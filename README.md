@@ -1,12 +1,10 @@
-## alienfile.org
+## pl.atypus.org
 
-This is the source for the alienfile.org website.  The intent is to make this the
+This is the source for the pl.atypus.org website.  The intent is to make this the
 go to place for information about Perl/Alien, and for these related Alien projects:
 
- * Alien::Base
- * Alien::Base::ModuleBuild
- * Alien::Build
- * alienfile
+ * FFI::Platypus
+ * and friends
 
 ## Contributing.
 
