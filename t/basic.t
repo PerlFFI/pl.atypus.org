@@ -6,7 +6,7 @@ use Importer 'Test2::Tools::HTTP' => ':short';
 use Mojo::DOM58;
 use HTTP::Request::Common;
 
-Test2::Tools::HTTP::http_base_url 'https://alienfile.org';
+Test2::Tools::HTTP::http_base_url 'https://pl.atypus.org';
 Test2::Tools::HTTP::Tx->add_helper(
   'res.dom' => sub {
     my($res) = @_;
@@ -17,7 +17,7 @@ Test2::Tools::HTTP::Tx->add_helper(
 app do "./test.psgi";
 
 req(
-  GET('https://alienfile.org'),
+  GET('https://pl.atypus.org'),
   res {
     code 200;
   },
