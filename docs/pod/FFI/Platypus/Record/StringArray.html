@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::Platypus::Record::StringArray</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/Platypus.html">Platypus</a>::<a href="/pod/FFI/Platypus/Record.html">Record</a>::StringArray</div>
+    <!--FFI::Platypus::Record::StringArray--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#CONSTRUCTOR'>CONSTRUCTOR</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#new'>new</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#METHODS'>METHODS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#opaque'>opaque</a>
+    <li class='indexItem indexItem2'><a href='#size'>size</a>
+    <li class='indexItem indexItem2'><a href='#element'>element</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::Platypus::Record::StringArray - Array of strings for your FFI record</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 0.01</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<pre class="sh_perl"> my $a = FFI::Platypus::Record::StringArray-&#62;new(qw( foo bar baz ));
+ my $opaque = $a-&#62;opaque;</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>Experimental interface for an array of C strings, useful for FFI record classes.</p>
+
+<p>The Platypus record class doesn&#39;t easily support an array of strings, and trying to use an <code>opaque</code> type to implement this is possible but more than a little arcane. This class provides an interface for creating a C array of strings which can be used to provide an <code>opaque</code> pointer than can be used by an <a href="/pod/FFI/Platypus/Record.html" class="podlinkpod"
+>FFI::Platypus::Record</a> object.</p>
+
+<p>Care needs to be taken! Because Perl has no way of knowing if/when the opaque pointer is no longer being used by C, you have to make sure that the <a href="/pod/FFI/Platypus/Record/StringArray.html" class="podlinkpod"
+>FFI::Platypus::Record::StringArray</a> instance remains in scope for as long as the <code>opaque</code> pointer is in use by C.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CONSTRUCTOR"
+>CONSTRUCTOR</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="new"
+>new</a></h2>
+
+<pre class="sh_perl"> my $a = FFI::Platypus::Record::StringArray-&#62;new(@a);</pre>
+
+<p>Creates a new array of C strings.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="METHODS"
+>METHODS</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="opaque"
+>opaque</a></h2>
+
+<pre class="sh_perl"> my $opaque = $a-&#62;opaque;</pre>
+
+<p>Returns the opaque pointer to the array of C strings.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="size"
+>size</a></h2>
+
+<pre class="sh_perl"> my $size = $a-&#62;size;</pre>
+
+<p>Returns the number of elements in the array of C strings.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="element"
+>element</a></h2>
+
+<pre class="sh_perl"> my $element = $a-&#62;element($index);</pre>
+
+<p>Returns the string in the array of C strings at the given index.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2019 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

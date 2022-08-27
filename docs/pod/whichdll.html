@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>whichdll</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> whichdll</div>
+    <!--whichdll--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#OPTIONS'>OPTIONS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#-a'>-a</a>
+    <li class='indexItem indexItem2'><a href='#-s'>-s</a>
+    <li class='indexItem indexItem2'><a href='#-v'>-v</a>
+    <li class='indexItem indexItem2'><a href='#-x'>-x</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>whichdll - Find dynamic libraries in the appropriate path</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 0.03</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<pre class="sh_perl"> $ whichdll xml2
+ $ whichdll -a xml2  # print all matches
+ $ whichdll -a \*    # print all DLLs
+ $ whichdll -s xml2  # silent mode</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p><code>whichdll</code> is a command line interface to <a href="/pod/FFI/CheckLib.html" class="podlinkpod"
+>FFI::CheckLib</a>. It can be helpful in determining the location of dynamic libraries installed on your system. Its primary purpose is to be used in debugging issues related to <a href="/pod/FFI/CheckLib.html" class="podlinkpod"
+>FFI::CheckLib</a>, or <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a>. The command takes one or more arguments, which are treated as library names. The <code>whichdll</code> script will find the platform specific names in the appropriate places if they can be found in the system path. Thus when you search for <code>foo</code> you will get a result like <code>libfoo.so.1.2.3</code> on Linux, <code>foo.dll</code> on Windows, <code>libfoo.dylib</code> or <code>foo.bundle</code> on OS X, <code>cygfoo-1.0.dll</code> on Cygwin, etc., with the appropriate full path.</p>
+
+<p>By default duplicates due to duplicate paths or symlinks will be removed. You can see them using the <code>-x</code> option. For example on Debian:</p>
+
+<pre class="sh_perl"> $ ./bin/whichdll -a xml2
+ /usr/lib/x86_64-linux-gnu/libxml2.so.2.9.4
+ $ ./bin/whichdll -a -x xml2
+ /usr/lib/x86_64-linux-gnu/libxml2.so.2.9.4
+ /usr/lib/x86_64-linux-gnu/libxml2.so =&#62; /usr/lib/x86_64-linux-gnu/libxml2.so.2.9.4
+ /usr/lib/x86_64-linux-gnu/libxml2.so.2 =&#62; /usr/lib/x86_64-linux-gnu/libxml2.so.2.9.4</pre>
+
+<p>You can use the wildcard <code>*</code> to print all libraries. This implies the <code>-a</code> option.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="OPTIONS"
+>OPTIONS</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="-a"
+>-a</a></h2>
+
+<p>Print all matches instead of just the first one.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="-s"
+>-s</a></h2>
+
+<p>No output, just return 0 if any of the DLLs are found, or 1 if none are found.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="-v"
+>-v</a></h2>
+
+<p>Prints version and copyright notice and exits.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="-x"
+>-x</a></h2>
+
+<p>Do not prune duplicates.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2018 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

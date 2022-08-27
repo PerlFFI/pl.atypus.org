@@ -2,6 +2,11 @@
 
 use strict;
 use warnings;
-use 5.026;
+use XOR;
 
-say 'built!';
+my $xor = XOR->new(
+  root => '.',
+  org  => 'PerlFFI',
+  site_name => 'Perl FFI',
+);
+$xor->builder->build;

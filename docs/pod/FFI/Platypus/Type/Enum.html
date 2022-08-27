@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::Platypus::Type::Enum</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/Platypus.html">Platypus</a>::<a href="/pod/FFI/Platypus/Type.html">Type</a>::Enum</div>
+    <!--FFI::Platypus::Type::Enum--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#OPTIONS'>OPTIONS</a>
+  <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::Platypus::Type::Enum - Custom platypus type for dealing with C enumerated types</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 0.06</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<p>C:</p>
+
+<pre class="sh_perl"> enum {
+   DEFAULT,
+   BETTER,
+   BEST = 12
+ } foo_t;
+ 
+ foo_t
+ f(foo_t arg)
+ {
+   return foo_t;
+ }</pre>
+
+<p>Perl with strings:</p>
+
+<pre class="sh_perl"> use FFI::Platypus 1.00;
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 1 );
+ 
+ $ffi-&#62;load_custom_type(&#39;::Enum&#39;, &#39;foo_t&#39;,
+   &#39;default&#39;,
+   &#39;better&#39;,
+   [&#39;best&#39; =&#62; 12],
+ );
+ 
+ $ffi-&#62;attach( f =&#62; [&#39;foo_t&#39;] =&#62; &#39;foo_t&#39; );
+ 
+ f(&#34;default&#34;) eq &#39;default&#39;;  # true
+ f(&#34;default&#34;) eq &#39;better&#39;;   # false
+ 
+ print f(&#34;default&#34;), &#34;\n&#34;;   # default
+ print f(&#34;better&#34;),  &#34;\n&#34;;   # better
+ print f(&#34;best&#34;),    &#34;\n&#34;;   # best</pre>
+
+<p>Perl with constants:</p>
+
+<pre class="sh_perl"> use FFI::Platypus 1.00;
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 1 );
+ 
+ $ffi-&#62;load_custom_type(&#39;::Enum&#39;, &#39;foo_t&#39;,
+   { rev =&#62; &#39;int&#39;, package =&#62; &#39;Foo&#39;, prefix =&#62; &#39;FOO_&#39; },
+   &#39;default&#39;,
+   &#39;better&#39;,
+   [&#39;best&#39; =&#62; 12],
+ );
+ 
+ $ffi-&#62;attach( f =&#62; [&#39;foo_t&#39;] =&#62; &#39;foo_t&#39; );
+ 
+ f(Foo::FOO_DEFAULT) == Foo::FOO_DEFAULT;   # true
+ f(Foo::FOO_DEFAULT) == Foo::FOO_BETTER;    # false</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>This type plugin is a helper for making enumerated types. It makes the most sense to use this when you have an enumerated type with a small number of possible values. For a large set of enumerated values or constants, see <a href="/pod/FFI/Platypus/Constant.html" class="podlinkpod"
+>FFI::Platypus::Constant</a>.</p>
+
+<p>This type plugin has two modes:</p>
+
+<dl>
+<dt><a name="string"
+>string</a></dt>
+
+<dd>
+<p>In string mode, string representations of the enum values are converted into the integer enum values when passed into C, and the enums are converted back into strings when coming from C back into Perl. You can also pass in the integer values.</p>
+
+<dt><a name="constant"
+>constant</a></dt>
+
+<dd>
+<p>In constant mode, constants are defined in the specified package, and with the optional prefix. The string representation or integer constants can be passed into C, but the integer constants are returned from C back into Perl.</p>
+</dd>
+</dl>
+
+<p>In both modes, if you attempt to pass in a value that isn&#39;t one of the possible enum values, an exception will be thrown.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="OPTIONS"
+>OPTIONS</a></h1>
+
+<p>The general form of the custom type load is:</p>
+
+<pre class="sh_perl"> $ffi-&#62;load_custom_type(&#39;::Enum&#39;, $name, \%options, @values);
+ $ffi-&#62;load_custom_type(&#39;::Enum&#39;, $name, @values);</pre>
+
+<p>The enumerated values are specified as a list of strings and array references.</p>
+
+<dl>
+<dt><a name="string"
+>string</a></dt>
+
+<dd>
+<pre class="sh_perl"> $ffi-&#62;load_custom_type(&#39;::Enum&#39;, $name, $string1, $string2, ... );</pre>
+
+<p>For strings the constant value starts at zero (0) and increases by one for each possible value.</p>
+
+<dt><a name="array_reference"
+>array reference</a></dt>
+
+<dd>
+<pre class="sh_perl"> $ffi-&#62;load_custom_type(&#39;::Enum&#39;, $name, [ $value_name, $value, %options ]);
+ $ffi-&#62;load_custom_type(&#39;::Enum&#39;, $name, [ $value_name, %options ]);</pre>
+
+<p>You can use an array reference to include an explicit integer value, rather than using the implicit incremented value. You can also use the array reference for value options. If the value isn&#39;t included (that is if there are an odd number of values in the array reference), then the implicit incremented value will be used.</p>
+
+<p>Value options:</p>
+
+<dl>
+<dt><a name="alias"
+>alias</a></dt>
+
+<dd>
+<pre class="sh_perl"> $ffi-&#62;load_custom_type(&#39;::Enum, $name, [ $value_name, $value, alias =&#62; \@aliases ]);
+ $ffi-&#62;load_custom_type(&#39;::Enum, $name, [ $value_name, alias =&#62; \@aliases ]);</pre>
+
+<p>The <code>alias</code> option lets you specify value aliases. For example, suppose you have an enum definition like:</p>
+
+<pre class="sh_perl"> enum {
+   FOO,
+   BAR,
+   BAZ=BAR,
+   ABC,
+   XYZ
+ } foo_t;</pre>
+
+<p>The Perl definition would be:</p>
+
+<pre class="sh_perl"> $ffi-&#62;load_custom_type(&#39;::Enum&#39;, &#39;foo_t&#39;,
+   &#39;foo&#39;,
+   [&#39;bar&#39;, alias =&#62; [&#39;baz&#39;]],
+   &#39;abc&#39;,
+   &#39;xyz&#39;,
+ );</pre>
+</dd>
+</dl>
+</dd>
+</dl>
+
+<p>Type options may be passed in as a hash reference after the type name.</p>
+
+<p>Type options:</p>
+
+<dl>
+<dt><a name="maps"
+>maps</a></dt>
+
+<dd>
+<pre class="sh_perl"> my @maps;
+ $ffi-&#62;load_custom_type(&#39;::Enum&#39;, $name, { maps =&#62; \@maps }, ... );
+ my($str,$int,$type) = @maps;</pre>
+
+<p>If set to an empty array reference, this will be filled with the string, integer and native type for the enum.</p>
+
+<dt><a name="package"
+>package</a></dt>
+
+<dd>
+<pre class="sh_perl"> $ffi-&#62;load_custom_type(&#39;::Enum&#39;, $name, { package =&#62; $package  }, ... );
+ $ffi-&#62;load_custom_type(&#39;::Enum&#39;, $name, { package =&#62; \@package }, ... );  # version 0.05</pre>
+
+<p>This option specifies the Perl package where constants will be defined. If not specified, then no constants will be generated. Unless otherwise specified (see &#39;casing&#39; below), the constants will be the upper case of the value names as per the usual convention.</p>
+
+<p>[version 0.05]</p>
+
+<p>As of version 0.05, you can specify multiple packages to create the constants via an array reference.</p>
+
+<dt><a name="prefix"
+>prefix</a></dt>
+
+<dd>
+<pre class="sh_perl"> $ffi-&#62;load_custom_type(&#39;::Enum&#39;, $name, { prefix =&#62; $prefix }, ... );</pre>
+
+<p>This specifies an optional prefix to give each constant. If not specified, then no prefix will be used.</p>
+
+<dt><a name="rev"
+>rev</a></dt>
+
+<dd>
+<pre class="sh_perl"> $ffi-&#62;load_custom_type(&#39;::Enum&#39;, $name, { rev =&#62; &#39;int&#39;     }, ... );
+ $ffi-&#62;load_custom_type(&#39;::Enum&#39;, $name, { rev =&#62; &#39;str&#39;     }, ... );
+ $ffi-&#62;load_custom_type(&#39;::Enum&#39;, $name, { rev =&#62; &#39;dualvar&#39; }, ... );  # version 0.05</pre>
+
+<p>This specifies what should be returned for C functions that return the enumerated type. For strings, use <code>str</code>, and for integer constants use <code>int</code>.</p>
+
+<p>(<code>rev</code> is short for &#34;reverse&#34;)</p>
+
+<p>[version 0.05]</p>
+
+<p>As of version 0.05, dualvar can be specified to return a string/integer dualvar.</p>
+
+<dt><a name="type"
+>type</a></dt>
+
+<dd>
+<pre class="sh_perl"> $ffi-&#62;load_custom_type(&#39;::Enum&#39;, $name, { type =&#62; $type }, ... );</pre>
+
+<p>This specifies the integer type that should be used for the enumerated type. The default is to use <code>enum</code> for types that only have positive possible values and <code>senum</code> for types that have possible negative values. (Note that on some platforms these two types may actually be the same).</p>
+
+<p>You can also use other integer types, which is useful if the enum is only used to define constants, and the values are stored in a type smaller than the default for <code>enum</code> or <code>senum</code>. For example:</p>
+
+<p>C:</p>
+
+<pre class="sh_perl"> enum {
+   DEFAULT,
+   BETTER,
+   BEST = 12
+ } foo_enum;
+ typedef uint8_t foo_t;
+ 
+ /*
+  * you are expected to use the constants from foo_enum,
+  * but the signature actually uses a uint8_t
+  */
+ void f(foo_t);</pre>
+
+<p>Perl:</p>
+
+<pre class="sh_perl"> $ffi-&#62;load_custom_type(&#39;::Enum&#39;, &#39;foo_t&#39;,
+   { type =&#62; &#39;uint8&#39; },
+   &#39;default&#39;,
+   &#39;better&#39;,
+   [best =&#62; 12],
+ );
+
+ $ffi-&#62;attach( f =&#62; [ &#39;foo_t&#39; ] =&#62; &#39;void&#39; );</pre>
+
+<dt><a name="casing"
+>casing</a></dt>
+
+<dd>
+<p>[version 0.06]</p>
+
+<pre class="sh_perl"> $ffi-&#62;load_custom_type(&#39;::Enum&#39;, $name, { casing =&#62; &#39;upper&#39; }, ... );
+ $ffi-&#62;load_custom_type(&#39;::Enum&#39;, $name, { casing =&#62; &#39;keep&#39;  }, ... );</pre>
+
+<p>When in constant mode, all constant names are by default generated in uppercase as is conventional. However, some libraries will on occasion define constant names in mixed case. For these cases, the <code>casing</code> option, added in version 0.06, can be set to <code>keep</code> to prevent the names from being modified. The only other allowed value is <code>upper</code>, which is the default.</p>
+</dd>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SEE_ALSO"
+>SEE ALSO</a></h1>
+
+<dl>
+<dt><a name="FFI::Platypus"
+><a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C"
+><a href="/pod/FFI/C.html" class="podlinkpod"
+>FFI::C</a></a></dt>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Author: Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<p>Contributors:</p>
+
+<p>Jos&#233; Joaqu&#237;n Atria (JJATRIA)</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2020 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

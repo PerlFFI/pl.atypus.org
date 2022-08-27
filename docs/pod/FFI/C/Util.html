@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::C::Util</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/C.html">C</a>::Util</div>
+    <!--FFI::C::Util--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#FUNCTIONS'>FUNCTIONS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#perl_to_c'>perl_to_c</a>
+    <li class='indexItem indexItem2'><a href='#c_to_perl'>c_to_perl</a>
+    <li class='indexItem indexItem2'><a href='#owned'>owned</a>
+    <li class='indexItem indexItem2'><a href='#take'>take</a>
+    <li class='indexItem indexItem2'><a href='#addressof'>addressof</a>
+    <li class='indexItem indexItem2'><a href='#set_array_count'>set_array_count</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::C::Util - Utility functions for dealing with structured C data</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 0.12</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<pre class="sh_perl"> use FFI::C::Util qw( perl_to_c take );
+ use FFI::C::StructDef;
+ use FFI::Platypus::Memory qw( free );
+ 
+ my $def = FFI::C::StructDef-&#62;new(
+   members =&#62; [
+     x =&#62; &#39;uint8&#39;,
+     y =&#62; &#39;sint64&#39;,
+   ],
+ );
+ my $inst = $def-&#62;create;
+ 
+ # initalize members
+ perl_to_c($inst, { x =&#62; 1, y =&#62; 2 });
+ 
+ # take ownership
+ my $ptr = take $inst;
+ 
+ # since we took ownership, we are responsible for freeing the memory:
+ free $ptr;</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>This module provides some useful utility functions for dealing with the various def instances provided by <a href="/pod/FFI/C.html" class="podlinkpod"
+>FFI::C</a></p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="FUNCTIONS"
+>FUNCTIONS</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="perl_to_c"
+>perl_to_c</a></h2>
+
+<pre class="sh_perl"> perl_to_c $instance, \%values;  # for Struct/Union
+ perl_to_c $instance, \@values;  # for Array</pre>
+
+<p>This function initializes the members of an instance.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="c_to_perl"
+>c_to_perl</a></h2>
+
+<pre class="sh_perl"> my $perl = c_to_perl $instance;</pre>
+
+<p>This function takes an instance and returns the nested members as Perl data structures.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="owned"
+>owned</a></h2>
+
+<pre class="sh_perl"> my $bool = owned $instance;</pre>
+
+<p>Returns true of the <code>$instance</code> owns its allocated memory. That is, it will free up the allocated memory when it falls out of scope. Reasons an instance might not be owned are:</p>
+
+<dl>
+<dt><a name="the_instance_is_nested_inside_another_object_that_owns_the_memory"
+>the instance is nested inside another object that owns the memory</a></dt>
+
+<dd>
+<dt><a name="the_instance_was_returned_from_a_C_function_that_owns_the_memory"
+>the instance was returned from a C function that owns the memory</a></dt>
+
+<dd>
+<dt><a name="ownership_was_taken_away_by_the_take_function_below."
+>ownership was taken away by the <code>take</code> function below.</a></dt>
+</dl>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="take"
+>take</a></h2>
+
+<pre class="sh_perl"> my $ptr = take $instance;</pre>
+
+<p>This function takes ownership of the instance pointer, and returns the opaque pointer. This means a couple of things:</p>
+
+<dl>
+<dt><a name="$instance_will_not_free_its_data_automatically"
+><code>$instance</code> will not free its data automatically</a></dt>
+
+<dd>
+<p>You should call <code>free</code> on it manually to free the memory it is using.</p>
+
+<dt><a name="$instance_cannot_be_used_anymore"
+><code>$instance</code> cannot be used anymore</a></dt>
+
+<dd>
+<p>So don&#39;t try to get/set any of its members, or pass it into a function.</p>
+</dd>
+</dl>
+
+<p>The returned pointer can be cast into something else or passed into a function that takes an <code>opaque</code> argument.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="addressof"
+>addressof</a></h2>
+
+<p>[version 0.11]</p>
+
+<pre class="sh_perl"> my $ptr = addressof $instance;</pre>
+
+<p>This function returns the address (as an <code>opaque</code> type) of the instance object. This is similar to <code>take</code> above in that it gets you the address of the object, but doesn&#39;t take ownership of it, so care needs to be taken when using <code>$ptr</code> that the object is still allocated.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="set_array_count"
+>set_array_count</a></h2>
+
+<pre class="sh_perl"> set_array_count $inst, $count;</pre>
+
+<p>This function sets the element count on a variable array returned from C (where normally there is no way to know from just the return value). If you try to set a count on a non-array or a fixed sized array an exception will be thrown.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SEE_ALSO"
+>SEE ALSO</a></h1>
+
+<dl>
+<dt><a name="FFI::C"
+><a href="/pod/FFI/C.html" class="podlinkpod"
+>FFI::C</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::Array"
+><a href="/pod/FFI/C/Array.html" class="podlinkpod"
+>FFI::C::Array</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::ArrayDef"
+><a href="/pod/FFI/C/ArrayDef.html" class="podlinkpod"
+>FFI::C::ArrayDef</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::Def"
+><a href="/pod/FFI/C/Def.html" class="podlinkpod"
+>FFI::C::Def</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::File"
+><a href="/pod/FFI/C/File.html" class="podlinkpod"
+>FFI::C::File</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::PosixFile"
+><a href="/pod/FFI/C/PosixFile.html" class="podlinkpod"
+>FFI::C::PosixFile</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::Struct"
+><a href="/pod/FFI/C/Struct.html" class="podlinkpod"
+>FFI::C::Struct</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::StructDef"
+><a href="/pod/FFI/C/StructDef.html" class="podlinkpod"
+>FFI::C::StructDef</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::Union"
+><a href="/pod/FFI/C/Union.html" class="podlinkpod"
+>FFI::C::Union</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::UnionDef"
+><a href="/pod/FFI/C/UnionDef.html" class="podlinkpod"
+>FFI::C::UnionDef</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::Util"
+><a href="/pod/FFI/C/Util.html" class="podlinkpod"
+>FFI::C::Util</a></a></dt>
+
+<dd>
+<dt><a name="FFI::Platypus::Record"
+><a href="/pod/FFI/Platypus/Record.html" class="podlinkpod"
+>FFI::Platypus::Record</a></a></dt>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2020-2022 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

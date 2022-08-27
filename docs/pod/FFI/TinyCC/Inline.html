@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::TinyCC::Inline</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/TinyCC.html">TinyCC</a>::Inline</div>
+    <!--FFI::TinyCC::Inline--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#OPTIONS'>OPTIONS</a>
+  <li class='indexItem indexItem1'><a href='#FUNCTIONS'>FUNCTIONS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#tcc_inline'>tcc_inline</a>
+    <li class='indexItem indexItem2'><a href='#tcc_eval'>tcc_eval</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
+  <li class='indexItem indexItem1'><a href='#BUNDLED_SOFTWARE'>BUNDLED SOFTWARE</a>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::TinyCC::Inline - Embed Tiny C code in your Perl program</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 0.28</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<pre class="sh_perl"> use FFI::TinyCC::Inline qw( tcc_inline );
+ 
+ tcc_inline q{
+   int square(int num)
+   {
+     return num*num;
+   }
+ };
+ 
+ print square(4), &#34;\n&#34;; # prints 16
+
+ use FFI::TinyCC::Inline qw( tcc_eval );
+ 
+ # sets value to 6:
+ my $value = tcc_eval q{
+   int main(int a, int b, int c)
+   {
+     return a + b + c;
+   }
+ }, 1, 2, 3;</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>This module provides a simplified interface to FFI::TinyCC, that allows you to write Perl subs in C. It is inspired by <a href="https://metacpan.org/pod/XS%3A%3ATCC" class="podlinkpod"
+>XS::TCC</a>, but it uses <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> to create bindings instead of XS.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="OPTIONS"
+>OPTIONS</a></h1>
+
+<p>You can specify Tiny C options using the scoped pragmata, like so:</p>
+
+<pre class="sh_perl"> use FFI::TinyCC::Inline options =&#62; &#34;-I/foo/include -L/foo/lib -DFOO=1&#34;;
+ 
+ # prints 1
+ print tcc_eval q{
+ #include &#60;foo.h&#62; /* will search /foo/include
+ int main()
+ {
+   return FOO; /* defined and set to 1 */
+ }
+ };</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="FUNCTIONS"
+>FUNCTIONS</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="tcc_inline"
+>tcc_inline</a></h2>
+
+<pre class="sh_perl"> tcc_inline $c_code;</pre>
+
+<p>Compile the given C code using Tiny C and inject any functions found into the current package. An exception will be thrown if the code fails to compile, or if <a href="/pod/FFI/TinyCC/Inline.html" class="podlinkpod"
+>FFI::TinyCC::Inline</a> does not recognize one of the argument or return types.</p>
+
+<pre class="sh_perl"> tcc_inline q{
+   int foo(int a, int b, int c)
+   {
+     return a + b + c;
+   }
+ };
+ 
+ print foo(1,2,3), &#34;\n&#34;; # prints 6</pre>
+
+<p>The special argument type of <code>(int argc, char **argv)</code> is recognized and will be translated from the list of arguments passed in. Example:</p>
+
+<pre class="sh_perl"> tcc_inline q{
+   void foo(int argc, const char **argv)
+   {
+     int i;
+     for(i=0; i&#60;argc; i++)
+     {
+       puts(argv[i]);
+     } 
+   }
+ };
+ 
+ foo(&#34;one&#34;, &#34;two&#34;, &#34;three&#34;); # prints &#34;one\ntwo\nthree\n&#34;</pre>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="tcc_eval"
+>tcc_eval</a></h2>
+
+<pre class="sh_perl"> tcc_eval $c_code, @arguments;</pre>
+
+<p>This compiles the C code and executes the <code>main</code> function, passing in the given arguments. Returns the result.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SEE_ALSO"
+>SEE ALSO</a></h1>
+
+<dl>
+<dt><a name="FFI::TinyCC"
+><a href="/pod/FFI/TinyCC.html" class="podlinkpod"
+>FFI::TinyCC</a></a></dt>
+
+<dd>
+<dt><a name="C::Blocks"
+><a href="https://metacpan.org/pod/C%3A%3ABlocks" class="podlinkpod"
+>C::Blocks</a></a></dt>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="BUNDLED_SOFTWARE"
+>BUNDLED SOFTWARE</a></h1>
+
+<p>This package also comes with a parser that was shamelessly stolen from <a href="https://metacpan.org/pod/XS%3A%3ATCC" class="podlinkpod"
+>XS::TCC</a>, which I strongly suspect was itself shamelessly &#34;borrowed&#34; from <a href="https://metacpan.org/pod/Inline%3A%3AC%3A%3AParser%3A%3ARegExp" class="podlinkpod"
+>Inline::C::Parser::RegExp</a></p>
+
+<p>The license details for the parser are:</p>
+
+<p>Copyright 2002 Brian Ingerson Copyright 2008, 2010-2012 Sisyphus Copyright 2013 Steffen Muellero</p>
+
+<p>This program is free software; you can redistribute it and/or modify it under the same terms as Perl itself.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Author: Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<p>Contributors:</p>
+
+<p>aero</p>
+
+<p>Dylan Cali (calid)</p>
+
+<p>pipcet</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2015-2018 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

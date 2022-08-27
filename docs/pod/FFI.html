@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> FFI</div>
+    <!--FFI--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#FUNCTIONS'>FUNCTIONS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#call'>call</a>
+    <li class='indexItem indexItem2'><a href='#callback'>callback</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#FUNCTION_SIGNATURES'>FUNCTION SIGNATURES</a>
+  <li class='indexItem indexItem1'><a href='#SUPPORT'>SUPPORT</a>
+  <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI - Perl Foreign Function Interface based on libffi</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 1.15</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<pre class="sh_perl"> # for a more portable interface see FFI::Library
+ $clib_file = ($^O eq &#34;MSWin32&#34;) ? &#34;MSVCRT40.DLL&#34; : &#34;-lc&#34;;
+ $clib = DynaLoader::dl_findfile($clib_file);
+ $strlen = DynaLoader::dl_find_symbol($clib, &#34;strlen&#34;);
+ $n = FFI::call($strlen, &#34;cIp&#34;, $my_string);
+ DynaLoader::dl_free_file($clib);</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p><b>NOTE</b>: Newer and better maintained FFI modules such as <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> provide more functionality and so it is strongly recommend that you use one of them for new projects and even consider migrating to one of them for existing projects.</p>
+
+<p>This module provides a low-level foreign function interface to Perl. It allows the calling of any function for which the user can supply an address and calling signature. Furthermore, it provides a method of encapsulating Perl subroutines as callback functions whose addresses can be passed to C code.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="FUNCTIONS"
+>FUNCTIONS</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="call"
+>call</a></h2>
+
+<pre class="sh_perl"> my $ret = FFI::call($address, $signature, @arguments);</pre>
+
+<p>Call the function at the given <code>$address</code> with the given <code>$signature</code>&#62; (see below) and the given <code>@arguments</code>.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="callback"
+>callback</a></h2>
+
+<pre class="sh_perl"> my $address = FFI::callback($signature, \&#38;subref);</pre>
+
+<p>Creates a c callback that will call a Perl subref.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="FUNCTION_SIGNATURES"
+>FUNCTION SIGNATURES</a></h1>
+
+<p>Function interfaces are defined by <i>signatures</i>. A function&#39;s signature is a string which specifies the function&#39;s return type, argument types and calling convention. The first character of the string is the function&#39;s calling convention. This is one of</p>
+
+<pre class="sh_perl">    s   The standard calling convention for dynamically linked functions
+    c   The calling convention used by C functions</pre>
+
+<p>Note that on many platforms, these two calling conventions may be identical. On the Windows platform, the <code>s</code> code corresponds to the <code>stdcall</code> calling convention, which is used for most dynamic link libraries. The <code>c</code> code corresponds to the <code>cdecl</code> calling convention, which is used for C functions, such as those in the C runtime library.</p>
+
+<p>The remaining characters of the string are the return type of the function, followed by the argument types, in left-to-right order. Valid values are based on the codes used for the <a href="https://metacpan.org/pod/pack" class="podlinkpod"
+>pack</a> function, namely</p>
+
+<pre class="sh_perl">    c   A signed char value.
+    C   An unsigned char value.
+    s   A signed short value.
+    S   An unsigned short value.
+    i   A signed integer value.
+    I   An unsigned integer value.
+    l   A signed long value.
+    L   An unsigned long value.
+    f   A single-precision float.
+    d   A double-precision float.
+    p   A pointer to a Perl scalar.
+    o   A opaque pointer, ie, an address.
+    v   No value (only valid as a return type).</pre>
+
+<p>Note that all of the above codes refer to &#34;native&#34; format values.</p>
+
+<p>The <code>p</code> code as an argument type simply passes the address of the Perl value&#39;s memory to the foreign function. It is the caller&#39;s responsibility to be sure that the called function does not overwrite memory outside that allocated by Perl.</p>
+
+<p>The <code>p</code> code as a return type treats the returned value as a null-terminated string, and passes it back to Perl as such. There is currently no support for functions which return pointers to structures, or to other blocks of memory which do not contain strings, nor for functions which return memory which the caller must free.</p>
+
+<p>To pass pointers to strings, use the <code>p</code> code. Perl ensures that strings are null-terminated for you. To pass pointers to structures, use <a href="https://metacpan.org/pod/pack" class="podlinkpod"
+>pack</a>. To pass an arbitrary block of memory, use something like the following:</p>
+
+<pre class="sh_perl">    $buf = &#39; &#39; x 100;
+    # Use $buf via a &#39;p&#39; parameter as a 100-byte memory block</pre>
+
+<p>At the present time, there is no direct support for passing pointers to &#39;native&#39; types (like int). To work around this, use <code>$buf = pack(&#39;i&#39;, 12);</code> to put an integer into a block of memory, then use the <code>p</code> pointer type, and obtain any returned value using <code>$n = unpack(&#39;i&#39;, $buf);</code> In the future, better support may be added (but remember that this is intended as a low-level interface!)</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SUPPORT"
+>SUPPORT</a></h1>
+
+<p>Please open any support tickets with this project&#39;s GitHub repository here:</p>
+
+<p><a href="https://github.com/Perl5-FFI/FFI/issues" class="podlinkurl"
+>https://github.com/Perl5-FFI/FFI/issues</a></p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SEE_ALSO"
+>SEE ALSO</a></h1>
+
+<dl>
+<dt><a name="FFI::Library"
+><a href="/pod/FFI/Library.html" class="podlinkpod"
+>FFI::Library</a></a></dt>
+
+<dd>
+<p>Higher level interface to libraries using this module.</p>
+
+<dt><a name="FFI::CheckLib"
+><a href="/pod/FFI/CheckLib.html" class="podlinkpod"
+>FFI::CheckLib</a></a></dt>
+
+<dd>
+<p>Portable functions for finding libraries.</p>
+
+<dt><a name="FFI::Platypus"
+><a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a></a></dt>
+
+<dd>
+<p>Platypus is another FFI interface based on libffi. It has a more extensive feature set, and libffi has a less restrictive license.</p>
+</dd>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Original author: Paul Moore &#60;gustav@morpheus.demon.co.uk&#62;</p>
+
+<p>Current maintainer: Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<p>Contributors:</p>
+
+<p>Anatoly Vorobey &#60;avorobey@pobox.com&#62;</p>
+
+<p>Gaal Yahas &#60;gaal@forum2.org&#62;</p>
+
+<p>Mitchell Charity &#60;mcharity@vendian.org&#62;</p>
+
+<p>Reini Urban &#60;&#60;RURBAN@cpan.org&#62;</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2016-2018 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

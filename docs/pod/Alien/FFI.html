@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Alien::FFI</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> Alien::FFI</div>
+    <!--Alien::FFI--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>Alien::FFI - Build and make available libffi</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 0.25</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<p>In your Build.PL:</p>
+
+<pre class="sh_perl"> use Module::Build;
+ use Alien::FFI;
+ my $builder = Module::Build-&#62;new(
+   ...
+   configure_requires =&#62; {
+     &#39;Alien::FFI&#39; =&#62; &#39;0&#39;,
+     ...
+   },
+   extra_compiler_flags =&#62; Alien::FFI-&#62;cflags,
+   extra_linker_flags   =&#62; Alien::FFI-&#62;libs,
+   ...
+ );
+ 
+ $build-&#62;create_build_script;</pre>
+
+<p>In your Makefile.PL:</p>
+
+<pre class="sh_perl"> use ExtUtils::MakeMaker;
+ use Config;
+ use Alien::FFI;
+ 
+ WriteMakefile(
+   ...
+   CONFIGURE_REQUIRES =&#62; {
+     &#39;Alien::FFI&#39; =&#62; &#39;0&#39;,
+   },
+   CCFLAGS =&#62; Alien::FFI-&#62;cflags . &#34; $Config{ccflags}&#34;,
+   LIBS    =&#62; [ Alien::FFI-&#62;libs ],
+   ...
+ );</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>This distribution installs libffi so that it can be used by other Perl distributions. If already installed for your operating system, and it can be found, this distribution will use the libffi that comes with your operating system, otherwise it will download it from the Internet, build and install it for you.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SEE_ALSO"
+>SEE ALSO</a></h1>
+
+<dl>
+<dt><a name="FFI::Platypus"
+><a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a></a></dt>
+
+<dd>
+<p>Write Perl bindings to non-Perl libraries without C or XS</p>
+
+<dt><a name="FFI::CheckLib"
+><a href="/pod/FFI/CheckLib.html" class="podlinkpod"
+>FFI::CheckLib</a></a></dt>
+
+<dd>
+<p>Check that a library is available for FFI</p>
+</dd>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Author: Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<p>Contributors:</p>
+
+<p>Petr Pisar (ppisar)</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2014 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

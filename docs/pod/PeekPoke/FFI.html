@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>PeekPoke::FFI</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> PeekPoke::FFI</div>
+    <!--PeekPoke::FFI--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#CONSTRUCTOR'>CONSTRUCTOR</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#new'>new</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#METHODS'>METHODS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#peek'>peek</a>
+    <li class='indexItem indexItem2'><a href='#poke'>poke</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#CAVEATS'>CAVEATS</a>
+  <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>PeekPoke::FFI - Perl extension for reading and writing to arbitrary memory locations</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 0.02</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<pre class="sh_perl"> # function interface
+ use PeekPoke::FFI qw( peek poke );
+ my $value = peek( 0xdeadbeaf );
+ poke( 0xdeadbeaf, $value + 1 );
+
+ # OO-interface
+ use PeekPoke::FFI;
+ my $pp = PeekPoke::FFI-&#62;new( type =&#62; &#39;sint32&#39;, base =&#62; 0xdeadbeaf );
+ my $value = $pp-&#62;peek( 0xdeadbeaf );
+ $pp-&#62;poke( 0xdeadbeaf, 0 - $value );</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>Very occasionally I need to get/set bytes from arbitrary bits of memory from a Perl script or module. If you know what you are doing it isn&#39;t too tricky to get an arbitrary byte from Perl. Setting one is a little harder, but can be done with tricks. This module implements these tricks so that I don&#39;t have to remind myself of how to do it the next time I need to reach for this particular tool.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CONSTRUCTOR"
+>CONSTRUCTOR</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="new"
+>new</a></h2>
+
+<pre class="sh_perl"> my $pp = PeekPoke::FFI-&#62;new(%opts);</pre>
+
+<p>Create a <a href="/pod/PeekPoke/FFI.html" class="podlinkpod"
+>PeekPoke::FFI</a> instance. If you need to get/set values other than bytes, or if you want to set a base address, then you will want to create</p>
+
+<dl>
+<dt><a name="type"
+>type</a></dt>
+
+<dd>
+<p>The <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> type to use for peeking and poking. Defaults to <code>uint8</code>. Only integer and floating point types are supported.</p>
+
+<dt><a name="base"
+>base</a></dt>
+
+<dd>
+<p>The base address to use. The offset will be added to this value.</p>
+</dd>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="METHODS"
+>METHODS</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="peek"
+>peek</a></h2>
+
+<pre class="sh_perl"> my $value = $pp-&#62;peek($offset);
+ my $value = peek($offset);</pre>
+
+<p>Get the value at the given offset.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="poke"
+>poke</a></h2>
+
+<pre class="sh_perl"> $pp-&#62;poke($offset, $value);
+ poke($offset, $value);</pre>
+
+<p>Set the value at the given offset.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CAVEATS"
+>CAVEATS</a></h1>
+
+<p>Most of the time you shouldn&#39;t be peeking and poking at random bits of memory. Sometimes during development it can be useful for various reasons. Use with extreme caution in production.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SEE_ALSO"
+>SEE ALSO</a></h1>
+
+<dl>
+<dt><a name="PeekPoke"
+><a href="https://metacpan.org/pod/PeekPoke" class="podlinkpod"
+>PeekPoke</a></a></dt>
+
+<dd>
+<p>This is an XS module that has been around for donkey&#39;s years. It only works with the native Perl integer values (IV) which is not usually what I want.</p>
+</dd>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2020 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::C::Stat</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/C.html">C</a>::Stat</div>
+    <!--FFI::C::Stat--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#CONSTRUCTORS'>CONSTRUCTORS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#new'>new</a>
+    <li class='indexItem indexItem2'><a href='#clone'>clone</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#PROPERTIES'>PROPERTIES</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#dev'>dev</a>
+    <li class='indexItem indexItem2'><a href='#ino'>ino</a>
+    <li class='indexItem indexItem2'><a href='#mode'>mode</a>
+    <li class='indexItem indexItem2'><a href='#nlink'>nlink</a>
+    <li class='indexItem indexItem2'><a href='#uid'>uid</a>
+    <li class='indexItem indexItem2'><a href='#gid'>gid</a>
+    <li class='indexItem indexItem2'><a href='#rdev'>rdev</a>
+    <li class='indexItem indexItem2'><a href='#size'>size</a>
+    <li class='indexItem indexItem2'><a href='#atime'>atime</a>
+    <li class='indexItem indexItem2'><a href='#mtime'>mtime</a>
+    <li class='indexItem indexItem2'><a href='#ctime'>ctime</a>
+    <li class='indexItem indexItem2'><a href='#blksize'>blksize</a>
+    <li class='indexItem indexItem2'><a href='#blocks'>blocks</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::C::Stat - Object-oriented FFI interface to native stat and lstat</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 0.02</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<pre class="sh_perl"> use FFI::C::Stat;
+ 
+ my $stat = FFI::C::Stat-&#62;new(&#34;foo.txt&#34;);
+ print &#34;size = &#34;, $stat-&#62;size;</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>Perl comes with perfectly good <code>stat</code>, <code>lstat</code> functions, however if you are writing FFI bindings for a library that use the C <code>stat</code> structure, you are out of luck there. This module provides an FFI friendly interface to the C <code>stat</code> function, which uses an object similar to <a href="https://metacpan.org/pod/File%3A%3Astat" class="podlinkpod"
+>File::stat</a>, except the internals are a real C <code>struct</code> that you can pass into C APIs that need it.</p>
+
+<p>Supposing you have a C function:</p>
+
+<pre class="sh_perl"> void
+ my_cfunction(struct stat *s)
+ {
+   ...
+ }</pre>
+
+<p>You can bind <code>my_cfunction</code> like this:</p>
+
+<pre class="sh_perl"> use FFI::Platypus 1.00;
+ 
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 1 );
+ $ffi-&#62;type(&#39;object(FFI::C::Stat)&#39; =&#62; &#39;stat&#39;);
+ $ffi-&#62;attach( my_cfunction =&#62; [&#39;stat&#39;] =&#62; &#39;void&#39; );</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CONSTRUCTORS"
+>CONSTRUCTORS</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="new"
+>new</a></h2>
+
+<pre class="sh_perl"> my $stat = FFI::C::Stat-&#62;new(*HANDLE,   %options);
+ my $stat = FFI::C::Stat-&#62;new($filename, %options);</pre>
+
+<p>You can create a new instance of this class by calling the new method and passing in either a file or directory handle, or by passing in the filename path.</p>
+
+<p>Options:</p>
+
+<dl>
+<dt><a name="symlink"
+>symlink</a></dt>
+
+<dd>
+<p>Use <code>lstat</code> instead of <code>stat</code>, that is if the filename is a symlink, <code>stat</code> the symlink instead of the target.</p>
+</dd>
+</dl>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="clone"
+>clone</a></h2>
+
+<pre class="sh_perl"> my $stat = FFI::C::Stat-&#62;clone($other_stat);</pre>
+
+<p>Creates a clone of <code>$stat</code>. The argument <code>$stat</code> can be either a <a href="/pod/FFI/C/Stat.html" class="podlinkpod"
+>FFI::C::Stat</a> instance, or an opaque pointer to a <code>stat</code> structure. The latter case is helpful when writing bindings to a method that returns a <code>stat</code> structure, since you won&#39;t be wanting to free the pointer that belongs to the callee.</p>
+
+<p>C:</p>
+
+<pre class="sh_perl"> struct stat *
+ my_cfunction()
+ {
+   static struct stat stat;  /* definitely do not want to free static memory */
+   ...
+   return stat;
+ }</pre>
+
+<p>Perl:</p>
+
+<pre class="sh_perl"> $ffi-&#62;attach( my_cfunction =&#62; [] =&#62; &#39;opaque&#39; =&#62; sub {
+   my $xsub = shift;
+   my $ptr = $xsub-&#62;();
+   return FFI::C::Stat-&#62;clone($ptr);
+ });</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="PROPERTIES"
+>PROPERTIES</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="dev"
+>dev</a></h2>
+
+<pre class="sh_perl"> my $id = $stat-&#62;dev;</pre>
+
+<p>The ID of device containing file.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="ino"
+>ino</a></h2>
+
+<pre class="sh_perl"> my $inode = $stat-&#62;ino;</pre>
+
+<p>The inode number.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="mode"
+>mode</a></h2>
+
+<pre class="sh_perl"> my $mode = $stat-&#62;mode;</pre>
+
+<p>The file type and mode.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="nlink"
+>nlink</a></h2>
+
+<pre class="sh_perl"> my $n = $stat-&#62;nlink;</pre>
+
+<p>The number of hard links.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="uid"
+>uid</a></h2>
+
+<pre class="sh_perl"> my $uid = $stat-&#62;uid;</pre>
+
+<p>The User ID owner.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="gid"
+>gid</a></h2>
+
+<pre class="sh_perl"> my $gid = $stat-&#62;gid;</pre>
+
+<p>The Group ID owner.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="rdev"
+>rdev</a></h2>
+
+<pre class="sh_perl"> my $id = $stat-&#62;rdev;</pre>
+
+<p>The ID of device (if special file)</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="size"
+>size</a></h2>
+
+<pre class="sh_perl"> my $size = $stat-&#62;size;</pre>
+
+<p>Returns the size of the file in bytes.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="atime"
+>atime</a></h2>
+
+<pre class="sh_perl"> my $time = $stat-&#62;atime;</pre>
+
+<p>The time of last access.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="mtime"
+>mtime</a></h2>
+
+<pre class="sh_perl"> my $time = $stat-&#62;mtime;</pre>
+
+<p>The time of last modification.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="ctime"
+>ctime</a></h2>
+
+<pre class="sh_perl"> my $time = $stat-&#62;ctime;</pre>
+
+<p>The time of last status change.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="blksize"
+>blksize</a></h2>
+
+<pre class="sh_perl"> my $size = $stat-&#62;blksize;</pre>
+
+<p>The filesystem-specific preferred I/O block size.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="blocks"
+>blocks</a></h2>
+
+<pre class="sh_perl"> my $count = $stat-&#62;blocks;</pre>
+
+<p>Number of blocks allocated.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2021 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

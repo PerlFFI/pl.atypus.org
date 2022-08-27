@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::CheckLib</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::CheckLib</div>
+    <!--FFI::CheckLib--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#FUNCTIONS'>FUNCTIONS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#find_lib'>find_lib</a>
+    <li class='indexItem indexItem2'><a href='#assert_lib'>assert_lib</a>
+    <li class='indexItem indexItem2'><a href='#check_lib_or_exit'>check_lib_or_exit</a>
+    <li class='indexItem indexItem2'><a href='#find_lib_or_exit'>find_lib_or_exit</a>
+    <li class='indexItem indexItem2'><a href='#find_lib_or_die'>find_lib_or_die</a>
+    <li class='indexItem indexItem2'><a href='#check_lib'>check_lib</a>
+    <li class='indexItem indexItem2'><a href='#which'>which</a>
+    <li class='indexItem indexItem2'><a href='#where'>where</a>
+    <li class='indexItem indexItem2'><a href='#has_symbols'>has_symbols</a>
+    <li class='indexItem indexItem2'><a href='#system_path'>system_path</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#FAQ'>FAQ</a>
+  <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::CheckLib - Check that a library is available for FFI</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 0.28</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<pre class="sh_perl"> use FFI::CheckLib;
+ 
+ check_lib_or_exit( lib =&#62; &#39;jpeg&#39;, symbol =&#62; &#39;jinit_memory_mgr&#39; );
+ check_lib_or_exit( lib =&#62; [ &#39;iconv&#39;, &#39;jpeg&#39; ] );
+ 
+ # or prompt for path to library and then:
+ print &#34;where to find jpeg library: &#34;;
+ my $path = &#60;STDIN&#62;;
+ check_lib_or_exit( lib =&#62; &#39;jpeg&#39;, libpath =&#62; $path );</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>This module checks whether a particular dynamic library is available for FFI to use. It is modeled heavily on <a href="https://metacpan.org/pod/Devel%3A%3ACheckLib" class="podlinkpod"
+>Devel::CheckLib</a>, but will find dynamic libraries even when development packages are not installed. It also provides a <a href="https://metacpan.org/pod/FFI%3A%3ACheckLib%23find_lib" class="podlinkpod"
+>find_lib</a> function that will return the full path to the found dynamic library, which can be feed directly into <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> or another FFI system.</p>
+
+<p>Although intended mainly for FFI modules via <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> and similar, this module does not actually use any FFI to do its detection and probing. This module does not have any non-core runtime dependencies. The test suite does depend on <a href="https://metacpan.org/pod/Test2%3A%3ASuite" class="podlinkpod"
+>Test2::Suite</a>.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="FUNCTIONS"
+>FUNCTIONS</a></h1>
+
+<p>All of these take the same named parameters and are exported by default.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="find_lib"
+>find_lib</a></h2>
+
+<pre class="sh_perl"> my(@libs) = find_lib(%args);</pre>
+
+<p>This will return a list of dynamic libraries, or empty list if none were found.</p>
+
+<p>[version 0.05]</p>
+
+<p>If called in scalar context it will return the first library found.</p>
+
+<p>Arguments are key value pairs with these keys:</p>
+
+<dl>
+<dt><a name="lib"
+>lib</a></dt>
+
+<dd>
+<p>Must be either a string with the name of a single library or a reference to an array of strings of library names. Depending on your platform, <code>CheckLib</code> will prepend <code>lib</code> or append <code>.dll</code> or <code>.so</code> when searching.</p>
+
+<p>[version 0.11]</p>
+
+<p>As a special case, if <code>*</code> is specified then any libs found will match.</p>
+
+<dt><a name="libpath"
+>libpath</a></dt>
+
+<dd>
+<p>A string or array of additional paths to search for libraries.</p>
+
+<dt><a name="systempath"
+>systempath</a></dt>
+
+<dd>
+<p>[version 0.11]</p>
+
+<p>A string or array of system paths to search for instead of letting <a href="/pod/FFI/CheckLib.html" class="podlinkpod"
+>FFI::CheckLib</a> determine the system path. You can set this to <code>[]</code> in order to not search <i>any</i> system paths.</p>
+
+<dt><a name="symbol"
+>symbol</a></dt>
+
+<dd>
+<p>A string or a list of symbol names that must be found.</p>
+
+<dt><a name="verify"
+>verify</a></dt>
+
+<dd>
+<p>A code reference used to verify a library really is the one that you want. It should take two arguments, which is the name of the library and the full path to the library pathname. It should return true if it is acceptable, and false otherwise. You can use this in conjunction with <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> to determine if it is going to meet your needs. Example:</p>
+
+<pre class="sh_perl"> use FFI::CheckLib;
+ use FFI::Platypus;
+ 
+ my($lib) = find_lib(
+   lib =&#62; &#39;foo&#39;,
+   verify =&#62; sub {
+     my($name, $libpath) = @_;
+ 
+     my $ffi = FFI::Platypus-&#62;new;
+     $ffi-&#62;lib($libpath);
+ 
+     my $f = $ffi-&#62;function(&#39;foo_version&#39;, [] =&#62; &#39;int&#39;);
+ 
+     return $f-&#62;call() &#62;= 500; # we accept version 500 or better
+   },
+ );</pre>
+
+<dt><a name="recursive"
+>recursive</a></dt>
+
+<dd>
+<p>[version 0.11]</p>
+
+<p>Recursively search for libraries in any non-system paths (those provided via <code>libpath</code> above).</p>
+
+<dt><a name="try_linker_script"
+>try_linker_script</a></dt>
+
+<dd>
+<p>[version 0.24]</p>
+
+<p>Some vendors provide <code>.so</code> files that are linker scripts that point to the real binary shared library. These linker scripts can be used by gcc or clang, but are not directly usable by <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> and friends. On select platforms, this options will use the linker command (<code>ld</code>) to attempt to resolve the real <code>.so</code> for non-binary files. Since there is extra overhead this is off by default.</p>
+
+<p>An example is libyaml on Red Hat based Linux distributions. On Debian these are handled with symlinks and no trickery is required.</p>
+
+<dt><a name="alien"
+>alien</a></dt>
+
+<dd>
+<p>[version 0.25]</p>
+
+<p>If no libraries can be found, try the given aliens instead. The Alien classes specified must provide the <a href="https://metacpan.org/pod/Alien%3A%3ABase" class="podlinkpod"
+>Alien::Base</a> interface for dynamic libraries, which is to say they should provide a method called <code>dynamic_libs</code> that returns a list of dynamic libraries.</p>
+
+<p>[version 0.28]</p>
+
+<p>In 0.28 and later, if the <a href="https://metacpan.org/pod/Alien" class="podlinkpod"
+>Alien</a> is not installed then it will be ignored and this module will search in system or specified directories only. This module <i>will</i> still throw an exception, if the <a href="https://metacpan.org/pod/Alien" class="podlinkpod"
+>Alien</a> doesn&#39;t look like a module name or if it does not provide a <code>dynamic_libs</code> method (which is implemented by all <a href="https://metacpan.org/pod/Alien%3A%3ABase" class="podlinkpod"
+>Alien::Base</a> subclasses).</p>
+</dd>
+</dl>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="assert_lib"
+>assert_lib</a></h2>
+
+<pre class="sh_perl"> assert_lib(%args);</pre>
+
+<p>This behaves exactly the same as <a href="https://metacpan.org/pod/FFI%3A%3ACheckLib%23find_lib" class="podlinkpod"
+>find_lib</a>, except that instead of returning empty list of failure it throws an exception.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="check_lib_or_exit"
+>check_lib_or_exit</a></h2>
+
+<pre class="sh_perl"> check_lib_or_exit(%args);</pre>
+
+<p>This behaves exactly the same as <a href="https://metacpan.org/pod/FFI%3A%3ACheckLib%23assert_lib" class="podlinkpod"
+>assert_lib</a>, except that instead of dying, it warns (with exactly the same error message) and exists. This is intended for use in <code>Makefile.PL</code> or <code>Build.PL</code></p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="find_lib_or_exit"
+>find_lib_or_exit</a></h2>
+
+<p>[version 0.05]</p>
+
+<pre class="sh_perl"> my(@libs) = find_lib_or_exit(%args);</pre>
+
+<p>This behaves exactly the same as <a href="https://metacpan.org/pod/FFI%3A%3ACheckLib%23find_lib" class="podlinkpod"
+>find_lib</a>, except that if the library is not found, it will call exit with an appropriate diagnostic.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="find_lib_or_die"
+>find_lib_or_die</a></h2>
+
+<p>[version 0.06]</p>
+
+<pre class="sh_perl"> my(@libs) = find_lib_or_die(%args);</pre>
+
+<p>This behaves exactly the same as <a href="https://metacpan.org/pod/FFI%3A%3ACheckLib%23find_lib" class="podlinkpod"
+>find_lib</a>, except that if the library is not found, it will die with an appropriate diagnostic.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="check_lib"
+>check_lib</a></h2>
+
+<pre class="sh_perl"> my $bool = check_lib(%args);</pre>
+
+<p>This behaves exactly the same as <a href="https://metacpan.org/pod/FFI%3A%3ACheckLib%23find_lib" class="podlinkpod"
+>find_lib</a>, except that it returns true (1) on finding the appropriate libraries or false (0) otherwise.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="which"
+>which</a></h2>
+
+<p>[version 0.17]</p>
+
+<pre class="sh_perl"> my $path = where($name);</pre>
+
+<p>Return the path to the first library that matches the given name.</p>
+
+<p>Not exported by default.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="where"
+>where</a></h2>
+
+<p>[version 0.17]</p>
+
+<pre class="sh_perl"> my @paths = where($name);</pre>
+
+<p>Return the paths to all the libraries that match the given name.</p>
+
+<p>Not exported by default.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="has_symbols"
+>has_symbols</a></h2>
+
+<p>[version 0.17]</p>
+
+<pre class="sh_perl"> my $bool = has_symbols($path, @symbol_names);</pre>
+
+<p>Returns true if <i>all</i> of the symbols can be found in the dynamic library located at the given path. Can be useful in conjunction with <code>verify</code> with <code>find_lib</code> above.</p>
+
+<p>Not exported by default.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="system_path"
+>system_path</a></h2>
+
+<p>[version 0.20]</p>
+
+<pre class="sh_perl"> my $path = FFI::CheckLib::system_path;</pre>
+
+<p>Returns the system path as a list reference. On some systems, this is <code>PATH</code> on others it might be <code>LD_LIBRARY_PATH</code> on still others it could be something completely different. So although you <i>may</i> add items to this list, you should probably do some careful consideration before you do so.</p>
+
+<p>This function is not exportable, even on request.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="FAQ"
+>FAQ</a></h1>
+
+<dl>
+<dt><a name="Why_not_just_use_dlopen?"
+>Why not just use <code>dlopen</code>?</a></dt>
+
+<dd>
+<p>Calling <code>dlopen</code> on a library name and then <code>dlclose</code> immediately can tell you if you have the exact name of a library available on a system. It does have a number of drawbacks as well.</p>
+
+<dl>
+<dt><a name="No_absolute_or_relative_path"
+>No absolute or relative path</a></dt>
+
+<dd>
+<p>It only tells you that the library is <i>somewhere</i> on the system, not having the absolute or relative path makes it harder to generate useful diagnostics.</p>
+
+<dt><a name="POSIX_only"
+>POSIX only</a></dt>
+
+<dd>
+<p>This doesn&#39;t work on non-POSIX systems like Microsoft Windows. If you are using a POSIX emulation layer on Windows that provides <code>dlopen</code>, like Cygwin, there are a number of gotchas there as well. Having a layer written in Perl handles this means that developers on Unix can develop FFI that will more likely work on these platforms without special casing them.</p>
+
+<dt><a name="inconsistent_implementations"
+>inconsistent implementations</a></dt>
+
+<dd>
+<p>Even on POSIX systems you have inconsistent implementations. OpenBSD for example don&#39;t usually include symlinks for <code>.so</code> files meaning you need to know the exact <code>.so</code> version.</p>
+
+<dt><a name="non-system_directories"
+>non-system directories</a></dt>
+
+<dd>
+<p>By default <code>dlopen</code> only works for libraries in the system paths. Most platforms have a way of configuring the search for different non-system paths, but none of them are portable, and are usually discouraged anyway. <a href="https://metacpan.org/pod/Alien" class="podlinkpod"
+>Alien</a> and friends need to do searches for dynamic libraries in non-system directories for <code>share</code> installs.</p>
+</dd>
+</dl>
+
+<dt><a name="My_64-bit_Perl_is_misconfigured_and_has_32-bit_libraries_in_its_search_path._Is_that_a_bug_in_FFI::CheckLib?"
+>My 64-bit Perl is misconfigured and has 32-bit libraries in its search path. Is that a bug in <a href="/pod/FFI/CheckLib.html" class="podlinkpod"
+>FFI::CheckLib</a>?</a></dt>
+
+<dd>
+<p>Nope.</p>
+
+<dt><a name="The_way_FFI::CheckLib_is_implemented_it_won&#39;t_work_on_AIX,_HP-UX,_OpenVMS_or_Plan_9."
+>The way <a href="/pod/FFI/CheckLib.html" class="podlinkpod"
+>FFI::CheckLib</a> is implemented it won&#39;t work on AIX, HP-UX, OpenVMS or Plan 9.</a></dt>
+
+<dd>
+<p>I know for a fact that it doesn&#39;t work on AIX <i>as currently implemented</i> because I used to develop on AIX in the early 2000s, and I am aware of some of the technical challenges. There are probably other systems that it won&#39;t work on. I would love to add support for these platforms. Realistically these platforms have a tiny market share, and absent patches from users or the companies that own these operating systems (patches welcome), or hardware / CPU time donations, these platforms are unsupportable anyway.</p>
+</dd>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SEE_ALSO"
+>SEE ALSO</a></h1>
+
+<dl>
+<dt><a name="FFI::Platypus"
+><a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a></a></dt>
+
+<dd>
+<p>Call library functions dynamically without a compiler.</p>
+
+<dt><a name="Dist::Zilla::Plugin::FFI::CheckLib"
+><a href="/pod/Dist/Zilla/Plugin/FFI/CheckLib.html" class="podlinkpod"
+>Dist::Zilla::Plugin::FFI::CheckLib</a></a></dt>
+
+<dd>
+<p><a href="https://metacpan.org/pod/Dist%3A%3AZilla" class="podlinkpod"
+>Dist::Zilla</a> plugin for this module.</p>
+</dd>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Author: Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<p>Contributors:</p>
+
+<p>Bakkiaraj Murugesan (bakkiaraj)</p>
+
+<p>Dan Book (grinnz, DBOOK)</p>
+
+<p>Ilya Pavlov (Ilya, ILUX)</p>
+
+<p>Shawn Laffan (SLAFFAN)</p>
+
+<p>Petr Pisar (ppisar)</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2014-2018 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

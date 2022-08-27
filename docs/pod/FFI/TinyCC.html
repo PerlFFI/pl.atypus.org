@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::TinyCC</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::TinyCC</div>
+    <!--FFI::TinyCC--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#CONSTRUCTOR'>CONSTRUCTOR</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#new'>new</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#METHODS'>METHODS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#Compile'>Compile</a>
+    <ul   class='indexList indexList3'>
+      <li class='indexItem indexItem3'><a href='#set_options'>set_options</a>
+      <li class='indexItem indexItem3'><a href='#add_file'>add_file</a>
+      <li class='indexItem indexItem3'><a href='#compile_string'>compile_string</a>
+      <li class='indexItem indexItem3'><a href='#add_symbol'>add_symbol</a>
+    </ul>
+    <li class='indexItem indexItem2'><a href='#Preprocessor_options'>Preprocessor options</a>
+    <ul   class='indexList indexList3'>
+      <li class='indexItem indexItem3'><a href='#detect_sysinclude_path'>detect_sysinclude_path</a>
+      <li class='indexItem indexItem3'><a href='#add_include_path'>add_include_path</a>
+      <li class='indexItem indexItem3'><a href='#add_sysinclude_path'>add_sysinclude_path</a>
+      <li class='indexItem indexItem3'><a href='#set_lib_path'>set_lib_path</a>
+      <li class='indexItem indexItem3'><a href='#define_symbol'>define_symbol</a>
+      <li class='indexItem indexItem3'><a href='#undefine_symbol'>undefine_symbol</a>
+    </ul>
+    <li class='indexItem indexItem2'><a href='#Link_%2F_run'>Link / run</a>
+    <ul   class='indexList indexList3'>
+      <li class='indexItem indexItem3'><a href='#set_output_type'>set_output_type</a>
+      <li class='indexItem indexItem3'><a href='#add_library'>add_library</a>
+      <li class='indexItem indexItem3'><a href='#add_library_path'>add_library_path</a>
+      <li class='indexItem indexItem3'><a href='#run'>run</a>
+      <li class='indexItem indexItem3'><a href='#get_symbol'>get_symbol</a>
+      <li class='indexItem indexItem3'><a href='#output_file'>output_file</a>
+    </ul>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#EXAMPLES'>EXAMPLES</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#Calling_Tiny_C_code_from_Perl'>Calling Tiny C code from Perl</a>
+    <li class='indexItem indexItem2'><a href='#Calling_Perl_from_Tiny_C_code'>Calling Perl from Tiny C code</a>
+    <li class='indexItem indexItem2'><a href='#Attaching_as_a_FFI%3A%3APlatypus_function_from_a_Tiny_C_function'>Attaching as a FFI::Platypus function from a Tiny C function</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#CAVEATS'>CAVEATS</a>
+  <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
+  <li class='indexItem indexItem1'><a href='#BUNDLED_SOFTWARE'>BUNDLED SOFTWARE</a>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::TinyCC - Tiny C Compiler for FFI</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 0.30</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<pre class="sh_perl"> use FFI::TinyCC;
+ use FFI::Platypus;
+ 
+ my $tcc = FFI::TinyCC-&#62;new;
+ 
+ $tcc-&#62;compile_string(q{
+   int
+   find_square(int value)
+   {
+     return value*value;
+   }
+ });
+ 
+ my $address = $tcc-&#62;get_symbol(&#39;find_square&#39;);
+ my $ffi = FFI::Platypus-&#62;new;
+ $ffi-&#62;attach([$address =&#62; &#39;find_square&#39;] =&#62; [&#39;int&#39;] =&#62; &#39;int&#39;);
+ 
+ print find_square(4), &#34;\n&#34;; # prints 16</pre>
+
+<p>For code that requires system headers:</p>
+
+<pre class="sh_perl"> use FFI::TinyCC;
+ use FFI::Platypus;
+ 
+ my $tcc = FFI::TinyCC-&#62;new;
+ 
+ # this will throw an exception if the system
+ # include paths cannot be detected.
+ $tcc-&#62;detect_sysinclude_path;
+ 
+ $tcc-&#62;compile_string(q{
+   #include &#60;stdio.h&#62;
+   
+   void print_hello()
+   {
+     puts(&#34;hello world&#34;);
+   }
+ });
+ 
+ my $address = $tcc-&#62;get_symbol(&#39;print_hello&#39;);
+ my $ffi = FFI::Platypus-&#62;new;
+ $ffi-&#62;attach([$address =&#62; &#39;print_hello&#39;] =&#62; [] =&#62; &#39;void&#39;);
+ print_hello();</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>This module provides an interface to a very small C compiler known as TinyCC. It does almost no optimizations, so <code>gcc</code> or <code>clang</code> will probably generate faster code, but it is very small and is very fast and thus may be useful for some Just In Time (JIT) or Foreign Function Interface (FFI) situations.</p>
+
+<p>For a simpler, but less powerful interface see <a href="/pod/FFI/TinyCC/Inline.html" class="podlinkpod"
+>FFI::TinyCC::Inline</a>.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CONSTRUCTOR"
+>CONSTRUCTOR</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="new"
+>new</a></h2>
+
+<pre class="sh_perl"> my $tcc = FFI::TinyCC-&#62;new;</pre>
+
+<p>Create a new TinyCC instance.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="METHODS"
+>METHODS</a></h1>
+
+<p>Methods will generally throw an exception on failure.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Compile"
+>Compile</a></h2>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="set_options"
+>set_options</a></h3>
+
+<pre class="sh_perl"> $tcc-&#62;set_options($options);</pre>
+
+<p>Set compiler and linker options, as you would on the command line, for example:</p>
+
+<pre class="sh_perl"> $tcc-&#62;set_options(&#39;-I/foo/include -L/foo/lib -DFOO=22&#39;);</pre>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="add_file"
+>add_file</a></h3>
+
+<pre class="sh_perl"> $tcc-&#62;add_file(&#39;foo.c&#39;);
+ $tcc-&#62;add_file(&#39;foo.o&#39;);
+ $tcc-&#62;add_file(&#39;foo.so&#39;); # or dll on windows</pre>
+
+<p>Add a file, DLL, shared object or object file.</p>
+
+<p>On windows adding a DLL is not supported via this interface.</p>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="compile_string"
+>compile_string</a></h3>
+
+<pre class="sh_perl"> $tcc-&#62;compile_string($c_code);</pre>
+
+<p>Compile a string containing C source code.</p>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="add_symbol"
+>add_symbol</a></h3>
+
+<pre class="sh_perl"> $tcc-&#62;add_symbol($name, $callback);
+ $tcc-&#62;add_symbol($name, $pointer);</pre>
+
+<p>Add the given given symbol name / callback or pointer combination. See example below for how to use this to call Perl from Tiny C code.</p>
+
+<p>If you are using <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> you can use <a href="https://metacpan.org/pod/FFI%3A%3APlatypus%23cast" class="podlinkpod"
+>FFI::Platypus#cast</a> to get a pointer to a closure:</p>
+
+<pre class="sh_perl"> use FFI::Platypus;
+ my $ffi = FFI::Platypus;
+ my $closure = $ffi-&#62;closure(sub { return $_[0]+1 });
+ my $pointer = $ffi-&#62;cast(&#39;(int)-&#62;int&#39; =&#62; &#39;opaque&#39;, $closure);
+ 
+ $tcc-&#62;add_symbol(&#39;foo&#39; =&#62; $pointer);</pre>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Preprocessor_options"
+>Preprocessor options</a></h2>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="detect_sysinclude_path"
+>detect_sysinclude_path</a></h3>
+
+<p>[version 0.18]</p>
+
+<pre class="sh_perl"> $tcc-&#62;detect_sysinclude_path;</pre>
+
+<p>Attempt to find and configure the appropriate system include directories. If the platform that you are on does not (yet?) support this functionality then this method will throw an exception.</p>
+
+<p>[version 0.19]</p>
+
+<p>Returns the list of directories added to the system include directories.</p>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="add_include_path"
+>add_include_path</a></h3>
+
+<pre class="sh_perl"> $tcc-&#62;add_include_path($path);</pre>
+
+<p>Add the given path to the list of paths used to search for include files.</p>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="add_sysinclude_path"
+>add_sysinclude_path</a></h3>
+
+<pre class="sh_perl"> $tcc-&#62;add_sysinclude_path($path);</pre>
+
+<p>Add the given path to the list of paths used to search for system include files.</p>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="set_lib_path"
+>set_lib_path</a></h3>
+
+<pre class="sh_perl"> $tcc-&#62;set_lib_path($path);</pre>
+
+<p>Set the lib path</p>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="define_symbol"
+>define_symbol</a></h3>
+
+<pre class="sh_perl"> $tcc-&#62;define_symbol($name =&#62; $value);
+ $tcc-&#62;define_symbol($name);</pre>
+
+<p>Define the given symbol, optionally with the specified value.</p>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="undefine_symbol"
+>undefine_symbol</a></h3>
+
+<pre class="sh_perl"> $tcc-&#62;undefine_symbol($name);</pre>
+
+<p>Undefine the given symbol.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Link_/_run"
+>Link / run</a></h2>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="set_output_type"
+>set_output_type</a></h3>
+
+<pre class="sh_perl"> $tcc-&#62;set_output_type(&#39;memory&#39;);
+ $tcc-&#62;set_output_type(&#39;exe&#39;);
+ $tcc-&#62;set_output_type(&#39;dll&#39;);
+ $tcc-&#62;set_output_type(&#39;obj&#39;);</pre>
+
+<p>Set the output type. This must be called before any compilation.</p>
+
+<p>Output formats may not be supported on your platform. <code>exe</code> is NOT supported on *BSD or OS X. It may NOT be supported on Linux.</p>
+
+<p>As a basic baseline at least <code>memory</code> should be supported.</p>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="add_library"
+>add_library</a></h3>
+
+<pre class="sh_perl"> $tcc-&#62;add_library($libname);</pre>
+
+<p>Add the given library when linking. Example:</p>
+
+<pre class="sh_perl"> $tcc-&#62;add_library(&#39;m&#39;); # equivalent to -lm (math library)</pre>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="add_library_path"
+>add_library_path</a></h3>
+
+<pre class="sh_perl"> $tcc-&#62;add_library_path($pathname);</pre>
+
+<p>Add the given directory to the search path used to find libraries.</p>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="run"
+>run</a></h3>
+
+<pre class="sh_perl"> my $exit_value = $tcc-&#62;run(@arguments);</pre>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="get_symbol"
+>get_symbol</a></h3>
+
+<pre class="sh_perl"> my $pointer = $tcc-&#62;get_symbol($symbol_name);</pre>
+
+<p>Return symbol address or undef if not found. This can be passed into the <a href="https://metacpan.org/pod/FFI%3A%3APlatypus%23function" class="podlinkpod"
+>FFI::Platypus#function</a> method, <a href="https://metacpan.org/pod/FFI%3A%3APlatypus%23attach" class="podlinkpod"
+>FFI::Platypus#attach</a> method, or similar interface that takes a pointer to a C function.</p>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="output_file"
+>output_file</a></h3>
+
+<pre class="sh_perl"> $tcc-&#62;output_file($filename);</pre>
+
+<p>Output the generated code (either executable, object or DLL) to the given filename. The type of output is specified by the <a href="#set_output_type" class="podlinkpod"
+>set_output_type</a> method.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="EXAMPLES"
+>EXAMPLES</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Calling_Tiny_C_code_from_Perl"
+>Calling Tiny C code from Perl</a></h2>
+
+<pre class="sh_perl"> use FFI::TinyCC;
+ 
+ my $tcc = FFI::TinyCC-&#62;new;
+ 
+ $tcc-&#62;compile_string(&#60;&#60;EOF);
+ int
+ main(int argc, char *argv[])
+ {
+   puts(&#34;hello world&#34;);
+ }
+ EOF
+ 
+ my $r = $tcc-&#62;run;
+ 
+ exit $r;</pre>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Calling_Perl_from_Tiny_C_code"
+>Calling Perl from Tiny C code</a></h2>
+
+<pre class="sh_perl"> use FFI::TinyCC;
+ use FFI::Platypus;
+ 
+ my $ffi = FFI::Platypus-&#62;new;
+ my $say = $ffi-&#62;closure(sub { print $_[0], &#34;\n&#34; });
+ my $ptr = $ffi-&#62;cast(&#39;(string)-&#62;void&#39; =&#62; &#39;opaque&#39; =&#62; $say);
+ 
+ my $tcc = FFI::TinyCC-&#62;new;
+ $tcc-&#62;add_symbol(say =&#62; $ptr);
+ 
+ $tcc-&#62;compile_string(&#60;&#60;EOF);
+ extern void say(const char *);
+ 
+ int
+ main(int argc, char *argv[])
+ {
+   int i;
+   for(i=0; i&#60;argc; i++)
+   {
+     say(argv[i]);
+   }
+ }
+ EOF
+ 
+ my $r = $tcc-&#62;run($0, @ARGV);
+ 
+ exit $r;</pre>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Attaching_as_a_FFI::Platypus_function_from_a_Tiny_C_function"
+>Attaching as a FFI::Platypus function from a Tiny C function</a></h2>
+
+<pre class="sh_perl"> use FFI::TinyCC;
+ use FFI::Platypus;
+ 
+ my $tcc = FFI::TinyCC-&#62;new;
+ 
+ $tcc-&#62;compile_string(q{
+   int
+   calculate_square(int value)
+   {
+     return value*value;
+   }
+ });
+ 
+ my $value = shift @ARGV;
+ $value = 4 unless defined $value;
+ 
+ my $address = $tcc-&#62;get_symbol(&#39;calculate_square&#39;);
+ 
+ my $ffi = FFI::Platypus-&#62;new;
+ $ffi-&#62;attach([$address =&#62; &#39;square&#39;] =&#62; [&#39;int&#39;] =&#62; &#39;int&#39;);
+ 
+ print square($value), &#34;\n&#34;;</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CAVEATS"
+>CAVEATS</a></h1>
+
+<p>Tiny C is only supported on platforms with ARM or Intel processors. All features may not be fully supported on all operating systems.</p>
+
+<p>Tiny C is no longer supported by its original author, though various forks seem to have varying levels of support. We use the fork that comes with <a href="https://metacpan.org/pod/Alien%3A%3ATinyCC" class="podlinkpod"
+>Alien::TinyCC</a>.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SEE_ALSO"
+>SEE ALSO</a></h1>
+
+<dl>
+<dt><a name="FFI::TinyCC::Inline"
+><a href="/pod/FFI/TinyCC/Inline.html" class="podlinkpod"
+>FFI::TinyCC::Inline</a></a></dt>
+
+<dd>
+<dt><a name="Tiny_C"
+><a href="http://bellard.org/tcc/" class="podlinkurl"
+>Tiny C</a></a></dt>
+
+<dd>
+<dt><a name="Tiny_C_Compiler_Reference_Documentation"
+><a href="http://bellard.org/tcc/tcc-doc.html" class="podlinkurl"
+>Tiny C Compiler Reference Documentation</a></a></dt>
+
+<dd>
+<dt><a name="FFI::Platypus"
+><a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a></a></dt>
+
+<dd>
+<dt><a name="C::Blocks"
+><a href="https://metacpan.org/pod/C%3A%3ABlocks" class="podlinkpod"
+>C::Blocks</a></a></dt>
+
+<dd>
+<dt><a name="Alien::TinyCC"
+><a href="https://metacpan.org/pod/Alien%3A%3ATinyCC" class="podlinkpod"
+>Alien::TinyCC</a></a></dt>
+
+<dd>
+<dt><a name="C::TinyCompiler"
+><a href="https://metacpan.org/pod/C%3A%3ATinyCompiler" class="podlinkpod"
+>C::TinyCompiler</a></a></dt>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="BUNDLED_SOFTWARE"
+>BUNDLED SOFTWARE</a></h1>
+
+<p>This package also comes with a parser that was shamelessly stolen from <a href="https://metacpan.org/pod/XS%3A%3ATCC" class="podlinkpod"
+>XS::TCC</a>, which I strongly suspect was itself shamelessly &#34;borrowed&#34; from <a href="https://metacpan.org/pod/Inline%3A%3AC%3A%3AParser%3A%3ARegExp" class="podlinkpod"
+>Inline::C::Parser::RegExp</a></p>
+
+<p>The license details for the parser are:</p>
+
+<pre class="sh_perl"> Copyright 2002 Brian Ingerson
+ Copyright 2008, 2010-2012 Sisyphus
+ Copyright 2013 Steffen Muellero</pre>
+
+<p>This program is free software; you can redistribute it and/or modify it under the same terms as Perl itself.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Author: Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<p>Contributors:</p>
+
+<p>aero</p>
+
+<p>Dylan Cali (calid)</p>
+
+<p>pipcet</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2015 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

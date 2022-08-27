@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::Platypus::Legacy::Raw::Ptr</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/Platypus.html">Platypus</a>::<a href="/pod/FFI/Platypus/Legacy.html">Legacy</a>::<a href="/pod/FFI/Platypus/Legacy/Raw.html">Raw</a>::Ptr</div>
+    <!--FFI::Platypus::Legacy::Raw::Ptr--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#CONSTRUCTOR'>CONSTRUCTOR</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#new'>new</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::Platypus::Legacy::Raw::Ptr - Base FFI::Platypus::Legacy::Raw pointer type</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 0.06</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<pre class="sh_perl"> package Foo;
+ 
+ use FFI::Platypus::Legacy::Raw;
+ 
+ use base qw(FFI::Platypus::Legacy::Raw::Ptr);
+ 
+ *_foo_new = FFI::Platypus::Legacy::Raw-&#62;new(
+   $shared, &#39;foo_new&#39;,
+   FFI::Platypus::Legacy::Raw::ptr
+ )-&#62;coderef;
+ 
+ sub new {
+   bless shift-&#62;SUPER::new(_foo_new());
+ }
+
+ *get_bar = FFI::Platypus::Legacy::Raw-&#62;new(
+   $shared, &#39;foo_get_bar&#39;,
+   FFI::Platypus::Legacy::Raw::int,
+   FFI::Platypus::Legacy::Raw::ptr
+ )-&#62;coderef;
+ 
+ *set_bar = FFI::Platypus::Legacy::Raw-&#62;new(
+   $shared, &#39;foo_set_bar&#39;,
+   FFI::Platypus::Legacy::Raw::void,
+   FFI::Platypus::Legacy::Raw::ptr,
+   FFI::Platypus::Legacy::Raw::int
+ )-&#62;coderef;
+ 
+ *DESTROY = FFI::Platypus::Legacy::Raw-&#62;new(
+   $shared, &#39;foo_free&#39;,
+   FFI::Platypus::Legacy::Raw::void,
+   FFI::Platypus::Legacy::Raw::ptr
+ )-&#62;coderef;
+ 
+ 1;
+ 
+ package main;
+ 
+ my $foo = Foo-&#62;new;
+ 
+ $foo-&#62;set_bar(42);</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p><b>FFI::Platypus::Legacy::Raw</b> and friends are a fork of <a href="/pod/FFI/Raw.html" class="podlinkpod"
+>FFI::Raw</a> that uses <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> instead of <a href="/pod/FFI/Raw.html" class="podlinkpod"
+>FFI::Raw</a>&#39;s own libffi implementation. It is intended for use when migrating from <a href="/pod/FFI/Raw.html" class="podlinkpod"
+>FFI::Raw</a> to <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a>. The main reason one might have for switching from Raw to Platypus is because Platypus is actively maintained, provides a more powerful interface, can be much faster when functions are &#34;attached&#34;, and works on more platforms than Raw. This module should be a drop in replacement for <a href="/pod/FFI/Raw.html" class="podlinkpod"
+>FFI::Raw</a>, simply replace all instances of <code>FFI::Raw</code> to <code>FFI::Platypus::Legacy::Raw</code>. See also <a href="/pod/Alt/FFI/Raw/Platypus.html" class="podlinkpod"
+>Alt::FFI::Raw::Platypus</a> for a way to use this module without making any source code changes.</p>
+
+<p>A <b>FFI::Platypus::Legacy::Raw::Ptr</b> represents a pointer to memory which can be passed to functions taking a <code>FFI::Platypus::Legacy::Raw::ptr</code> argument.</p>
+
+<p>Note that differently from <a href="/pod/FFI/Platypus/Legacy/Raw/MemPtr.html" class="podlinkpod"
+>FFI::Platypus::Legacy::Raw::MemPtr</a>, <code>FFI::Platypus::Legacy::Raw::Ptr</code> pointers are not automatically deallocated once not in use anymore.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CONSTRUCTOR"
+>CONSTRUCTOR</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="new"
+>new</a></h2>
+
+<pre class="sh_perl"> my $ptr = FFI::Platypus::Legacy::Raw::Ptr-&#62;new( $ptr );</pre>
+
+<p>Create a new <code>FFI::Platypus::Legacy::Raw::Ptr</code> pointing to <code>$ptr</code>, which can be either a <code>FFI::Platypus::Legacy::Raw::MemPtr</code> or a pointer returned by a C function.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Original author: Alessandro Ghedini (ghedo, ALEXBIO)</p>
+
+<p>Current maintainer: Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<p>Contributors:</p>
+
+<p>Bakkiaraj Murugesan (bakkiaraj)</p>
+
+<p>Dylan Cali (CALID)</p>
+
+<p>Brian Wightman (MidLifeXis, MLX)</p>
+
+<p>David Steinbrunner (dsteinbrunner)</p>
+
+<p>Olivier Mengu&#233; (DOLMEN)</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2012 by Alessandro Ghedini.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

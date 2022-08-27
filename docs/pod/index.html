@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Perl FFI Documentation</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> Perl FFI Documentation</div>
+    
+
+<ul class="dists">
+
+  <li class="dist">Alien-FFI
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/Alien/FFI.html>Alien::FFI</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">Alien-castxml
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/Alien/castxml.html>Alien::castxml</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">Alt-FFI-Raw-Platypus
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/Alt/FFI/Raw/Platypus.html>Alt::FFI::Raw::Platypus</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Raw.html>FFI::Raw</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Raw/Callback.html>FFI::Raw::Callback</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Raw/MemPtr.html>FFI::Raw::MemPtr</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Raw/Ptr.html>FFI::Raw::Ptr</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">App-whichdll
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/App/whichdll.html>App::whichdll</a></li>
+      
+        <li class="pod"><a href=/pod/whichdll.html>whichdll</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">Clang-CastXML
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/Clang/CastXML.html>Clang::CastXML</a></li>
+      
+        <li class="pod"><a href=/pod/Clang/CastXML/Container.html>Clang::CastXML::Container</a></li>
+      
+        <li class="pod"><a href=/pod/Clang/CastXML/Exception.html>Clang::CastXML::Exception</a></li>
+      
+        <li class="pod"><a href=/pod/Clang/CastXML/Exception/ParseException.html>Clang::CastXML::Exception::ParseException</a></li>
+      
+        <li class="pod"><a href=/pod/Clang/CastXML/Exception/ProcessException.html>Clang::CastXML::Exception::ProcessException</a></li>
+      
+        <li class="pod"><a href=/pod/Clang/CastXML/Exception/ProcessException/BadCastXMLVersionException.html>Clang::CastXML::Exception::ProcessException::BadCastXMLVersionException</a></li>
+      
+        <li class="pod"><a href=/pod/Clang/CastXML/Exception/ProcessException/IntrospectException.html>Clang::CastXML::Exception::ProcessException::IntrospectException</a></li>
+      
+        <li class="pod"><a href=/pod/Clang/CastXML/Exception/UsageException.html>Clang::CastXML::Exception::UsageException</a></li>
+      
+        <li class="pod"><a href=/pod/Clang/CastXML/Find.html>Clang::CastXML::Find</a></li>
+      
+        <li class="pod"><a href=/pod/Clang/CastXML/Wrapper.html>Clang::CastXML::Wrapper</a></li>
+      
+        <li class="pod"><a href=/pod/Clang/CastXML/Wrapper/Result.html>Clang::CastXML::Wrapper::Result</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">Const-Introspect-C
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/Const/Introspect/C.html>Const::Introspect::C</a></li>
+      
+        <li class="pod"><a href=/pod/Const/Introspect/C/Constant.html>Const::Introspect::C::Constant</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">Dist-Zilla-MintingProfile-FFI
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/Dist/Zilla/MintingProfile/FFI.html>Dist::Zilla::MintingProfile::FFI</a></li>
+      
+        <li class="pod"><a href=/pod/Dist/Zilla/Plugin/FFI/Mint.html>Dist::Zilla::Plugin::FFI::Mint</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">Dist-Zilla-Plugin-FFI
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/Dist/Zilla/Plugin/FFI.html>Dist::Zilla::Plugin::FFI</a></li>
+      
+        <li class="pod"><a href=/pod/Dist/Zilla/Plugin/FFI/Build.html>Dist::Zilla::Plugin::FFI::Build</a></li>
+      
+        <li class="pod"><a href=/pod/Dist/Zilla/Plugin/FFI/CheckLib.html>Dist::Zilla::Plugin::FFI::CheckLib</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">FFI
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/FFI.html>FFI</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Library.html>FFI::Library</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">FFI-C
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/FFI/C.html>FFI::C</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/C/Array.html>FFI::C::Array</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/C/ArrayDef.html>FFI::C::ArrayDef</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/C/Def.html>FFI::C::Def</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/C/FFI.html>FFI::C::FFI</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/C/File.html>FFI::C::File</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/C/PosixFile.html>FFI::C::PosixFile</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/C/Struct.html>FFI::C::Struct</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/C/StructDef.html>FFI::C::StructDef</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/C/Union.html>FFI::C::Union</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/C/UnionDef.html>FFI::C::UnionDef</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/C/Util.html>FFI::C::Util</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">FFI-C-Stat
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/FFI/C/Stat.html>FFI::C::Stat</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">FFI-CheckLib
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/FFI/CheckLib.html>FFI::CheckLib</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">FFI-ExtractSymbols
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/FFI/ExtractSymbols.html>FFI::ExtractSymbols</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/ExtractSymbols/OpenBSD.html>FFI::ExtractSymbols::OpenBSD</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/ExtractSymbols/PosixNm.html>FFI::ExtractSymbols::PosixNm</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/ExtractSymbols/Windows.html>FFI::ExtractSymbols::Windows</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">FFI-Platypus
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/FFI/Build.html>FFI::Build</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Build/File/Base.html>FFI::Build::File::Base</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Build/File/C.html>FFI::Build::File::C</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Build/File/CXX.html>FFI::Build::File::CXX</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Build/File/Library.html>FFI::Build::File::Library</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Build/File/Object.html>FFI::Build::File::Object</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Build/MM.html>FFI::Build::MM</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Build/Platform.html>FFI::Build::Platform</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Build/Plugin.html>FFI::Build::Plugin</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Build/PluginData.html>FFI::Build::PluginData</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus.html>FFI::Platypus</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/API.html>FFI::Platypus::API</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Buffer.html>FFI::Platypus::Buffer</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Bundle.html>FFI::Platypus::Bundle</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Closure.html>FFI::Platypus::Closure</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Constant.html>FFI::Platypus::Constant</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/DL.html>FFI::Platypus::DL</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Function.html>FFI::Platypus::Function</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Internal.html>FFI::Platypus::Internal</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Lang.html>FFI::Platypus::Lang</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Lang/ASM.html>FFI::Platypus::Lang::ASM</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Lang/C.html>FFI::Platypus::Lang::C</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Lang/Win32.html>FFI::Platypus::Lang::Win32</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Legacy.html>FFI::Platypus::Legacy</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Memory.html>FFI::Platypus::Memory</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Record.html>FFI::Platypus::Record</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Record/Meta.html>FFI::Platypus::Record::Meta</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Record/TieArray.html>FFI::Platypus::Record::TieArray</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/ShareConfig.html>FFI::Platypus::ShareConfig</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Type.html>FFI::Platypus::Type</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Type/PointerSizeBuffer.html>FFI::Platypus::Type::PointerSizeBuffer</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Type/StringArray.html>FFI::Platypus::Type::StringArray</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Type/StringPointer.html>FFI::Platypus::Type::StringPointer</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Type/WideString.html>FFI::Platypus::Type::WideString</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/TypeParser.html>FFI::Platypus::TypeParser</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/TypeParser/Version0.html>FFI::Platypus::TypeParser::Version0</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/TypeParser/Version1.html>FFI::Platypus::TypeParser::Version1</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/TypeParser/Version2.html>FFI::Platypus::TypeParser::Version2</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Probe.html>FFI::Probe</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Probe/Runner.html>FFI::Probe::Runner</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Probe/Runner/Builder.html>FFI::Probe::Runner::Builder</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Probe/Runner/Result.html>FFI::Probe::Runner::Result</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Temp.html>FFI::Temp</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">FFI-Platypus-Declare
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Declare.html>FFI::Platypus::Declare</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">FFI-Platypus-Lang-CPP
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Lang/CPP.html>FFI::Platypus::Lang::CPP</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">FFI-Platypus-Lang-CPP-Demangle-XS
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Lang/CPP/Demangle/XS.html>FFI::Platypus::Lang::CPP::Demangle::XS</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">FFI-Platypus-Lang-Fortran
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/FFI/Build/File/Fortran.html>FFI::Build::File::Fortran</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Lang/Fortran.html>FFI::Platypus::Lang::Fortran</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">FFI-Platypus-Lang-Go
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/FFI/Build/File/GoMod.html>FFI::Build::File::GoMod</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Go/String.html>FFI::Go::String</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Lang/Go.html>FFI::Platypus::Lang::Go</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Type/GoString.html>FFI::Platypus::Type::GoString</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">FFI-Platypus-Lang-Pascal
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/FFI/Build/File/Pascal.html>FFI::Build::File::Pascal</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Lang/Pascal.html>FFI::Platypus::Lang::Pascal</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">FFI-Platypus-Lang-Rust
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/FFI/Build/File/Cargo.html>FFI::Build::File::Cargo</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Lang/Rust.html>FFI::Platypus::Lang::Rust</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">FFI-Platypus-Legacy-Raw
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Lang/Raw.html>FFI::Platypus::Lang::Raw</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Legacy/Raw.html>FFI::Platypus::Legacy::Raw</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Legacy/Raw/Callback.html>FFI::Platypus::Legacy::Raw::Callback</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Legacy/Raw/MemPtr.html>FFI::Platypus::Legacy::Raw::MemPtr</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Legacy/Raw/Platypus.html>FFI::Platypus::Legacy::Raw::Platypus</a></li>
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Legacy/Raw/Ptr.html>FFI::Platypus::Legacy::Raw::Ptr</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">FFI-Platypus-Record-StringArray
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Record/StringArray.html>FFI::Platypus::Record::StringArray</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">FFI-Platypus-Type-Enum
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Type/Enum.html>FFI::Platypus::Type::Enum</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">FFI-Platypus-Type-PtrObject
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/FFI/Platypus/Type/PtrObject.html>FFI::Platypus::Type::PtrObject</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">FFI-TinyCC
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/FFI/TinyCC.html>FFI::TinyCC</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">FFI-TinyCC-Inline
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/FFI/TinyCC/Inline.html>FFI::TinyCC::Inline</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">PeekPoke-FFI
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/PeekPoke/FFI.html>PeekPoke::FFI</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">Task-FFIDev
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/Task/FFIDev.html>Task::FFIDev</a></li>
+      
+    </ul>
+  </li>
+
+  <li class="dist">Test2-Tools-FFI
+    <ul class="pods">
+      
+        <li class="pod"><a href=/pod/Alien/libt2t.html>Alien::libt2t</a></li>
+      
+        <li class="pod"><a href=/pod/Test2/Plugin/FFI/Package.html>Test2::Plugin::FFI::Package</a></li>
+      
+        <li class="pod"><a href=/pod/Test2/Tools/FFI.html>Test2::Tools::FFI</a></li>
+      
+    </ul>
+  </li>
+
+</ul>
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

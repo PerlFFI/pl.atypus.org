@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::Platypus::Lang::Pascal</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/Platypus.html">Platypus</a>::<a href="/pod/FFI/Platypus/Lang.html">Lang</a>::Pascal</div>
+    <!--FFI::Platypus::Lang::Pascal--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#CAVEATS'>CAVEATS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#name_mangling'>name mangling</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#METHODS'>METHODS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#native_type_map'>native_type_map</a>
+    <li class='indexItem indexItem2'><a href='#mangler'>mangler</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#EXAMPLES'>EXAMPLES</a>
+  <li class='indexItem indexItem1'><a href='#SUPPORT'>SUPPORT</a>
+  <li class='indexItem indexItem1'><a href='#CONTRIBUTING'>CONTRIBUTING</a>
+  <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::Platypus::Lang::Pascal - Documentation and tools for using Platypus with the Free Pascal programming language</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<p>Free Pascal:</p>
+
+<pre class="sh_perl"> { compile and link with: fpc mylib.pas }
+ 
+ Library MyLib;
+ 
+ Function Add(A: Integer; B: Integer): Integer; Cdecl;
+ Begin
+   Add := A + B;
+ End;
+ 
+ Exports
+   Add;
+ 
+ End.</pre>
+
+<p>Perl:</p>
+
+<pre class="sh_perl"> use FFI::Platypus;
+ 
+ my $ffi = FFI::Platypus-&#62;new;
+ $ffi-&#62;lang(&#39;Pascal&#39;);
+ $ffi-&#62;lib(&#39;./libmylib.so&#39;);
+ 
+ $ffi-&#62;attach(
+   Add =&#62; [&#39;Integer&#39;,&#39;Integer&#39;] =&#62; &#39;Integer&#39;
+ );
+ 
+ print Add(1,2), &#34;\n&#34;;</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>This modules provides native types and demangling for the Free Pascal Programming language when used with <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a>.</p>
+
+<p>This module provides these types (case sensitive):</p>
+
+<dl>
+<dt><a name="Byte"
+>Byte</a></dt>
+
+<dd>
+<dt><a name="ShortInt"
+>ShortInt</a></dt>
+
+<dd>
+<dt><a name="SmallInt"
+>SmallInt</a></dt>
+
+<dd>
+<dt><a name="Word"
+>Word</a></dt>
+
+<dd>
+<dt><a name="Integer"
+>Integer</a></dt>
+
+<dd>
+<p>This is an alias for SmallInt (which is appropriate for Free Pascal&#39;s default mode)</p>
+
+<dt><a name="Cardinal"
+>Cardinal</a></dt>
+
+<dd>
+<dt><a name="LongInt"
+>LongInt</a></dt>
+
+<dd>
+<dt><a name="LongWord"
+>LongWord</a></dt>
+
+<dd>
+<dt><a name="Int64"
+>Int64</a></dt>
+
+<dd>
+<dt><a name="QWord"
+>QWord</a></dt>
+
+<dd>
+<dt><a name="Boolean"
+>Boolean</a></dt>
+
+<dd>
+<dt><a name="ByteBool"
+>ByteBool</a></dt>
+
+<dd>
+<dt><a name="WordBool"
+>WordBool</a></dt>
+
+<dd>
+<dt><a name="LongBool"
+>LongBool</a></dt>
+
+<dd>
+<dt><a name="Single"
+>Single</a></dt>
+
+<dd>
+<dt><a name="Double"
+>Double</a></dt>
+</dl>
+
+<p>The following types are not (yet) supported:</p>
+
+<dl>
+<dt><a name="Extended"
+>Extended</a></dt>
+
+<dd>
+<dt><a name="Comp"
+>Comp</a></dt>
+
+<dd>
+<dt><a name="Currency"
+>Currency</a></dt>
+
+<dd>
+<dt><a name="ShortString"
+>ShortString</a></dt>
+</dl>
+
+<p>This module also has some support for demangled functions and overloading, if you are using a dynamic library constructed from units via <code>ppumove</code>.</p>
+
+<p>You may also use <a href="https://metacpan.org/pod/Module%3A%3ABuild%3A%3AFFI%3A%3APascal" class="podlinkpod"
+>Module::Build::FFI::Pascal</a> to bundle Free Pascal code with your distribution.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CAVEATS"
+>CAVEATS</a></h1>
+
+<p>I&#39;ve been experimenting with Free Pascal 2.6.0 while working on this module.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="name_mangling"
+>name mangling</a></h2>
+
+<p>If you compile one or more Pascal Units and link them using <code>ppumove</code>, they symbols in the resulting dynamic library will include mangled Pascal names. This module has at least some support for such names.</p>
+
+<p>For example, suppose you had this Pascal Unit:</p>
+
+<pre class="sh_perl"> Unit Add;
+ 
+ Interface
+ 
+ Function Add( A: SmallInt; B: SmallInt) : SmallInt; Cdecl;
+ Function Add( A: Real;    B: Real)      : Real; Cdecl;
+ 
+ Implementation
+ 
+ Function Add( A: SmallInt; B: SmallInt) : SmallInt; Cdecl;
+ Begin
+   Add := A + B;
+ End;
+ 
+ Function Add( A: real; B: real) : real; Cdecl;
+ Begin
+   Add := A + B;
+ End;
+ 
+ End.</pre>
+
+<p>On Linux, you could compile and link this into a shared object with these commands:</p>
+
+<pre class="sh_perl"> fpc add.pas
+ gcc -o add.so -shared add.o</pre>
+
+<p>And you could then use it from Perl:</p>
+
+<pre class="sh_perl"> use FFI::Platypus;
+ 
+ my $ffi = FFI::Platypus-&#62;new;
+ $ffi-&#62;lang(&#39;Pascal&#39;);
+ $ffi-&#62;lib(&#39;./add.so&#39;);
+ 
+ $ffi-&#62;attach(
+   [&#39;Add.Add(SmallInt,SmallInt):SmallInt&#39; =&#62; &#39;Add&#39;] =&#62; [&#39;SmallInt&#39;,&#39;SmallInt&#39;] =&#62; &#39;SmallInt&#39;
+ );
+ 
+ print Add(1,2), &#34;\n&#34;;</pre>
+
+<p>When attaching the function you have to specify the argument and return types because the <code>Add</code> function is overloaded and is ambiguous without it. If there were just one Add function, then you could attach it like this:</p>
+
+<pre class="sh_perl"> $ffi-&#62;attach(&#39;Add&#39; =&#62; [&#39;SmallInt&#39;,&#39;SmallInt&#39;] =&#62; &#39;SmallInt&#39;);</pre>
+
+<p>The downside to using a shared library constructed from Pascal Units in this way is that the resulting dynamic library does not include the Pascal standard library so very simple capabilities such as IO and ShortString are not available. It is recommended instead to use a Pascal Library (possibly linked with one or more Pascal Units), as inthe <a href="#SYNOPSIS" class="podlinkpod"
+>&#34;SYNOPSIS&#34;</a> at the top.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="METHODS"
+>METHODS</a></h1>
+
+<p>Generally you will not use this class directly, instead interacting with the <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> instance. However, the public methods used by Platypus are documented here.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="native_type_map"
+>native_type_map</a></h2>
+
+<pre class="sh_perl"> my $hashref = FFI::Platypus::Lang::Pascal-&#62;native_type_map;</pre>
+
+<p>This returns a hash reference containing the native aliases for the Free Pascal programming languages. That is the keys are native Pascal types and the values are libffi native types.</p>
+
+<p>Types are in camel case. For example use <code>ShortInt</code>, not <code>Shortint</code> or <code>SHORTINT</code>.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="mangler"
+>mangler</a></h2>
+
+<pre class="sh_perl"> my $mangler = FFI::Platypus::Lang::Pascal-&#62;mangler($ffi-&#62;libs);
+ # prints ADD_ADD$SMALLINT$SMALLINT$$SMALLINT
+ print $mangler-&#62;(&#34;add(smallint,smallint):smallint&#34;);</pre>
+
+<p>Returns a subroutine reference that will &#34;mangle&#34; Pascal names.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="EXAMPLES"
+>EXAMPLES</a></h1>
+
+<p>See the above <a href="#SYNOPSIS" class="podlinkpod"
+>&#34;SYNOPSIS&#34;</a> or the <code>examples</code> directory that came with this distribution.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SUPPORT"
+>SUPPORT</a></h1>
+
+<p>If something does not work as advertised, or the way that you think it should, or if you have a feature request, please open an issue on this project&#39;s GitHub issue tracker:</p>
+
+<p><a href="https://github.com/PerlFFI/FFI-Platypus-Lang-Pascal/issues" class="podlinkurl"
+>https://github.com/PerlFFI/FFI-Platypus-Lang-Pascal/issues</a></p>
+
+<p>This project&#39;s GitHub issue tracker listed above is not Write-Only. If you want to contribute then feel free to browse through the existing issues and see if there is something you feel you might be good at and take a whack at the problem. I frequently open issues myself that I hope will be accomplished by someone in the future but do not have time to immediately implement myself.</p>
+
+<p>Another good area to help out in is documentation. I try to make sure that there is good document coverage, that is there should be documentation describing all the public features and warnings about common pitfalls, but an outsider&#39;s or alternate view point on such things would be welcome; if you see something confusing or lacks sufficient detail I encourage documentation only pull requests to improve things.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CONTRIBUTING"
+>CONTRIBUTING</a></h1>
+
+<p>If you have implemented a new feature or fixed a bug then you may make a pull reequest on this project&#39;s GitHub repository:</p>
+
+<p><a href="https://github.com/PerlFFI/FFI-Platypus-Lang-Pascal/pulls" class="podlinkurl"
+>https://github.com/PerlFFI/FFI-Platypus-Lang-Pascal/pulls</a></p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SEE_ALSO"
+>SEE ALSO</a></h1>
+
+<dl>
+<dt><a name="FFI::Platypus"
+><a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a></a></dt>
+
+<dd>
+<p>The Core Platypus documentation.</p>
+
+<dt><a name="FFI::Build_+_FFI::Build::File::Pascal"
+><a href="/pod/FFI/Build.html" class="podlinkpod"
+>FFI::Build</a> + <a href="/pod/FFI/Build/File/Pascal.html" class="podlinkpod"
+>FFI::Build::File::Pascal</a></a></dt>
+
+<dd>
+<p>Bundle Free Pascal with your FFI / Perl extension.</p>
+</dd>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2015 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

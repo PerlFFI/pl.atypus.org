@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Test2::Tools::FFI</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> Test2::Tools::FFI</div>
+    <!--Test2::Tools::FFI--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#FUNCTIONS'>FUNCTIONS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#ffi_options'>ffi_options</a>
+    <li class='indexItem indexItem2'><a href='#ffi-%3Eruntime'>ffi-&#62;runtime</a>
+    <li class='indexItem indexItem2'><a href='#ffi-%3Etest'>ffi-&#62;test</a>
+    <li class='indexItem indexItem2'><a href='#ffi-%3Ecombined'>ffi-&#62;combined</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>Test2::Tools::FFI - Tools for testing FFI</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 0.06</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<p>In your t/ffi/test.c:</p>
+
+<pre class="sh_perl"> int
+ mytest()
+ {
+   return 42;
+ }</pre>
+
+<p>In your t/mytest.t:</p>
+
+<pre class="sh_perl"> use Test2::V0;
+ use Test2::Tools::FFI;
+
+ is(
+   ffi-&#62;test-&#62;function( mytest =&#62; [] =&#62; &#39;int&#39;)-&#62;call,
+   42,
+ );
+ 
+ done_testing;</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>This Test2 Tools module provide some basic tools for testing FFI modules.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="FUNCTIONS"
+>FUNCTIONS</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="ffi_options"
+>ffi_options</a></h2>
+
+<pre class="sh_perl"> ffi_options %options;</pre>
+
+<p>This must be run before any <code>ffi-&#62;</code> functions. Options available:</p>
+
+<dl>
+<dt><a name="api"
+>api</a></dt>
+
+<dd>
+<p>The <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> api level. Zero (0) by default for backward compat, but it is recommended that you use One (1).</p>
+</dd>
+</dl>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="ffi-&#62;runtime"
+>ffi-&#62;runtime</a></h2>
+
+<pre class="sh_perl"> my $ffi = ffi-&#62;runtime;</pre>
+
+<p>Returns a <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> instance connected to the runtime for your module.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="ffi-&#62;test"
+>ffi-&#62;test</a></h2>
+
+<pre class="sh_perl"> my $ffi = ffi-&#62;test;</pre>
+
+<p>Returns a <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> instance connected to the test for your module.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="ffi-&#62;combined"
+>ffi-&#62;combined</a></h2>
+
+<pre class="sh_perl"> my $ffi = ffi-&#62;combined;</pre>
+
+<p>Return a <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> instance with the combined test and runtime libraries for your module.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2018 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

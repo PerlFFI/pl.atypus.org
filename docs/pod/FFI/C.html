@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::C</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::C</div>
+    <!--FFI::C--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#METHODS'>METHODS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#ffi'>ffi</a>
+    <li class='indexItem indexItem2'><a href='#struct'>struct</a>
+    <li class='indexItem indexItem2'><a href='#union'>union</a>
+    <li class='indexItem indexItem2'><a href='#array'>array</a>
+    <li class='indexItem indexItem2'><a href='#enum'>enum</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#EXAMPLES'>EXAMPLES</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#unix_time_struct'>unix time struct</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#CAVEATS'>CAVEATS</a>
+  <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::C - C data types for FFI</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 0.12</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<p>In C:</p>
+
+<pre class="sh_perl"> #include &#60;stdint.h&#62;
+ 
+ typedef struct {
+   uint8_t red;
+   uint8_t green;
+   uint8_t blue;
+ } color_value_t;
+ 
+ typedef struct {
+   char name[22];
+   color_value_t value;
+ } named_color_t;
+ 
+ typedef named_color_t array_named_color_t[4];
+ 
+ typedef union {
+   uint8_t  u8;
+   uint16_t u16;
+   uint32_t u32;
+   uint64_t u64;
+ } anyint_t;</pre>
+
+<p>In Perl:</p>
+
+<pre class="sh_perl"> use FFI::C;
+ 
+ package ColorValue {
+   FFI::C-&#62;struct([
+     red   =&#62; &#39;uint8&#39;,
+     green =&#62; &#39;uint8&#39;,
+     blue  =&#62; &#39;uint8&#39;,
+   ]);
+ }
+ 
+ package NamedColor {
+   FFI::C-&#62;struct([
+     name  =&#62; &#39;string(22)&#39;,
+     value =&#62; &#39;color_value_t&#39;,
+   ]);
+ }
+ 
+ package ArrayNamedColor {
+   FFI::C-&#62;array([&#39;named_color_t&#39; =&#62; 4]);
+ };
+ 
+ my $array = ArrayNamedColor-&#62;new([
+   { name =&#62; &#34;red&#34;,    value =&#62; { red   =&#62; 255 } },
+   { name =&#62; &#34;green&#34;,  value =&#62; { green =&#62; 255 } },
+   { name =&#62; &#34;blue&#34;,   value =&#62; { blue  =&#62; 255 } },
+   { name =&#62; &#34;purple&#34;, value =&#62; { red   =&#62; 255,
+                                  blue  =&#62; 255 } },
+ ]);
+ 
+ # dim each color by 1/2
+ foreach my $color (@$array)
+ {
+   $color-&#62;value-&#62;red  ( $color-&#62;value-&#62;red   / 2 );
+   $color-&#62;value-&#62;green( $color-&#62;value-&#62;green / 2 );
+   $color-&#62;value-&#62;blue ( $color-&#62;value-&#62;blue  / 2 );
+ }
+ 
+ # print out the colors
+ foreach my $color (@$array)
+ {
+   printf &#34;%s [%02x %02x %02x]\n&#34;,
+     $color-&#62;name,
+     $color-&#62;value-&#62;red,
+     $color-&#62;value-&#62;green,
+     $color-&#62;value-&#62;blue;
+ }
+ 
+ package AnyInt {
+   FFI::C-&#62;union([
+     u8  =&#62; &#39;uint8&#39;,
+     u16 =&#62; &#39;uint16&#39;,
+     u32 =&#62; &#39;uint32&#39;,
+     u64 =&#62; &#39;uint64&#39;,
+   ]);
+ }
+ 
+ my $int = AnyInt-&#62;new({ u8 =&#62; 42 });
+ print $int-&#62;u32;</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>This distribution provides tools for building classes to interface for common C data types. Arrays, <code>struct</code>, <code>union</code> and nested types based on those are supported.</p>
+
+<p>Core <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> also provides <a href="/pod/FFI/Platypus/Record.html" class="podlinkpod"
+>FFI::Platypus::Record</a> for manipulating and passing structured data. Typically you want to use <a href="/pod/FFI/C.html" class="podlinkpod"
+>FFI::C</a> instead, the main exception is when you need to pass structured data by value instead of by reference.</p>
+
+<p>To work with C APIs that work with C file pointers you can use <a href="/pod/FFI/C/File.html" class="podlinkpod"
+>FFI::C::File</a> and <a href="/pod/FFI/C/PosixFile.html" class="podlinkpod"
+>FFI::C::PosixFile</a>. For C APIs that expose the POSIX <code>stat</code> structure use <a href="/pod/FFI/C/Stat.html" class="podlinkpod"
+>FFI::C::Stat</a>.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="METHODS"
+>METHODS</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="ffi"
+>ffi</a></h2>
+
+<pre class="sh_perl"> FFI::C-&#62;ffi($ffi);
+ my $ffi = FFI::C-&#62;ffi;</pre>
+
+<p>Get or set the <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> instance used for the current Perl file (<code>.pl</code> or <code>.pm</code>).</p>
+
+<p>By default a new Platypus instance is created the on the first call to <code>ffi</code>, or when a new type is created with <code>struct</code>, <code>union</code> or <code>array</code> below, so if you want to use your own Platypus instance make sure that you set it as soon as possible.</p>
+
+<p>The Platypus instance is file scoped because scoping on just one package doesn&#39;t make sense if you are defining multiple types in one file since each type must be in its own package. It also doesn&#39;t make sense to make the Platypus instance global, because different distributions would conflict.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="struct"
+>struct</a></h2>
+
+<pre class="sh_perl"> FFI::C-&#62;struct($name, \@members);
+ FFI::C-&#62;struct(\@members);</pre>
+
+<p>Generate a new <a href="/pod/FFI/C/Struct.html" class="podlinkpod"
+>FFI::C::Struct</a> class with the given <code>@members</code> into the calling package. (<code>@members</code> should be a list of name/type pairs). You may optionally give a <code>$name</code> which will be used for the <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> type name for the generated class. If you do not specify a <code>$name</code>, a C style name will be generated from the last segment in the calling package name by converting to snake case and appending a <code>_t</code> to the end.</p>
+
+<p>As an example, given:</p>
+
+<pre class="sh_perl"> package MyLibrary::FooBar {
+   FFI::C-&#62;struct([
+     a =&#62; &#39;uint8&#39;,
+     b =&#62; &#39;float&#39;,
+   ]);
+ };</pre>
+
+<p>You can use <code>MyLibrary::FooBar</code> via the file scoped <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> instance using the type <code>foo_bar_t</code>.</p>
+
+<pre class="sh_perl"> my $foobar = MyLibrary::FooBar-&#62;new({ a =&#62; 1, b =&#62; 3.14 });
+ $ffi-&#62;function( my_library_func =&#62; [ &#39;foo_bar_t&#39; ] =&#62; &#39;void&#39; )-&#62;call($foobar);</pre>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="union"
+>union</a></h2>
+
+<pre class="sh_perl"> FFI::C-&#62;union($name, \@members);
+ FFI::C-&#62;union(\@members);</pre>
+
+<p>This works exactly like the <code>struct</code> method above, except a <a href="/pod/FFI/C/Union.html" class="podlinkpod"
+>FFI::C::Union</a> class is generated instead.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="array"
+>array</a></h2>
+
+<pre class="sh_perl"> FFI::C-&#62;array($name, [$type, $count]);
+ FFI::C-&#62;array($name, [$type]);
+ FFI::C-&#62;array([$type, $count]);
+ FFI::C-&#62;array([$type]);</pre>
+
+<p>This is similar to <code>struct</code> and <code>union</code> above, except <a href="/pod/FFI/C/Array.html" class="podlinkpod"
+>FFI::C::Array</a> is generated. For an array you give it the member type and the element count. The element count is optional for variable length arrays, but keep in mind that when you create such an array you do need to provide a size.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="enum"
+>enum</a></h2>
+
+<pre class="sh_perl"> FFI::C-&#62;enum($name, \@values, \%config);
+ FFI::C-&#62;enum(\@values, \%config);
+ FFI::C-&#62;enum(\@values, \%config);
+ FFI::C-&#62;enum(\@values);</pre>
+
+<p>Defines an enum. The <code>@values</code> and <code>%config</code> are passed to <a href="/pod/FFI/Platypus/Type/Enum.html" class="podlinkpod"
+>FFI::Platypus::Type::Enum</a>, except the constants are exported to the calling package by default.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="EXAMPLES"
+>EXAMPLES</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="unix_time_struct"
+>unix time struct</a></h2>
+
+<pre class="sh_perl"> use FFI::Platypus 1.00;
+ use FFI::C;
+ 
+ my $ffi = FFI::Platypus-&#62;new(
+   api =&#62; 1,
+   lib =&#62; [undef],
+ );
+ FFI::C-&#62;ffi($ffi);
+ 
+ package Unix::TimeStruct {
+ 
+   FFI::C-&#62;struct(tm =&#62; [
+     tm_sec    =&#62; &#39;int&#39;,
+     tm_min    =&#62; &#39;int&#39;,
+     tm_hour   =&#62; &#39;int&#39;,
+     tm_mday   =&#62; &#39;int&#39;,
+     tm_mon    =&#62; &#39;int&#39;,
+     tm_year   =&#62; &#39;int&#39;,
+     tm_wday   =&#62; &#39;int&#39;,
+     tm_yday   =&#62; &#39;int&#39;,
+     tm_isdst  =&#62; &#39;int&#39;,
+     tm_gmtoff =&#62; &#39;long&#39;,
+     _tm_zone  =&#62; &#39;opaque&#39;,
+   ]);
+ 
+   # For now &#39;string&#39; is unsupported by FFI::C, but we
+   # can cast the time zone from an opaque pointer to
+   # string.
+   sub tm_zone {
+     my $self = shift;
+     $ffi-&#62;cast(&#39;opaque&#39;, &#39;string&#39;, $self-&#62;_tm_zone);
+   }
+ 
+   # attach the C localtime function
+   $ffi-&#62;attach( localtime =&#62; [&#39;time_t*&#39;] =&#62; &#39;tm&#39;, sub {
+     my($inner, $class, $time) = @_;
+     $time = time unless defined $time;
+     $inner-&#62;(\$time);
+   });
+ }
+ 
+ # now we can actually use our My::UnixTime class
+ my $time = Unix::TimeStruct-&#62;localtime;
+ printf &#34;time is %d:%d:%d %s\n&#34;,
+   $time-&#62;tm_hour,
+   $time-&#62;tm_min,
+   $time-&#62;tm_sec,
+   $time-&#62;tm_zone;</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CAVEATS"
+>CAVEATS</a></h1>
+
+<p><a href="/pod/FFI/C.html" class="podlinkpod"
+>FFI::C</a> objects must be passed into C via <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> by pointers. So-called &#34;pass-by-value&#34; is not and will not be supported. For &#34;pass-by-value&#34; record types, you should instead use <a href="/pod/FFI/Platypus/Record.html" class="podlinkpod"
+>FFI::Platypus::Record</a>.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SEE_ALSO"
+>SEE ALSO</a></h1>
+
+<dl>
+<dt><a name="FFI::C"
+><a href="/pod/FFI/C.html" class="podlinkpod"
+>FFI::C</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::Array"
+><a href="/pod/FFI/C/Array.html" class="podlinkpod"
+>FFI::C::Array</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::ArrayDef"
+><a href="/pod/FFI/C/ArrayDef.html" class="podlinkpod"
+>FFI::C::ArrayDef</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::Def"
+><a href="/pod/FFI/C/Def.html" class="podlinkpod"
+>FFI::C::Def</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::File"
+><a href="/pod/FFI/C/File.html" class="podlinkpod"
+>FFI::C::File</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::PosixFile"
+><a href="/pod/FFI/C/PosixFile.html" class="podlinkpod"
+>FFI::C::PosixFile</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::Struct"
+><a href="/pod/FFI/C/Struct.html" class="podlinkpod"
+>FFI::C::Struct</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::StructDef"
+><a href="/pod/FFI/C/StructDef.html" class="podlinkpod"
+>FFI::C::StructDef</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::Union"
+><a href="/pod/FFI/C/Union.html" class="podlinkpod"
+>FFI::C::Union</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::UnionDef"
+><a href="/pod/FFI/C/UnionDef.html" class="podlinkpod"
+>FFI::C::UnionDef</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::Util"
+><a href="/pod/FFI/C/Util.html" class="podlinkpod"
+>FFI::C::Util</a></a></dt>
+
+<dd>
+<dt><a name="FFI::Platypus::Record"
+><a href="/pod/FFI/Platypus/Record.html" class="podlinkpod"
+>FFI::Platypus::Record</a></a></dt>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2020-2022 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

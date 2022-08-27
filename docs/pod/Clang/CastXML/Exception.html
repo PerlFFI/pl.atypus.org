@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Clang::CastXML::Exception</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> Clang::<a href="/pod/Clang/CastXML.html">CastXML</a>::Exception</div>
+    <!--Clang::CastXML::Exception--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#ROLES'>ROLES</a>
+  <li class='indexItem indexItem1'><a href='#METHODS'>METHODS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#message'>message</a>
+    <li class='indexItem indexItem2'><a href='#to_string'>to_string</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>Clang::CastXML::Exception - Base exception class for Clang::CastXML</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 0.02</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<pre class="sh_perl"> package Clang::CastXML::Exception::MyException {
+   use Moose;
+ 
+   extends &#39;Clang::CastXML::Exception&#39;;
+   has x =&#62; ( is =&#62; &#39;ro&#39; );
+ 
+   sub message
+   {
+     my($self) = @_;
+     sprintf &#34;oops error with x = %d&#34;, $self-&#62;x;
+   }
+ }
+ 
+ # dies with an object expression tha stringifies to
+ # &#34;oops error with x = 1 at xxx.pl line xxx&#34;
+ Clang::CastXML::Exception::MyException-&#62;throw( x =&#62; 1);</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>This is the base class for exceptions thrown by <a href="/pod/Clang/CastXML.html" class="podlinkpod"
+>Clang::CastXML</a>. It keeps track of the stack where the exception is thrown, and stringifies to a useful message. Subclasses may add appropriate properties, and must define a message method that generates the exception message.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="ROLES"
+>ROLES</a></h1>
+
+<p>This class consumes the <a href="https://metacpan.org/pod/Throwable" class="podlinkpod"
+>Throwable</a> and <a href="https://metacpan.org/pod/StackTrace%3A%3AAuto" class="podlinkpod"
+>StackTrace::Auto</a> roles.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="METHODS"
+>METHODS</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="message"
+>message</a></h2>
+
+<pre class="sh_perl"> my $message = $ex-&#62;message;</pre>
+
+<p>Get the message for the exception. This must be defined in the subclass.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="to_string"
+>to_string</a></h2>
+
+<pre class="sh_perl"> my $string = $ex-&#62;to_string;
+ my $string = &#34;$ex&#34;;</pre>
+
+<p>Generate the human readable string diagnostic for the exception.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SEE_ALSO"
+>SEE ALSO</a></h1>
+
+<p><a href="/pod/Clang/CastXML.html" class="podlinkpod"
+>Clang::CastXML</a></p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2020 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

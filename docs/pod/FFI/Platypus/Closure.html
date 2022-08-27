@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::Platypus::Closure</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/Platypus.html">Platypus</a>::Closure</div>
+    <!--FFI::Platypus::Closure--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#CONSTRUCTOR'>CONSTRUCTOR</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#new'>new</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#METHODS'>METHODS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#call'>call</a>
+    <li class='indexItem indexItem2'><a href='#sticky'>sticky</a>
+    <li class='indexItem indexItem2'><a href='#unstick'>unstick</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::Platypus::Closure - Platypus closure object</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 2.00</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<p>create closure with OO interface</p>
+
+<pre class="sh_perl"> use FFI::Platypus::Closure;
+ my $closure = FFI::Platypus::Closure-&#62;new(sub { print &#34;hello world\n&#34; });</pre>
+
+<p>create closure from Platypus object</p>
+
+<pre class="sh_perl"> use FFI::Platypus 2.00;
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 2 );
+ my $closure = $ffi-&#62;closure(sub { print &#34;hello world\n&#34; });</pre>
+
+<p>use closure</p>
+
+<pre class="sh_perl"> $ffi-&#62;function(foo =&#62; [&#39;()-&#62;void&#39;] =&#62; &#39;void&#39;)-&#62;call($closure);</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>This class represents a Perl code reference that can be called from compiled code. When you create a closure object, you can pass it into any function that expects a function pointer. Care needs to be taken with closures because compiled languages typically have a different way of handling lifetimes of objects. You have to make sure that if the compiled code is going to call a closure that the closure object is still in scope somewhere, or has been made sticky, otherwise you may get a segment violation or other mysterious crash.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CONSTRUCTOR"
+>CONSTRUCTOR</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="new"
+>new</a></h2>
+
+<pre class="sh_perl"> my $closure = FFI::Platypus::Closure-&#62;new($coderef);</pre>
+
+<p>Create a new closure object; <code>$coderef</code> must be a subroutine code reference.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="METHODS"
+>METHODS</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="call"
+>call</a></h2>
+
+<pre class="sh_perl"> $closure-&#62;call(@arguments);
+ $closure-&#62;(@arguments);</pre>
+
+<p>Call the closure from Perl space. May also be invoked by treating the closure object as a code reference.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="sticky"
+>sticky</a></h2>
+
+<pre class="sh_perl"> $closure-&#62;sticky;</pre>
+
+<p>Mark the closure sticky, meaning that it won&#39;t be free&#39;d even if all the reference of the object fall out of scope.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="unstick"
+>unstick</a></h2>
+
+<pre class="sh_perl"> $closure-&#62;unstick;</pre>
+
+<p>Unmark the closure as sticky.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Author: Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<p>Contributors:</p>
+
+<p>Bakkiaraj Murugesan (bakkiaraj)</p>
+
+<p>Dylan Cali (calid)</p>
+
+<p>pipcet</p>
+
+<p>Zaki Mughal (zmughal)</p>
+
+<p>Fitz Elliott (felliott)</p>
+
+<p>Vickenty Fesunov (vyf)</p>
+
+<p>Gregor Herrmann (gregoa)</p>
+
+<p>Shlomi Fish (shlomif)</p>
+
+<p>Damyan Ivanov</p>
+
+<p>Ilya Pavlov (Ilya33)</p>
+
+<p>Petr P&#237;sa&#345; (ppisar)</p>
+
+<p>Mohammad S Anwar (MANWAR)</p>
+
+<p>H&#229;kon H&#230;gland (hakonhagland, HAKONH)</p>
+
+<p>Meredith (merrilymeredith, MHOWARD)</p>
+
+<p>Diab Jerius (DJERIUS)</p>
+
+<p>Eric Brine (IKEGAMI)</p>
+
+<p>szTheory</p>
+
+<p>Jos&#233; Joaqu&#237;n Atria (JJATRIA)</p>
+
+<p>Pete Houston (openstrike, HOUSTON)</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2015-2022 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

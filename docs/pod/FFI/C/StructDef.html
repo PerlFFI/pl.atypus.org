@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::C::StructDef</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/C.html">C</a>::StructDef</div>
+    <!--FFI::C::StructDef--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#CONSTRUCTOR'>CONSTRUCTOR</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#new'>new</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#METHODS'>METHODS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#create'>create</a>
+    <li class='indexItem indexItem2'><a href='#trim_string'>trim_string</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::C::StructDef - Structured data definition for FFI</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 0.12</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<p>In your C code:</p>
+
+<pre class="sh_perl"> #include &#60;stdint.h&#62;
+ #include &#60;stdio.h&#62;
+ 
+ typedef struct {
+   uint8_t red;
+   uint8_t green;
+   uint8_t blue;
+ } color_t;
+ 
+ void
+ print_color(color_t *c)
+ {
+   printf(&#34;[%02x %02x %02x]\n&#34;,
+     c-&#62;red,
+     c-&#62;green,
+     c-&#62;blue
+   );
+ }</pre>
+
+<p>In your Perl code:</p>
+
+<pre class="sh_perl"> use FFI::Platypus 1.00;
+ use FFI::C::StructDef;
+ 
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 1 );
+ # See FFI::Platypus::Bundle for how bundle works.
+ $ffi-&#62;bundle;
+ 
+ my $def = FFI::C::StructDef-&#62;new(
+   $ffi,
+   name  =&#62; &#39;color_t&#39;,
+   class =&#62; &#39;Color&#39;,
+   members =&#62; [
+     red   =&#62; &#39;uint8&#39;,
+     green =&#62; &#39;uint8&#39;,
+     blue  =&#62; &#39;uint8&#39;,
+   ],
+ );
+ 
+ my $red = Color-&#62;new({ red =&#62; 255 });
+ 
+ my $green = Color-&#62;new({ green =&#62; 255 });
+ 
+ $ffi-&#62;attach( print_color =&#62; [&#39;color_t&#39;] );
+ 
+ print_color($red);   # [ff 00 00]
+ print_color($green); # [00 ff 00]
+ 
+ # that red is a tad bright!
+ $red-&#62;red( 200 );
+ 
+ print_color($red);   # [c8 00 00]</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>This class creates a def for a C <code>struct</code>.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CONSTRUCTOR"
+>CONSTRUCTOR</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="new"
+>new</a></h2>
+
+<pre class="sh_perl"> my $def = FFI::C::StructDef-&#62;new(%opts);
+ my $def = FFI::C::StructDef-&#62;new($ffi, %opts);</pre>
+
+<p>For standard def options, see <a href="/pod/FFI/C/Def.html" class="podlinkpod"
+>FFI::C::Def</a>.</p>
+
+<dl>
+<dt><a name="members"
+>members</a></dt>
+
+<dd>
+<p>This should be an array reference containing name, type pairs, in the order that they will be stored in the struct.</p>
+
+<dt><a name="trim_string"
+>trim_string</a></dt>
+
+<dd>
+<p>If true, fixed-length strings should be treated as null terminated strings and be trimmed.</p>
+</dd>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="METHODS"
+>METHODS</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="create"
+>create</a></h2>
+
+<pre class="sh_perl"> my $instance = $def-&#62;create;
+ my $instance = $def-&#62;class-&#62;new;          # if class was specified
+ my $instance = $def-&#62;create(\%init);
+ my $instance = $def-&#62;class-&#62;new(\%init);  # if class was specified</pre>
+
+<p>This creates an instance of the <code>struct</code>, returns a <a href="/pod/FFI/C/Struct.html" class="podlinkpod"
+>FFI::C::Struct</a>.</p>
+
+<p>You can optionally initialize member values using <code>%init</code>.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="trim_string"
+>trim_string</a></h2>
+
+<pre class="sh_perl"> my $bool = $def-&#62;trim_string;</pre>
+
+<p>Returns true if fixed-length strings should be treated as null terminated strings and be trimmed.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SEE_ALSO"
+>SEE ALSO</a></h1>
+
+<dl>
+<dt><a name="FFI::C"
+><a href="/pod/FFI/C.html" class="podlinkpod"
+>FFI::C</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::Array"
+><a href="/pod/FFI/C/Array.html" class="podlinkpod"
+>FFI::C::Array</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::ArrayDef"
+><a href="/pod/FFI/C/ArrayDef.html" class="podlinkpod"
+>FFI::C::ArrayDef</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::Def"
+><a href="/pod/FFI/C/Def.html" class="podlinkpod"
+>FFI::C::Def</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::File"
+><a href="/pod/FFI/C/File.html" class="podlinkpod"
+>FFI::C::File</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::PosixFile"
+><a href="/pod/FFI/C/PosixFile.html" class="podlinkpod"
+>FFI::C::PosixFile</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::Struct"
+><a href="/pod/FFI/C/Struct.html" class="podlinkpod"
+>FFI::C::Struct</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::StructDef"
+><a href="/pod/FFI/C/StructDef.html" class="podlinkpod"
+>FFI::C::StructDef</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::Union"
+><a href="/pod/FFI/C/Union.html" class="podlinkpod"
+>FFI::C::Union</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::UnionDef"
+><a href="/pod/FFI/C/UnionDef.html" class="podlinkpod"
+>FFI::C::UnionDef</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::Util"
+><a href="/pod/FFI/C/Util.html" class="podlinkpod"
+>FFI::C::Util</a></a></dt>
+
+<dd>
+<dt><a name="FFI::Platypus::Record"
+><a href="/pod/FFI/Platypus/Record.html" class="podlinkpod"
+>FFI::Platypus::Record</a></a></dt>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2020-2022 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

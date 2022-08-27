@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::Platypus::Type::PtrObject</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/Platypus.html">Platypus</a>::<a href="/pod/FFI/Platypus/Type.html">Type</a>::PtrObject</div>
+    <!--FFI::Platypus::Type::PtrObject--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#CAVEATS'>CAVEATS</a>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::Platypus::Type::PtrObject - Platypus custom type for an object wrapped around an opaque pointer</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 0.03</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<p>C:</p>
+
+<pre class="sh_perl"> #include &#60;string.h&#62;
+ 
+ typedef struct { char buffer[100] } foo_t;
+ 
+ void
+ set(foo_t *self, const char *value)
+ {
+   strncpy(self-&#62;buffer, value, 100);
+ }
+ 
+ const char *
+ get(foo_t *self)
+ {
+   return self-&#62;buffer;
+ }
+ 
+ foo_t *
+ clone(foo_t *self)
+ {
+   foo_t *clone;
+   clone = malloc(100);
+   memcpy(clone-&#62;buffer, self-&#62;buffer, 100);
+   return clone;
+ }</pre>
+
+<p>Perl:</p>
+
+<pre class="sh_perl"> my $ffi = FFI::Platypus-&#62;new( api =&#62; 1 );
+ $ffi-&#62;bundle;  # See FFI::Platypus::Bundle
+ $ffi-&#62;load_custom_type(&#39;::PtrObject&#39;, &#39;foo_t&#39;, &#39;Foo&#39;);
+ 
+ package Foo {
+   use FFI::Platypus::Memory qw( malloc free );
+ 
+   sub new
+   {
+     my $class = shift;
+     bless {
+       ptr =&#62; malloc(100),
+     }, $class;
+   }
+ 
+   $ffi-&#62;attach( set   =&#62; [&#39;foo_t&#39;,&#39;string&#39;]    );
+   $ffi-&#62;attach( get   =&#62; [&#39;foo_t&#39;] =&#62; &#39;string&#39; );
+   $ffi-&#62;attach( clone =&#62; [&#39;foo_t&#39;] =&#62; &#39;foo_t&#39;  );
+ 
+   sub take_ownership
+   {
+     my($self) = @_;
+     return delete $self-&#62;{ptr};
+   }
+ 
+   sub DESTROY
+   {
+     my($self) = @_;
+     if(defined $self-&#62;{ptr})
+     {
+       free($self-&#62;{ptr});
+     }
+   }
+ }
+ 
+ my $foo = Foo-&#62;new;
+ $foo-&#62;set(&#34;hello there&#34;);
+ print $foo-&#62;get, &#34;\n&#34;;    # hello there
+ my $bar = $foo-&#62;clone;
+ print $bar-&#62;get, &#34;\n&#34;;    # hello there
+ 
+ Foo::get(undef);    # undef is not a Foo, throws exception
+ 
+ my $baz = bless { ptr =&#62; 0xdeadbeaf }, &#39;Baz&#39;;
+ Foo::get($baz);     # $baz is not a Foo, throws exception
+ 
+ # by calling take ownership, the pointer will be
+ # removed from $foo, so we now own the pointer.
+ my $ptr = $foo-&#62;take_ownership;
+ 
+ $foo-&#62;get;  # $foo no longer owns its pointer, throws an exception
+ 
+ # since $foo no longer is tracking the memory, we should free it
+ # manually ourselves.
+ use FFI::Platypus::Memory qw( free );
+ free $ptr;
+ 
+ # $bar will free its memory when it falls out of scope automatically
+ # since it still owns its pointer.</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>This is a helper type for <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> that handles type checking for the common pattern where a Perl class is a simple wrapper around an opaque pointer. The class should be implemented as a hash reference, and the pointer itself is expected to be stored on the <code>ptr</code> key. If the caller of the interface (Perl) is responsible for cleaning up the memory, then it normally should be done in the <code>DESTROY</code> method (as above).</p>
+
+<p>If you do not pass in the correct type, it will be detected before the C code is called and an exception will be thrown. (otherwise you would probably get a segment violation SEGV).</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CAVEATS"
+>CAVEATS</a></h1>
+
+<p>Care needs to be taken that only the responsible party frees its pointers.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2020 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

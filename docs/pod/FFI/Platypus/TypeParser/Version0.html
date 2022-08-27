@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::Platypus::TypeParser::Version0</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/Platypus.html">Platypus</a>::<a href="/pod/FFI/Platypus/TypeParser.html">TypeParser</a>::Version0</div>
+    <!--FFI::Platypus::TypeParser::Version0--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#Interface_differences'>Interface differences</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::Platypus::TypeParser::Version0 - FFI Type Parser Version Zero</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 2.00</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<pre class="sh_perl"> use FFI::Platypus;
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 0 );
+ $ffi-&#62;type(&#39;record(Foo::Bar)&#39; =&#62; &#39;foo_bar_t&#39;);
+ $ffi-&#62;type(&#39;opaque&#39; =&#62; &#39;baz_t&#39;);
+ $ffi-&#62;type(&#39;opaque*&#39; =&#62; &#39;baz_ptr&#39;);</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>This documents the original <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> type parser. It was the default and only type parser used by <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> starting with version <code>0.02</code>. Starting with version <code>1.00</code> <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> comes with a new type parser with design fixes that are not backward compatibility.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Interface_differences"
+>Interface differences</a></h2>
+
+<dl>
+<dt><a name="Pass-by-value_records_are_not_allowed"
+>Pass-by-value records are not allowed</a></dt>
+
+<dd>
+<p>Originally <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> only supported passing records as a pointer. The type <code>record(Foo::Bar)</code> actually passes a pointer to the record. In the version 1.00 parser allows <code>record(Foo::Bar)</code> which is pass-by-value (the contents of the record is copied onto the stack) and <code>record(Foo::Bar)*</code> which is pass-by-reference or pointer (a pointer to the record is passed to the callee so that it can make modifications to the record).</p>
+
+<p>TL;DR <code>record(Foo::Bar)</code> in version 0 is equivalent to <code>record(Foo::Bar)*</code> in the version 1 API. There is no equivalent to <code>record(Foo::Bar)*</code> in the version 0 API.</p>
+
+<dt><a name="decorate_aliases_of_basic_types"
+>decorate aliases of basic types</a></dt>
+
+<dd>
+<p>This is not allowed in the version 0 API:</p>
+
+<pre class="sh_perl"> $ffi-&#62;type(&#39;opaque&#39; =&#62; &#39;foo_t&#39;);    # ok!
+ $ffi-&#62;type(&#39;foo_t*&#39; =&#62; &#39;foo_ptr&#39;);  # not ok! in version 0, ok! in version 1</pre>
+
+<p>Instead you need to use the basic type in the second type definition:</p>
+
+<pre class="sh_perl"> $ffi-&#62;type(&#39;opaque&#39; =&#62; &#39;foo_t&#39;);    # ok!
+ $ffi-&#62;type(&#39;opaque*&#39; =&#62; &#39;foo_ptr&#39;); # ok!</pre>
+
+<dt><a name="object_types_are_not_allowed"
+>object types are not allowed</a></dt>
+
+<dd>
+<pre class="sh_perl"> $ffi-&#62;type(&#39;object(Foo::Bar)&#39;);   # not ok! in version 0, ok! in version 1</pre>
+</dd>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SEE_ALSO"
+>SEE ALSO</a></h1>
+
+<dl>
+<dt><a name="FFI::Platypus"
+><a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a></a></dt>
+
+<dd>
+<p>The core <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> documentation.</p>
+
+<dt><a name="FFI::Platypus::TypeParser::Version1"
+><a href="/pod/FFI/Platypus/TypeParser/Version1.html" class="podlinkpod"
+>FFI::Platypus::TypeParser::Version1</a></a></dt>
+
+<dd>
+<p>The API <code>1.00</code> type parser.</p>
+</dd>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Author: Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<p>Contributors:</p>
+
+<p>Bakkiaraj Murugesan (bakkiaraj)</p>
+
+<p>Dylan Cali (calid)</p>
+
+<p>pipcet</p>
+
+<p>Zaki Mughal (zmughal)</p>
+
+<p>Fitz Elliott (felliott)</p>
+
+<p>Vickenty Fesunov (vyf)</p>
+
+<p>Gregor Herrmann (gregoa)</p>
+
+<p>Shlomi Fish (shlomif)</p>
+
+<p>Damyan Ivanov</p>
+
+<p>Ilya Pavlov (Ilya33)</p>
+
+<p>Petr P&#237;sa&#345; (ppisar)</p>
+
+<p>Mohammad S Anwar (MANWAR)</p>
+
+<p>H&#229;kon H&#230;gland (hakonhagland, HAKONH)</p>
+
+<p>Meredith (merrilymeredith, MHOWARD)</p>
+
+<p>Diab Jerius (DJERIUS)</p>
+
+<p>Eric Brine (IKEGAMI)</p>
+
+<p>szTheory</p>
+
+<p>Jos&#233; Joaqu&#237;n Atria (JJATRIA)</p>
+
+<p>Pete Houston (openstrike, HOUSTON)</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2015-2022 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

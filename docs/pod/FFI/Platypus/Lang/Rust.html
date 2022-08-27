@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::Platypus::Lang::Rust</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/Platypus.html">Platypus</a>::<a href="/pod/FFI/Platypus/Lang.html">Lang</a>::Rust</div>
+    <!--FFI::Platypus::Lang::Rust--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#name_mangling'>name mangling</a>
+    <li class='indexItem indexItem2'><a href='#panics'>panics</a>
+    <li class='indexItem indexItem2'><a href='#structs'>structs</a>
+    <li class='indexItem indexItem2'><a href='#returning_strings'>returning strings</a>
+    <li class='indexItem indexItem2'><a href='#callbacks'>callbacks</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#METHODS'>METHODS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#native_type_map'>native_type_map</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#EXAMPLES'>EXAMPLES</a>
+  <li class='indexItem indexItem1'><a href='#SUPPORT'>SUPPORT</a>
+  <li class='indexItem indexItem1'><a href='#CONTRIBUTING'>CONTRIBUTING</a>
+  <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::Platypus::Lang::Rust - Documentation and tools for using Platypus with the Rust programming language</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<p>Rust:</p>
+
+<pre class="sh_perl"> #![crate_type = &#34;dylib&#34;]
+ 
+ // compile with: rustc add.rs
+ 
+ #[no_mangle]
+ pub extern &#34;C&#34; fn add(a:i32, b:i32) -&#62; i32 {
+     a+b
+ }</pre>
+
+<p>Perl:</p>
+
+<pre class="sh_perl"> use FFI::Platypus 1.00;
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 1, lang =&#62; &#39;Rust&#39; );
+ $ffi-&#62;lib(&#39;./libadd.so&#39;);
+ 
+ $ffi-&#62;attach( add =&#62; [&#39;i32&#39;, &#39;i32&#39;] =&#62; &#39;i32&#39; );
+ 
+ print add(1,2), &#34;\n&#34;;  # prints 3</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>This module provides native Rust types for <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> in order to reduce cognitive load and concentrate on Rust and forget about C types. This document also documents issues and caveats that I have discovered in my attempts to work with Rust and FFI.</p>
+
+<p>This module is somewhat experimental. It is also available for adoption for anyone either sufficiently knowledgeable about Rust or eager enough to learn enough about Rust. If you are interested, please send me a pull request or two on the project&#39;s GitHub.</p>
+
+<p>Note that in addition to using pre-compiled Rust libraries, you can bundle Rust code with your Perl distribution using <a href="/pod/FFI/Build.html" class="podlinkpod"
+>FFI::Build</a> and <a href="/pod/FFI/Build/File/Cargo.html" class="podlinkpod"
+>FFI::Build::File::Cargo</a>.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="name_mangling"
+>name mangling</a></h2>
+
+<p>Rust names are &#34;mangled&#34; to handle features such as modules and the fact that some characters in Rust names are illegal machine code symbol names. For now that means that you have to tell Rust not to mangle the names of functions that you are going to call from Perl. You can accomplish that like this:</p>
+
+<pre class="sh_perl"> #[no_mangle]
+ pub extern &#34;C&#34; fn foo() {
+ }</pre>
+
+<p>You do not need to add this decoration to functions that you do not directly call from Perl. For example:</p>
+
+<pre class="sh_perl"> fn bar() {
+ }
+ 
+ #[no_mangle]
+ pub extern &#34;C&#34; fn foo() {
+     bar();
+ }</pre>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="panics"
+>panics</a></h2>
+
+<p>Be careful about code that might <code>panic!</code>. A <code>panic!</code> across an FFI boundary is undefined behavior. You will want to catch the panic with a <code>catch_unwind</code> and map to an appropriate result.</p>
+
+<pre class="sh_perl"> use std::panic::catch_unwind;
+ 
+ #[no_mangle]
+ pub extern fn oopsie() -&#62; u32 {
+     let result = catch_unwind(|| {
+         might_panic();
+     });
+     match result {
+         OK(_) =&#62; 0,
+         Err(_) -&#62; 1,
+     }
+ }</pre>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="structs"
+>structs</a></h2>
+
+<p>You can map a Rust struct to a Perl object by creating a C OO layer. I suggest using the <code>c_void</code> type aliased to an appropriate name so that the struct can remain private to the Rust code.</p>
+
+<p>For example, given a Foo struct:</p>
+
+<pre class="sh_perl"> struct Foo {
+     ...
+ }
+ 
+ impl Foo {
+     fn new() -&#62; Foo { ... }
+     fn method1(&#38;self) { ... }
+ }</pre>
+
+<p>You can write a thin C layer:</p>
+
+<pre class="sh_perl"> type CFoo = c_void;
+ 
+ #[no_mangle]
+ pub extern &#34;C&#34; fn foo_new(_class *const i8) -&#62; *mut CFoo {
+     Box::into_raw(Box::new(Foo::new())) as *mut CFoo
+ }
+ 
+ #[no_mangle]
+ pub extern &#34;C&#34; fn foo_method1(f: *mut CFoo) {
+     let f = unsafe { &#38;*(f as *mut Foo) };
+     f.method1();
+ }
+ 
+ #[allow(non_snake_case)]
+ #[no_mangle]
+ pub extern &#34;C&#34; fn foo_DESTROY(f: *mut CFoo) {
+     unsafe { drop(Box::from_raw(f as *mut Foo)) };
+ }</pre>
+
+<p>Which can be called easily from Perl:</p>
+
+<pre class="sh_perl"> package Foo {
+ 
+     use FFI::Platypus 1.00;
+     my $ffi = FFI::Platypus-&#62;new( api =&#62; 1, lang =&#62; &#39;Rust&#39; );
+     $ffi-&#62;bundle; # see FFI::Build::File::Cargo for how to bundle
+                   # your rust code...
+     $ffi-&#62;type( &#39;object(Foo)&#39; =&#62; &#39;CFoo&#39; );
+     $ffi-&#62;mangler(sub {
+         my $symbol = shift;
+         &#34;foo_$symbol&#34;;
+     });
+     $ffi-&#62;attach( new     =&#62; [] =&#62; &#39;CFoo&#39; );
+     $ffi-&#62;attach( method1 =&#62; [&#39;CFoo&#39;] );
+     $ffi-&#62;attach( DESTROY =&#62; [&#39;CFoo&#39;] );
+ };
+ 
+ my $foo = Foo-&#62;new;
+ $foo-&#62;method1;
+ # $foo-&#62;DESTROY implicitly called when it falls out of scope</pre>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="returning_strings"
+>returning strings</a></h2>
+
+<p>Passing in strings is not too hard, you can convert a Rust <code>CString</code> into a Rust <code>String</code>. Return a string is a little tricky because of the ownership model. Depending on how your API works there are probably lot of approaches you might want to take. One approach would be to use thread local storage to store a <code>CString</code> which you return. It wastes a little memory because once the string is copied into Perl space it isn&#39;t used again, but at least it doesn&#39;t leak memory since it will be freed on the next call to your function. Best of all it doesn&#39;t require an <code>unsafe</code> block.</p>
+
+<pre class="sh_perl"> pub extern &#34;C&#34; fn return_string() -&#62; *const i8 {
+     thread_local! {
+         static KEEP: RefCell&#60;Option&#60;CString&#62;&#62; = RefCell::new(None);
+     }
+ 
+     let my_string = String::from(&#34;foo&#34;);
+     let c_string = CString::new(my_string).unwrap();
+     let ptr = c_string.as_ptr();
+     KEEP.with(|k| {
+         *k.borrow_mut() = Some(c_string);
+     });
+ 
+     ptr;
+ }</pre>
+
+<p>From Perl:</p>
+
+<pre class="sh_perl"> use FFI::Platypus 1.00;
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 1, lang =&#62; &#39;Rust&#39; );
+ $ffi-&#62;bundle;
+ $ffi-&#62;attach( return_string =&#62; [] =&#62; &#39;string&#39; );</pre>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="callbacks"
+>callbacks</a></h2>
+
+<p>Calling back into Perl from Rust is easy so long as you have the correct types defined. Consider a Rust function that takes a C function pointer:</p>
+
+<pre class="sh_perl"> use std::ffi::CString;
+ 
+ type PerlLog = extern fn(line: *const i8);
+ 
+ #[no_mangle]
+ pub extern &#34;C&#34; fn rust_log(logf: PerlLog) {
+ 
+     let lines: [&#38;str; 3] = [
+         &#34;Hello from rust!&#34;,
+         &#34;Something else.&#34;,
+         &#34;The last log line&#34;,
+     ];
+ 
+     for line in lines.iter() {
+         // convert string slice to a C style NULL terminated string
+         let line = CString::new(*line).unwrap();
+         logf(line.as_ptr());
+     }
+ }</pre>
+
+<p>This can be called with a closure from Perl:</p>
+
+<pre class="sh_perl"> use FFI::Platypus 1.00;
+ 
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 1, lang =&#62; &#39;Rust&#39; );
+ $ffi-&#62;bundle;
+ $ffi-&#62;type( &#39;(string)-&#62;void&#39; =&#62; &#39;PerlLog&#39; );
+ $ffi-&#62;attach( rust_log =&#62; [&#39;PerlLog&#39;] );
+ 
+ my $perl_log = $ffi-&#62;closure(sub {
+     my $message = shift;
+     print &#34;log&#62; $message\n&#34;;
+ });
+ 
+ rust_log($perl_log);</pre>
+
+<p>Which outputs:</p>
+
+<pre class="sh_perl"> $ perl callback.pl
+ log&#62; Hello from rust!
+ log&#62; Something else.
+ log&#62; The last log line</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="METHODS"
+>METHODS</a></h1>
+
+<p>Generally you will not use this class directly, instead interacting with the <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> instance. However, the public methods used by Platypus are documented here.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="native_type_map"
+>native_type_map</a></h2>
+
+<pre class="sh_perl"> my $hashref = FFI::Platypus::Lang::Rust-&#62;native_type_map;</pre>
+
+<p>This returns a hash reference containing the native aliases for the Rust programming languages. That is the keys are native Rust types and the values are libffi native types.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="EXAMPLES"
+>EXAMPLES</a></h1>
+
+<p>See the above <a href="#SYNOPSIS" class="podlinkpod"
+>&#34;SYNOPSIS&#34;</a> or the <code>examples</code> directory that came with this distribution. This distribution comes with a whole module example of a full object-oriented Rust/Perl extension including <code>Makefile.PL</code> Rust crate, Perl library and tests. It lives in the <code>examples/Person</code> directory, or you can browse it on the web here:</p>
+
+<p><a href="https://github.com/Perl5-FFI/FFI-Platypus-Lang-Rust/tree/master/examples/Person" class="podlinkurl"
+>https://github.com/Perl5-FFI/FFI-Platypus-Lang-Rust/tree/master/examples/Person</a></p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SUPPORT"
+>SUPPORT</a></h1>
+
+<p>If something does not work as advertised, or the way that you think it should, or if you have a feature request, please open an issue on this project&#39;s GitHub issue tracker:</p>
+
+<p><a href="https://github.com/Perl5-FFI/FFI-Platypus-Lang-Rust/issues" class="podlinkurl"
+>https://github.com/Perl5-FFI/FFI-Platypus-Lang-Rust/issues</a></p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CONTRIBUTING"
+>CONTRIBUTING</a></h1>
+
+<p>If you have implemented a new feature or fixed a bug then you may make a pull reequest on this project&#39;s GitHub repository:</p>
+
+<p><a href="https://github.com/Perl5-FFI/FFI-Platypus-Lang-Rust/issues" class="podlinkurl"
+>https://github.com/Perl5-FFI/FFI-Platypus-Lang-Rust/issues</a></p>
+
+<p>Caution: if you do this too frequently I may nominate you as the new maintainer. Extreme caution: if you like that sort of thing.</p>
+
+<p>This project&#39;s GitHub issue tracker listed above is not Write-Only. If you want to contribute then feel free to browse through the existing issues and see if there is something you feel you might be good at and take a whack at the problem. I frequently open issues myself that I hope will be accomplished by someone in the future but do not have time to immediately implement myself.</p>
+
+<p>Another good area to help out in is documentation. I try to make sure that there is good document coverage, that is there should be documentation describing all the public features and warnings about common pitfalls, but an outsider&#39;s or alternate view point on such things would be welcome; if you see something confusing or lacks sufficient detail I encourage documentation only pull requests to improve things.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SEE_ALSO"
+>SEE ALSO</a></h1>
+
+<dl>
+<dt><a name="FFI::Platypus"
+><a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a></a></dt>
+
+<dd>
+<p>The Core Platypus documentation.</p>
+
+<dt><a name="FFI::Build::File::Cargo"
+><a href="/pod/FFI/Build/File/Cargo.html" class="podlinkpod"
+>FFI::Build::File::Cargo</a></a></dt>
+
+<dd>
+<p>Bundle Rust code with your FFI / Perl extension.</p>
+</dd>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2015 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

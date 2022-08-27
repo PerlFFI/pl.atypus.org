@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::Platypus::Lang::Fortran</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/Platypus.html">Platypus</a>::<a href="/pod/FFI/Platypus/Lang.html">Lang</a>::Fortran</div>
+    <!--FFI::Platypus::Lang::Fortran--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#CAVEATS'>CAVEATS</a>
+  <li class='indexItem indexItem1'><a href='#METHODS'>METHODS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#native_type_map'>native_type_map</a>
+    <li class='indexItem indexItem2'><a href='#mangler'>mangler</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#EXAMPLES'>EXAMPLES</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#Call_a_subroutine'>Call a subroutine</a>
+    <li class='indexItem indexItem2'><a href='#Call_Fortran_90_%2F_95'>Call Fortran 90 / 95</a>
+    <li class='indexItem indexItem2'><a href='#Complex_numbers'>Complex numbers</a>
+    <li class='indexItem indexItem2'><a href='#Fixed_length_array'>Fixed length array</a>
+    <li class='indexItem indexItem2'><a href='#Multidimensional_arrays'>Multidimensional arrays</a>
+    <li class='indexItem indexItem2'><a href='#Variable-length_array'>Variable-length array</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#SUPPORT'>SUPPORT</a>
+  <li class='indexItem indexItem1'><a href='#CONTRIBUTING'>CONTRIBUTING</a>
+  <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::Platypus::Lang::Fortran - Documentation and tools for using Platypus with Fortran</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<p>Fortran 77:</p>
+
+<pre class="sh_perl"> C Fortran function that adds two numbers together
+ C On Linux create a .so with: gfortran -shared -o libadd.so add.f
+       FUNCTION ADD(IA, IB)
+           ADD = IA + IB
+       END</pre>
+
+<p>Fortran 90/95:</p>
+
+<pre class="sh_perl"> ! Fortran function that adds two numbers together
+ ! On Linux create a .so with: gfortran -shared -o libadd.so add.f90
+ function add(a,b) result(ret)
+   implicit none
+   integer :: a
+   integer :: b
+   integer :: ret
+   ret = a + b
+ end function add</pre>
+
+<p>Perl:</p>
+
+<pre class="sh_perl"> use FFI::Platypus 1.00;
+ 
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 1 );
+ $ffi-&#62;lang(&#39;Fortran&#39;);
+ $ffi-&#62;lib(&#39;./libadd.so&#39;); # or add.dll on Windows
+ 
+ # Fortran is pass by reference, so use pointers
+ $ffi-&#62;attach( add =&#62; [ &#39;integer*&#39;, &#39;integer*&#39; ] =&#62; &#39;integer&#39; );
+ 
+ # Use a reference to an integer to pass
+ # a pointer to an integer
+ print add(\1,\2), &#34;\n&#34;;  # prints 3</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>This module provides native types and demangling for Fortran when used with <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a>.</p>
+
+<p>This module is somewhat experimental. It is also available for adoption for anyone either sufficiently knowledgable about Fortran or eager enough to learn enough about Fortran. If you are interested, please send me a pull request or two on the project&#39;s GitHub.</p>
+
+<p>For types, <code>_</code> is used instead of <code>*</code>, so use <code>integer_4</code> instead of <code>integer*4</code>.</p>
+
+<dl>
+<dt><a name="byte,_character"
+>byte, character</a></dt>
+
+<dd>
+<dt><a name="integer,_integer_1,_integer_2,_integer_4,_integer_8"
+>integer, integer_1, integer_2, integer_4, integer_8</a></dt>
+
+<dd>
+<dt><a name="unsigned,_unsigned_1,_unsigned_2,_unsigned_4,_unsigned_8"
+>unsigned, unsigned_1, unsigned_2, unsigned_4, unsigned_8</a></dt>
+
+<dd>
+<dt><a name="logical,_logical_1,_logical_2,_logical_4,_logical_8"
+>logical, logical_1, logical_2, logical_4, logical_8</a></dt>
+
+<dd>
+<dt><a name="real,_real_4,_real_8,_double_precision"
+>real, real_4, real_8, double precision</a></dt>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CAVEATS"
+>CAVEATS</a></h1>
+
+<p>Fortran is pass by reference, which means that you need to pass pointers. Confusingly Platypus uses a star (<code>*</code>) suffix to indicate a pointer, and Fortran uses a star to indicate the size of types.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="METHODS"
+>METHODS</a></h1>
+
+<p>Generally you will not use this class directly, instead interacting with the <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> instance. However, the public methods used by Platypus are documented here.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="native_type_map"
+>native_type_map</a></h2>
+
+<pre class="sh_perl"> my $hashref = FFI::Platypus::Lang::Fortran-&#62;native_type_map;</pre>
+
+<p>This returns a hash reference containing the native aliases for Fortran. That is the keys are native Fortran types and the values are libffi native types.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="mangler"
+>mangler</a></h2>
+
+<pre class="sh_perl"> my $mangler = FFI::Platypus::Lang::Fortran-&#62;mangler($ffi-&#62;libs);
+ my $c_name = $mangler-&#62;($fortran_name);</pre>
+
+<p>Returns a subroutine reference that will &#34;mangle&#34; Fortran names.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="EXAMPLES"
+>EXAMPLES</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Call_a_subroutine"
+>Call a subroutine</a></h2>
+
+<p>Fortran:</p>
+
+<pre class="sh_perl"> C Compile with gfortran -shared -o libsub.so sub.f
+       SUBROUTINE ADD(IRESULT, IA, IB)
+           IRESULT = IA + IB
+       END</pre>
+
+<p>Perl:</p>
+
+<pre class="sh_perl"> use FFI::Platypus 1.00;
+ 
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 1 );
+ $ffi-&#62;lang(&#39;Fortran&#39;);
+ $ffi-&#62;lib(&#39;./libsub.so&#39;);
+ 
+ $ffi-&#62;attach( add =&#62; [&#39;integer*&#39;,&#39;integer*&#39;,&#39;integer*&#39;] =&#62; &#39;void&#39;);
+ 
+ my $value = 0;
+ add(\$value, \1, \2);
+ 
+ print &#34;$value\n&#34;;</pre>
+
+<p><b>Discussion</b>: A Fortran &#34;subroutine&#34; is just a function that doesn&#39;t return a value. In Fortran 77 variables that start wit the letter I are integers unless declared otherwise. Fortran is also pass by reference, which means under the covers Fortran passes its arguments as pointers to the data, and you have to remember to pass in a reference to a value in Perl in cases where you would normally pass in a simple value to a C function.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Call_Fortran_90_/_95"
+>Call Fortran 90 / 95</a></h2>
+
+<p>Fortran:</p>
+
+<pre class="sh_perl"> ! on Linux: gfortran -shared -fPIC -o libfib.so fib.f90
+ 
+ recursive function fib(x) result(ret)
+   integer, intent(in) :: x
+   integer :: ret
+ 
+   if (x == 1 .or. x == 2) then
+     ret = 1
+   else
+     ret = fib(x-1) + fib(x-2)
+   end if
+ 
+ end function fib</pre>
+
+<p>Perl:</p>
+
+<pre class="sh_perl"> use FFI::Platypus 1.00;
+ 
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 1 );
+ $ffi-&#62;lang(&#39;Fortran&#39;);
+ $ffi-&#62;lib(&#39;./libfib.so&#39;);
+ 
+ $ffi-&#62;attach( fib =&#62; [&#39;integer*&#39;] =&#62; &#39;integer&#39; );
+ 
+ for(1..10)
+ {
+   print fib(\$_), &#34;\n&#34;;
+ }</pre>
+
+<p><b>Discussion</b>: Fortran 90 has &#34;advanced&#34; features such as recursion and pointers, which can now be used in Perl too.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Complex_numbers"
+>Complex numbers</a></h2>
+
+<p>Fortran:</p>
+
+<pre class="sh_perl"> ! on Linux: gfortran -shared -fPIC -o libcomplex.so complex.f90
+ 
+ subroutine complex_decompose(c,r,i)
+   implicit none
+   complex*16 :: c
+   real*8 :: r
+   real*8 :: i
+ 
+   r = real(c)
+   i = aimag(c)
+ 
+ end subroutine complex_decompose</pre>
+
+<p>Perl:</p>
+
+<pre class="sh_perl"> use FFI::Platypus 1.00;
+ use Math::Complex;
+ 
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 1 );
+ $ffi-&#62;lang(&#39;Fortran&#39;);
+ $ffi-&#62;lib(&#39;./libcomplex.so&#39;);
+ 
+ $ffi-&#62;attach(
+   complex_decompose =&#62; [&#39;real_8[2]&#39;,&#39;real_8*&#39;,&#39;real_8*&#39;] =&#62; &#39;void&#39;,
+   sub {
+     # wrapper around the Fortran function complex_decompose
+     # $decompose is a code ref to the real complex_decompose
+     # and $complex is the first argument passed int othe Perl
+     # function complex_decompose
+     my($decompose, $complex) = @_;
+     my $real;
+     my $imaginary;
+     # decompose the Perl complex number and pass it as a
+     # Fortran complex number
+     $decompose-&#62;([Re($complex),Im($complex)], \$real, \$imaginary);
+     # The decomposed real and imaginary parts are returned from
+     # Fortran.  We pass them back to the caller as a return value
+     ($real, $imaginary);
+   },
+ );
+ 
+ my($r,$i) = complex_decompose(1.5 + 2.5*i);
+ 
+ print &#34;${r} + ${i}i\n&#34;;</pre>
+
+<p><b>Discussion</b>: More recent versions of <code>libffi</code> and <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> support complex types, but not pointers to complex types, so they aren&#39;t (yet) much use when calling Fortran, which is pass by reference. There is a work around, however, at least for complex types passes as arguments. They are really two just two <code>real*4</code> or <code>real*8</code> types joined together like an array or record of two elements. Thus we can pass in a complex type to a Fortran subroutine as an array of two floating points. Take care though, as this technique DOES NOT work for return types.</p>
+
+<p>From my research, some Fortran compilers pass in the return address of the return value as the first argument for functions that return a <code>complex</code> type. This is not the case for Gnu Fortran, the compiler that I have been testing with, but if your compiler does use this convention you could pass in the &#34;return value&#34; as a two element array, as we did in the above example. I have not been able to test this though.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Fixed_length_array"
+>Fixed length array</a></h2>
+
+<p>Fortran:</p>
+
+<pre class="sh_perl"> ! on Linux: gfortran -shared -fPIC -o libfixed.so fixed.f90
+ 
+ subroutine print_array10(a)
+   implicit none
+   integer, dimension(10) :: a
+   integer :: i
+   do i=1,10
+     print *, a(i)
+   end do
+ end subroutine print_array10</pre>
+
+<p>Perl:</p>
+
+<pre class="sh_perl"> use FFI::Platypus 1.00;
+ 
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 1 );
+ $ffi-&#62;lang(&#39;Fortran&#39;);
+ $ffi-&#62;lib(&#39;./libfixed.so&#39;);
+ 
+ $ffi-&#62;attach( print_array10  =&#62; [&#39;integer[10]&#39;] =&#62; &#39;void&#39; );
+ my $array = [5,10,15,20,25,30,35,40,45,50];
+ print_array10($array);</pre>
+
+<p>Output:</p>
+
+<pre class="sh_perl">            5
+           10
+           15
+           20
+           25
+           30
+           35
+           40
+           45
+           50</pre>
+
+<p><b>Discussion</b>: In Fortran arrays are 1 indexed unlike Perl and C where arrays are 0 indexed. Perl arrays are passed in from Perl using Platypus as a array reference.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Multidimensional_arrays"
+>Multidimensional arrays</a></h2>
+
+<p>Fortran:</p>
+
+<pre class="sh_perl"> ! On Linux gfortran -shared -fPIC -o libfixed2.so fixed2.f90
+ 
+ subroutine print_array2x5(a)
+   implicit none
+   integer, dimension(2,5) :: a
+   integer :: i,n
+ 
+   do i=1,5
+     print *, a(1,i), a(2,i)
+   end do
+ end subroutine print_array2x5</pre>
+
+<p>Perl:</p>
+
+<pre class="sh_perl"> use FFI::Platypus 1.00;
+ 
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 1 );
+ $ffi-&#62;lang(&#39;Fortran&#39;);
+ $ffi-&#62;lib(&#39;./libfixed.so&#39;);
+ 
+ $ffi-&#62;attach( print_array2x5 =&#62; [&#39;integer[10]&#39;] =&#62; &#39;void&#39; );
+ my $array = [5,10,15,20,25,30,35,40,45,50];
+ print_array2x5($array);</pre>
+
+<p>Output:</p>
+
+<pre class="sh_perl">            5          10
+           15          20
+           25          30
+           35          40
+           45          50</pre>
+
+<p><b>Discussion</b>: Perl does not generally support multi-dimensional arrays (though they can be achieved using lists of references). In Fortran, multidimensional arrays are stored as a contiguous series of bytes, so you can pass in a single dimensional array to a Fortran function or subroutine assuming it has sufficent number of values.</p>
+
+<p>Platypus updates any values that have been changed by Fortran when the Fortran code returns.</p>
+
+<p>One thing to keep in mind is that Fortran arrays are &#34;column-first&#34;, which is the opposite of C/C++, which could be termed &#34;row-first&#34;.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Variable-length_array"
+>Variable-length array</a></h2>
+
+<p>Fortran:</p>
+
+<pre class="sh_perl"> ! On Linux gfortran -shared -fPIC -o libvar.so var.f90
+ 
+ function sum_array(size,a) result(ret)
+   implicit none
+   integer :: size
+   integer, dimension(size) :: a
+   integer :: i
+   integer :: ret
+ 
+   ret = 0
+ 
+   do i=1,size
+     ret = ret + a(i)
+   end do
+ end function sum_array</pre>
+
+<p>Perl:</p>
+
+<pre class="sh_perl"> use FFI::Platypus 1.00;
+ 
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 1 );
+ $ffi-&#62;lang(&#34;Fortran&#34;);
+ $ffi-&#62;lib(&#34;./libvar_array.so&#34;);
+ 
+ $ffi-&#62;attach( sum_array =&#62; [&#39;integer*&#39;,&#39;integer[]&#39;] =&#62; &#39;integer&#39;,
+   sub {
+     my $f = shift;
+     my $size = scalar @_;
+     $f-&#62;(\$size, \@_);
+   },
+ );
+ 
+ my @a = (1..10);
+ my @b = (25..30);
+ 
+ print sum_array(1..10), &#34;\n&#34;;
+ print sum_array(25..30), &#34;\n&#34;;</pre>
+
+<p>Output:</p>
+
+<pre class="sh_perl"> 55
+ 165</pre>
+
+<p><b>Discussion</b>: Fortran allows variable-length arrays. To indicate a variable length array use the <code>[]</code> notation without a length. Note that this works for argument types, where Perl knows the length of an array, but it will not work for return types, where Perl has no way of determining the size of the returned array (you can probably fake it with an <code>opaque</code> type and a wrapper function though).</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SUPPORT"
+>SUPPORT</a></h1>
+
+<p>If something does not work as advertised, or the way that you think it should, or if you have a feature request, please open an issue on this project&#39;s GitHub issue tracker:</p>
+
+<p><a href="https://github.com/plicease/FFI-Platypus-Lang-Fortran/issues" class="podlinkurl"
+>https://github.com/plicease/FFI-Platypus-Lang-Fortran/issues</a></p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CONTRIBUTING"
+>CONTRIBUTING</a></h1>
+
+<p>If you have implemented a new feature or fixed a bug then you may make a pull reequest on this project&#39;s GitHub repository:</p>
+
+<p><a href="https://github.com/plicease/FFI-Platypus-Lang-Fortran/pulls" class="podlinkurl"
+>https://github.com/plicease/FFI-Platypus-Lang-Fortran/pulls</a></p>
+
+<p>Also Feel free to use the issue tracker:</p>
+
+<p><a href="https://github.com/plicease/FFI-Platypus-Lang-Fortran/issues" class="podlinkurl"
+>https://github.com/plicease/FFI-Platypus-Lang-Fortran/issues</a></p>
+
+<p>This project&#39;s GitHub issue tracker listed above is not Write-Only. If you want to contribute then feel free to browse through the existing issues and see if there is something you feel you might be good at and take a whack at the problem. I frequently open issues myself that I hope will be accomplished by someone in the future but do not have time to immediately implement myself.</p>
+
+<p>Another good area to help out in is documentation. I try to make sure that there is good document coverage, that is there should be documentation describing all the public features and warnings about common pitfalls, but an outsider&#39;s or alternate view point on such things would be welcome; if you see something confusing or lacks sufficient detail I encourage documentation only pull requests to improve things.</p>
+
+<p>Caution: if you do this too frequently I may nominate you as the new maintainer. Extreme caution: if you like that sort of thing.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SEE_ALSO"
+>SEE ALSO</a></h1>
+
+<dl>
+<dt><a name="FFI::Platypus"
+><a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a></a></dt>
+
+<dd>
+<p>The Core Platypus documentation.</p>
+
+<dt><a name="FFI::Build_+_FFI::Build::File::Fortran"
+><a href="/pod/FFI/Build.html" class="podlinkpod"
+>FFI::Build</a> + <a href="/pod/FFI/Build/File/Fortran.html" class="podlinkpod"
+>FFI::Build::File::Fortran</a></a></dt>
+
+<dd>
+<p>Bundle Fortran with your FFI / Perl extension.</p>
+</dd>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2015 by Graham Ollis</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

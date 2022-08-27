@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::Raw</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::Raw</div>
+    <!--FFI::Raw--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#CONSTRUCTORS'>CONSTRUCTORS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#new'>new</a>
+    <li class='indexItem indexItem2'><a href='#new_from_ptr'>new_from_ptr</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#METHODS'>METHODS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#call'>call</a>
+    <li class='indexItem indexItem2'><a href='#coderef'>coderef</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#SUBROUTINES'>SUBROUTINES</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#memptr'>memptr</a>
+    <li class='indexItem indexItem2'><a href='#callback'>callback</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#TYPES'>TYPES</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#void'>void</a>
+    <li class='indexItem indexItem2'><a href='#int'>int</a>
+    <li class='indexItem indexItem2'><a href='#uint'>uint</a>
+    <li class='indexItem indexItem2'><a href='#short'>short</a>
+    <li class='indexItem indexItem2'><a href='#ushort'>ushort</a>
+    <li class='indexItem indexItem2'><a href='#long'>long</a>
+    <li class='indexItem indexItem2'><a href='#ulong'>ulong</a>
+    <li class='indexItem indexItem2'><a href='#int64'>int64</a>
+    <li class='indexItem indexItem2'><a href='#uint64'>uint64</a>
+    <li class='indexItem indexItem2'><a href='#char'>char</a>
+    <li class='indexItem indexItem2'><a href='#uchar'>uchar</a>
+    <li class='indexItem indexItem2'><a href='#float'>float</a>
+    <li class='indexItem indexItem2'><a href='#double'>double</a>
+    <li class='indexItem indexItem2'><a href='#str'>str</a>
+    <li class='indexItem indexItem2'><a href='#ptr'>ptr</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::Raw - Perl bindings to the portable FFI library (libffi)</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 0.04</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<pre class="sh_perl"> use FFI::Raw;
+ 
+ my $cos = FFI::Raw-&#62;new(
+   &#39;libm.so&#39;, &#39;cos&#39;,
+   FFI::Raw::double, # return value
+   FFI::Raw::double  # arg #1
+ );
+ 
+ say $cos-&#62;call(2.0);</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p><b>FFI::Raw</b> provides a low-level foreign function interface (FFI) for Perl based on <a href="http://sourceware.org/libffi/" class="podlinkurl"
+>libffi</a>. In essence, it can access and call functions exported by shared libraries without the need to write C/XS code.</p>
+
+<p>Dynamic symbols can be automatically resolved at runtime so that the only information needed to use <b>FFI::Raw</b> is the name (or path) of the target library, the name of the function to call and its signature (though it is also possible to pass a function pointer obtained, for example, using <a href="https://metacpan.org/pod/DynaLoader" class="podlinkpod"
+>DynaLoader</a>).</p>
+
+<p>Note that this module has nothing to do with <a href="/pod/FFI.html" class="podlinkpod"
+>FFI</a>.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CONSTRUCTORS"
+>CONSTRUCTORS</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="new"
+>new</a></h2>
+
+<pre class="sh_perl"> my $ffi = FFI::Raw-&#62;new( $library, $function, $return_type, @arg_types )</pre>
+
+<p>Create a new <code>FFI::Raw</code> object. It loads <code>$library</code>, finds the function <code>$function</code> with return type <code>$return_type</code> and creates a calling interface.</p>
+
+<p>If <code>$library</code> is <code>undef</code> then the function is searched in the main program.</p>
+
+<p>This method also takes a variable number of types, representing the arguments of the wanted function.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="new_from_ptr"
+>new_from_ptr</a></h2>
+
+<pre class="sh_perl"> my $ffi = FFI::Raw-&#62;new_from_ptr( $function_ptr, $return_type, @arg_types )</pre>
+
+<p>Create a new <code>FFI::Raw</code> object from the <code>$function_ptr</code> function pointer.</p>
+
+<p>This method also takes a variable number of types, representing the arguments of the wanted function.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="METHODS"
+>METHODS</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="call"
+>call</a></h2>
+
+<pre class="sh_perl"> my $ret = $ffi-&#62;call( @args)</pre>
+
+<p>Execute the <code>FFI::Raw</code> function. This method also takes a variable number of arguments, which are passed to the called function. The argument types must match the types passed to <code>new</code> (or <code>new_from_ptr</code>).</p>
+
+<p>The <code>FFI::Raw</code> object can be used as a CODE reference as well. Dereferencing the object will work just like call():</p>
+
+<pre class="sh_perl"> $cos-&#62;call(2.0); # normal call() call
+ $cos-&#62;(2.0);     # dereference as CODE ref</pre>
+
+<p>This works because FFI::Raw overloads the <code>&#38;{}</code> operator.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="coderef"
+>coderef</a></h2>
+
+<pre class="sh_perl"> my $code = FFI::Raw-&#62;coderef;</pre>
+
+<p>Return a code reference of a given <code>FFI::Raw</code>.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SUBROUTINES"
+>SUBROUTINES</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="memptr"
+>memptr</a></h2>
+
+<pre class="sh_perl"> my $memptr = FFI::Raw::memptr( $length );</pre>
+
+<p>Create a <a href="/pod/FFI/Raw/MemPtr.html" class="podlinkpod"
+>FFI::Raw::MemPtr</a>. This is a shortcut for <code>FFI::Raw::MemPtr-&#62;new(...)</code>.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="callback"
+>callback</a></h2>
+
+<pre class="sh_perl"> my $callback = FFI::Raw::callback( $coderef, $ret_type, \@arg_types );</pre>
+
+<p>Create a <a href="/pod/FFI/Raw/Callback.html" class="podlinkpod"
+>FFI::Raw::Callback</a>. This is a shortcut for <code>FFI::Raw::Callback-&#62;new(...)</code>.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="TYPES"
+>TYPES</a></h1>
+
+<p>Caveats on the way types were defined by the original <a href="/pod/FFI/Raw.html" class="podlinkpod"
+>FFI::Raw</a>:</p>
+
+<p>This module uses the common convention that <code>char</code> is 8 bits, <code>short</code> is 16 bits, <code>int</code> is 32 bits, <code>long</code> is 32 bits on a 32bit arch and 64 bits on a 64 bit arch, <code>int64</code> is 64 bits. While this is probably true on most modern platforms (if not all), it isn&#39;t technically guaranteed by the standard. <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> itself, differs in that <code>int</code>, <code>long</code>, etc are the native sizes, even if they do not follow this common convention and you need to use <code>sint32</code>, <code>sint64</code>, etc if you want a specific sized type.</p>
+
+<p>This module also assumes that <code>char</code> is signed. Although this is commonly true on many platforms it is not guaranteed by the standard. On Windows, for example the <code>char</code> type is unsigned. <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> by contrast follows to the standard where <code>char</code> uses the native behavior, and if you want an signed character type you can use <code>sint8</code> instead.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="void"
+>void</a></h2>
+
+<pre class="sh_perl"> my $type = FFI::Raw::void();</pre>
+
+<p>Return a <code>FFI::Raw</code> void type.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="int"
+>int</a></h2>
+
+<pre class="sh_perl"> my $type = FFI::Raw::int();</pre>
+
+<p>Return a <code>FFI::Raw</code> integer type.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="uint"
+>uint</a></h2>
+
+<pre class="sh_perl"> my $type = FFI::Raw::uint();</pre>
+
+<p>Return a <code>FFI::Raw</code> unsigned integer type.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="short"
+>short</a></h2>
+
+<pre class="sh_perl"> my $type = FFI::Raw::short();</pre>
+
+<p>Return a <code>FFI::Raw</code> short integer type.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="ushort"
+>ushort</a></h2>
+
+<pre class="sh_perl"> my $type = FFI::Raw::ushort();</pre>
+
+<p>Return a <code>FFI::Raw</code> unsigned short integer type.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="long"
+>long</a></h2>
+
+<pre class="sh_perl"> my $type = FFI::Raw::long();</pre>
+
+<p>Return a <code>FFI::Raw</code> long integer type.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="ulong"
+>ulong</a></h2>
+
+<pre class="sh_perl"> my $type = FFI::Raw::ulong();</pre>
+
+<p>Return a <code>FFI::Raw</code> unsigned long integer type.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="int64"
+>int64</a></h2>
+
+<pre class="sh_perl"> my $type = FFI::Raw::int64();</pre>
+
+<p>Return a <code>FFI::Raw</code> 64 bit integer type. This requires <a href="https://metacpan.org/pod/Math%3A%3AInt64" class="podlinkpod"
+>Math::Int64</a> to work.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="uint64"
+>uint64</a></h2>
+
+<pre class="sh_perl"> my $type = FFI::Raw::uint64();</pre>
+
+<p>Return a <code>FFI::Raw</code> unsigned 64 bit integer type. This requires <a href="https://metacpan.org/pod/Math%3A%3AInt64" class="podlinkpod"
+>Math::Int64</a> to work.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="char"
+>char</a></h2>
+
+<pre class="sh_perl"> my $type = FFI::Raw::char();</pre>
+
+<p>Return a <code>FFI::Raw</code> char type.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="uchar"
+>uchar</a></h2>
+
+<pre class="sh_perl"> my $type = FFI::Raw::uchar();</pre>
+
+<p>Return a <code>FFI::Raw</code> unsigned char type.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="float"
+>float</a></h2>
+
+<pre class="sh_perl"> my $type = FFI::Raw::float();</pre>
+
+<p>Return a <code>FFI::Raw</code> float type.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="double"
+>double</a></h2>
+
+<pre class="sh_perl"> my $type = FFI::Raw::double();</pre>
+
+<p>Return a <code>FFI::Raw</code> double type.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="str"
+>str</a></h2>
+
+<pre class="sh_perl"> my $type = FFI::Raw::str();</pre>
+
+<p>Return a <code>FFI::Raw</code> string type.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="ptr"
+>ptr</a></h2>
+
+<pre class="sh_perl"> my $type = FFI::Raw::ptr();</pre>
+
+<p>Return a <code>FFI::Raw</code> pointer type.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SEE_ALSO"
+>SEE ALSO</a></h1>
+
+<p><a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a>, <a href="/pod/Alt/FFI/Raw/Platypus.html" class="podlinkpod"
+>Alt::FFI::Raw::Platypus</a></p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2019 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

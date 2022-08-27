@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Const::Introspect::C</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> Const::Introspect::C</div>
+    <!--Const::Introspect::C--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#PROPERTIES'>PROPERTIES</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#headers'>headers</a>
+    <li class='indexItem indexItem2'><a href='#lang'>lang</a>
+    <li class='indexItem indexItem2'><a href='#cc'>cc</a>
+    <li class='indexItem indexItem2'><a href='#ppflags'>ppflags</a>
+    <li class='indexItem indexItem2'><a href='#cflags'>cflags</a>
+    <li class='indexItem indexItem2'><a href='#extra_cflags'>extra_cflags</a>
+    <li class='indexItem indexItem2'><a href='#source'>source</a>
+    <li class='indexItem indexItem2'><a href='#filter'>filter</a>
+    <li class='indexItem indexItem2'><a href='#diag'>diag</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#METHODS'>METHODS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#get_macro_constants'>get_macro_constants</a>
+    <li class='indexItem indexItem2'><a href='#get_single'>get_single</a>
+    <li class='indexItem indexItem2'><a href='#compute_expression_type'>compute_expression_type</a>
+    <li class='indexItem indexItem2'><a href='#compute_expression_value'>compute_expression_value</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#CAVEATS'>CAVEATS</a>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>Const::Introspect::C - Find and evaluate C/C++ constants for use in Perl</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 0.01</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<pre class="sh_perl"> use Const::Introspect::C;
+ 
+ my $c = Const::Introspect::C-&#62;new(
+   headers =&#62; [&#39;foo.h&#39;],
+ );
+ 
+ foreach my $const ($c-&#62;get_macro_constants)
+ {
+   # const isa Const::Introspect::C::Constant
+   say &#34;name  = &#34;, $const-&#62;name;
+   # type is one of: int, long, pointer, string,
+   #                 float, double or &#34;other&#34;
+   say &#34;type  = &#34;, $const-&#62;type;
+   say &#34;value = &#34;, $const-&#62;value;
+ }</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p><b>Note</b>: This is an early release, expect some interface changes in the near future.</p>
+
+<p>This module provides an interface for finding C/C++ constant style macros, and can compute their types and values. It can also be used to compute the values of enumerated type constants, although this module doesn&#39;t have a way of finding the names (For that try something like <a href="/pod/Clang/CastXML.html" class="podlinkpod"
+>Clang::CastXML</a>).</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="PROPERTIES"
+>PROPERTIES</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="headers"
+>headers</a></h2>
+
+<p>List of C/C++ header files.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="lang"
+>lang</a></h2>
+
+<p>The programming language. Should be one of <code>c</code> or <code>c++</code>. The default is <code>c</code>.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="cc"
+>cc</a></h2>
+
+<p>The C compiler. The default is the C compiler used by Perl itself, automatically split on the appropriate whitespace. This should be a array reference, so <code>[&#39;clang&#39;]</code> and not <code>&#39;clang&#39;</code>. This allows for <code>cc</code> with spaces in it.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="ppflags"
+>ppflags</a></h2>
+
+<p>The C pre-processor flags. This may change in the future, or on some platforms, but as of this writing this is <code>-dM -E -x c</code> for C and <code>-dM -E -x c++</code> for C++. This must be an array reference.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="cflags"
+>cflags</a></h2>
+
+<p>C compiler flags. This is what Perl uses by default. This must be an array reference.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="extra_cflags"
+>extra_cflags</a></h2>
+
+<p>Extra Compiler flags. This is an empty array by default. This allows the caller to provide additional library specific flags, like <code>-I</code>.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="source"
+>source</a></h2>
+
+<p>C source file. This is an instance of <a href="https://metacpan.org/pod/Path%3A%3ATiny" class="podlinkpod"
+>Path::Tiny</a> and it is created on-the-fly. You shouldn&#39;t need to specify this explicitly.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="filter"
+>filter</a></h2>
+
+<p>Filter regular expression that all macro names must match. This is <code>^[^_]</code> by default, which means all macros starting with an underscore are skipped.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="diag"
+>diag</a></h2>
+
+<p>List of diagnostic failures.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="METHODS"
+>METHODS</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="get_macro_constants"
+>get_macro_constants</a></h2>
+
+<pre class="sh_perl"> my @const = $c-&#62;get_macro_constants;</pre>
+
+<p>This generates the source file, runs the pre-processor, parses the macros as well as possible and returns the result as a list of <a href="/pod/Const/Introspect/C/Constant.html" class="podlinkpod"
+>Const::Introspect::C::Constant</a> instances.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="get_single"
+>get_single</a></h2>
+
+<pre class="sh_perl"> my $const = $c-&#62;get_single($name);</pre>
+
+<p>Get a single constant by the name of <code>$name</code>. Returns an instance of <a href="/pod/Const/Introspect/C.html" class="podlinkpod"
+>Const::Introspect::C</a>. This is most useful for getting the integer values for named enumerated values.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="compute_expression_type"
+>compute_expression_type</a></h2>
+
+<pre class="sh_perl"> my $type = $c-&#62;compute_expression_type($expression);</pre>
+
+<p>This attempts to compute the type of the C <code>$expression</code>. It should return one of <code>int</code>, <code>long</code>, <code>string</code>, <code>float</code>, <code>double</code>, or <code>other</code>. If the type cannot be determined then <code>other</code> will be returned, and often indicates a code macro that doesn&#39;t have a corresponding constant.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="compute_expression_value"
+>compute_expression_value</a></h2>
+
+<pre class="sh_perl"> my $value = $c-&#62;compute_expression_value($type, $expression);</pre>
+
+<p>This method attempts to compute the value of the given C <code>$expression</code> of the given <code>$type</code>. <code>$type</code> should be one of <code>int</code>, <code>long</code>, <code>string</code>, <code>float</code>, or <code>double</code>.</p>
+
+<p>If you do not know the expression type, you can try to compute the type using <code>compute_expression_type</code> above.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CAVEATS"
+>CAVEATS</a></h1>
+
+<p>This modules requires the C pre-processor for macro constants, and for many constants requires a compiler to compute the type and value. The techniques used by this module work with <code>clang</code> and <code>gcc</code>, but they probably don&#39;t work with other compilers. Patches welcome to support other compilers.</p>
+
+<p>This module can tell you the value of pointer constants, but there is not much utility to the value of non <code>NULL</code> values.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2020 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

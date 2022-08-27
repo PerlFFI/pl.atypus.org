@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::C::Union</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/C.html">C</a>::Union</div>
+    <!--FFI::C::Union--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#CONSTRUCTOR'>CONSTRUCTOR</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#new'>new</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::C::Union - Union data instance for FFI</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 0.12</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<pre class="sh_perl"> use FFI::C::UnionDef;
+ 
+ my $def = FFI::C::UnionDef-&#62;new(
+   name =&#62; &#39;anyint_t&#39;,
+   class =&#62; &#39;AnyInt&#39;,
+   members =&#62; [
+     u8  =&#62; &#39;uint8&#39;,
+     u16 =&#62; &#39;uint16&#39;,
+     u32 =&#62; &#39;uint32&#39;,
+   ],
+ );
+ 
+ my $int = AnyInt-&#62;new({ u8 =&#62; 42 });
+ printf &#34;0x%x\n&#34;, $int-&#62;u32;   # 0x2a on Intel</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>This class represents an instance of a C <code>union</code>. This class can be created using <code>new</code> on the generated class, if that was specified for the <a href="/pod/FFI/C/UnionDef.html" class="podlinkpod"
+>FFI::C::UnionDef</a>, or by using the <code>create</code> method on <a href="/pod/FFI/C/UnionDef.html" class="podlinkpod"
+>FFI::C::UnionDef</a>.</p>
+
+<p>For each member defined in the <a href="/pod/FFI/C/UnionDef.html" class="podlinkpod"
+>FFI::C::UnionDef</a> there is an accessor for the <a href="/pod/FFI/C/Union.html" class="podlinkpod"
+>FFI::C::Union</a> instance.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CONSTRUCTOR"
+>CONSTRUCTOR</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="new"
+>new</a></h2>
+
+<pre class="sh_perl"> FFI::C::UnionDef-&#62;new( class =&#62; &#39;User::Union::Class&#39;, ... );
+ my $instance = User::Union::Class-&#62;new;</pre>
+
+<p>Creates a new instance of the <code>union</code>.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SEE_ALSO"
+>SEE ALSO</a></h1>
+
+<dl>
+<dt><a name="FFI::C"
+><a href="/pod/FFI/C.html" class="podlinkpod"
+>FFI::C</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::Array"
+><a href="/pod/FFI/C/Array.html" class="podlinkpod"
+>FFI::C::Array</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::ArrayDef"
+><a href="/pod/FFI/C/ArrayDef.html" class="podlinkpod"
+>FFI::C::ArrayDef</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::Def"
+><a href="/pod/FFI/C/Def.html" class="podlinkpod"
+>FFI::C::Def</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::File"
+><a href="/pod/FFI/C/File.html" class="podlinkpod"
+>FFI::C::File</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::PosixFile"
+><a href="/pod/FFI/C/PosixFile.html" class="podlinkpod"
+>FFI::C::PosixFile</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::Struct"
+><a href="/pod/FFI/C/Struct.html" class="podlinkpod"
+>FFI::C::Struct</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::StructDef"
+><a href="/pod/FFI/C/StructDef.html" class="podlinkpod"
+>FFI::C::StructDef</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::Union"
+><a href="/pod/FFI/C/Union.html" class="podlinkpod"
+>FFI::C::Union</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::UnionDef"
+><a href="/pod/FFI/C/UnionDef.html" class="podlinkpod"
+>FFI::C::UnionDef</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::Util"
+><a href="/pod/FFI/C/Util.html" class="podlinkpod"
+>FFI::C::Util</a></a></dt>
+
+<dd>
+<dt><a name="FFI::Platypus::Record"
+><a href="/pod/FFI/Platypus/Record.html" class="podlinkpod"
+>FFI::Platypus::Record</a></a></dt>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2020-2022 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

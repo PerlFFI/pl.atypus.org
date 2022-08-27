@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::Raw::MemPtr</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/Raw.html">Raw</a>::MemPtr</div>
+    <!--FFI::Raw::MemPtr--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#CONSTRUCTORS'>CONSTRUCTORS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#new'>new</a>
+    <li class='indexItem indexItem2'><a href='#new_from_buf'>new_from_buf</a>
+    <li class='indexItem indexItem2'><a href='#new_from_ptr'>new_from_ptr</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#METHODS'>METHODS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#to_perl_str'>to_perl_str</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::Raw::MemPtr - FFI::Platypus::Legacy::Raw memory pointer type</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 0.04</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>A <b>FFI::Raw::MemPtr</b> represents a memory pointer which can be passed to functions taking a <code>FFI::Raw::ptr</code> argument.</p>
+
+<p>The allocated memory is automatically deallocated once the object is not in use anymore.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CONSTRUCTORS"
+>CONSTRUCTORS</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="new"
+>new</a></h2>
+
+<pre class="sh_perl"> FFI::Raw::MemPtr-&#62;new( $length );</pre>
+
+<p>Allocate a new <code>FFI::Raw::MemPtr</code> of size <code>$length</code> bytes.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="new_from_buf"
+>new_from_buf</a></h2>
+
+<pre class="sh_perl"> my $memptr = FFI::Platypus::Legacy::Raw::MemPtr-&#62;new_from_buf( $buffer, $length );</pre>
+
+<p>Allocate a new <code>FFI::Platypus::Legacy::Raw::MemPtr</code> of size <code>$length</code> bytes and copy <code>$buffer</code> into it. This can be used, for example, to pass a pointer to a function that takes a C struct pointer, by using <code>pack()</code> or the <a href="https://metacpan.org/pod/Convert%3A%3ABinary%3A%3AC" class="podlinkpod"
+>Convert::Binary::C</a> module to create the actual struct content.</p>
+
+<p>For example, consider the following C code</p>
+
+<pre class="sh_perl"> struct some_struct {
+   int some_int;
+   char some_str[];
+ };
+ 
+ extern void take_one_struct(struct some_struct *arg) {
+   if (arg-&#62;some_int == 42)
+     puts(arg-&#62;some_str);
+ }</pre>
+
+<p>It can be called using FFI::Platypus::Legacy::Raw as follows:</p>
+
+<pre class="sh_perl"> use FFI::Platypus::Legacy::Raw;
+ 
+ my $packed = pack(&#39;ix![p]p&#39;, 42, &#39;hello&#39;);
+ my $arg = FFI::Platypus::Legacy::Raw::MemPtr-&#62;new_from_buf($packed, length $packed);
+ 
+ my $take_one_struct = FFI::Platypus::Legacy::Raw-&#62;new(
+   $shared, &#39;take_one_struct&#39;,
+   FFI::Platypus::Legacy::Raw::void, FFI::Platypus::Legacy::Raw::ptr
+ );
+ 
+ $take_one_struct-&#62;($arg);</pre>
+
+<p>Which would print <code>hello</code>.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="new_from_ptr"
+>new_from_ptr</a></h2>
+
+<pre class="sh_perl"> my $memptr = FFI::Platypus::Legacy::Raw::MemPtr-&#62;new_from_ptr( $ptr );</pre>
+
+<p>Allocate a new <code>FFI::Platypus::Legacy::Raw::MemPtr</code> pointing to the <code>$ptr</code>, which can be either a <code>FFI::Platypus::Legacy::Raw::MemPtr</code> or a pointer returned by another function.</p>
+
+<p>This is the <code>FFI::Platypus::Legacy::Raw</code> equivalent of a pointer to a pointer.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="METHODS"
+>METHODS</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="to_perl_str"
+>to_perl_str</a></h2>
+
+<pre class="sh_perl"> my $memptr = FFI::Platypus::Legacy::Raw::MemPtr-&#62;to_perl_str;
+ my $memptr = FFI::Platypus::Legacy::Raw::MemPtr-&#62;to_perl_str( $length );</pre>
+
+<p>Convert a <code>FFI::Platypus::Legacy::Raw::MemPtr</code> to a Perl string. If <code>$length</code> is not provided, the length of the string will be computed using <code>strlen()</code>.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2019 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

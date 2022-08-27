@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::C::Array</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/C.html">C</a>::Array</div>
+    <!--FFI::C::Array--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#CONSTRUCTOR'>CONSTRUCTOR</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#new'>new</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#METHODS'>METHODS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#get'>get</a>
+    <li class='indexItem indexItem2'><a href='#count'>count</a>
+    <li class='indexItem indexItem2'><a href='#tie'>tie</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::C::Array - Array instance for FFI</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 0.12</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<pre class="sh_perl"> use FFI::C::ArrayDef;
+ use FFI::C::StructDef;
+ 
+ my $point_def = FFI::C::StructDef-&#62;new(
+   name  =&#62; &#39;point_t&#39;,
+   class =&#62; &#39;Point&#39;,
+   members =&#62; [
+     x =&#62; &#39;double&#39;,
+     y =&#62; &#39;double&#39;,
+   ],
+ );
+ 
+ my $rect_def = FFI::C::ArrayDef-&#62;new(
+   name    =&#62; &#39;rectangle_t&#39;,
+   class   =&#62; &#39;Rectangle&#39;,
+   members =&#62; [
+     $point_def, 2,
+   ]
+ );
+ 
+ # create a rectangle using the def&#39;s create method
+ my $square = $rect_def-&#62;create([
+   { x =&#62; 1.0, y =&#62; 1.0 },
+   { x =&#62; 2.0, y =&#62; 2.0 },
+ ]);
+ 
+ printf &#34;[[%d %d][%d %d]]\n&#34;,
+   $square-&#62;[0]-&#62;x, $square-&#62;[0]-&#62;y,
+   $square-&#62;[1]-&#62;x, $square-&#62;[1]-&#62;y;   # [[1 1][2 2]]
+ 
+ # move square by 1 on the x axis
+ $square-&#62;[$_]-&#62;x( $square-&#62;[$_]-&#62;x + 1 ) for 0..1;
+ 
+ printf &#34;[[%d %d][%d %d]]\n&#34;,
+   $square-&#62;[0]-&#62;x, $square-&#62;[0]-&#62;y,
+   $square-&#62;[1]-&#62;x, $square-&#62;[1]-&#62;y;   # [[2 1][3 2]]
+ 
+ # Create a rectange usingn the generated class
+ my $rect = Rectangle-&#62;new;
+ $rect-&#62;[0]-&#62;x(1.0);
+ $rect-&#62;[0]-&#62;y(1.0);
+ $rect-&#62;[1]-&#62;x(2.0);
+ $rect-&#62;[1]-&#62;y(3.0);</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>This class represents an instance of a C an array. This class can be created using <code>new</code> on the generated class, if that was specified for the <a href="/pod/FFI/C/ArrayDef.html" class="podlinkpod"
+>FFI::C::ArrayDef</a>, or by using the <code>create</code> method on <a href="/pod/FFI/C/ArrayDef.html" class="podlinkpod"
+>FFI::C::ArrayDef</a>.</p>
+
+<p>Each element of the array can be accessed using the <code>get</code> method below, or by using the object as an array reference, thanks to magical Perl ties.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CONSTRUCTOR"
+>CONSTRUCTOR</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="new"
+>new</a></h2>
+
+<pre class="sh_perl"> FFI::C::ArrayDef-&#62;new( class =&#62; &#39;User::Array::Class&#39;, ... );
+ my $instance = User::Array::Class-&#62;new;
+ my $instance = User::Array::Class-&#62;new($count);</pre>
+
+<p>Creates a new instance of the array. If <code>$count</code> is specified, that will be used as the element count, overriding the count defined by the def. If the def did not specify a count then you MUST provide a count.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="METHODS"
+>METHODS</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="get"
+>get</a></h2>
+
+<pre class="sh_perl"> my $element = $instance-&#62;get($index);
+ my $element = $instance-&#62;[$index];</pre>
+
+<p>Gets the element at the given <code>$index</code>.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="count"
+>count</a></h2>
+
+<pre class="sh_perl"> my $count = $instance-&#62;count;</pre>
+
+<p>Returns the number of elements in the array, if known.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="tie"
+>tie</a></h2>
+
+<pre class="sh_perl"> my $arrayref = $instance-&#62;tie;</pre>
+
+<p>Returns a Perl array reference tied to the C array.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SEE_ALSO"
+>SEE ALSO</a></h1>
+
+<dl>
+<dt><a name="FFI::C"
+><a href="/pod/FFI/C.html" class="podlinkpod"
+>FFI::C</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::Array"
+><a href="/pod/FFI/C/Array.html" class="podlinkpod"
+>FFI::C::Array</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::ArrayDef"
+><a href="/pod/FFI/C/ArrayDef.html" class="podlinkpod"
+>FFI::C::ArrayDef</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::Def"
+><a href="/pod/FFI/C/Def.html" class="podlinkpod"
+>FFI::C::Def</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::File"
+><a href="/pod/FFI/C/File.html" class="podlinkpod"
+>FFI::C::File</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::PosixFile"
+><a href="/pod/FFI/C/PosixFile.html" class="podlinkpod"
+>FFI::C::PosixFile</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::Struct"
+><a href="/pod/FFI/C/Struct.html" class="podlinkpod"
+>FFI::C::Struct</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::StructDef"
+><a href="/pod/FFI/C/StructDef.html" class="podlinkpod"
+>FFI::C::StructDef</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::Union"
+><a href="/pod/FFI/C/Union.html" class="podlinkpod"
+>FFI::C::Union</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::UnionDef"
+><a href="/pod/FFI/C/UnionDef.html" class="podlinkpod"
+>FFI::C::UnionDef</a></a></dt>
+
+<dd>
+<dt><a name="FFI::C::Util"
+><a href="/pod/FFI/C/Util.html" class="podlinkpod"
+>FFI::C::Util</a></a></dt>
+
+<dd>
+<dt><a name="FFI::Platypus::Record"
+><a href="/pod/FFI/Platypus/Record.html" class="podlinkpod"
+>FFI::Platypus::Record</a></a></dt>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2020-2022 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

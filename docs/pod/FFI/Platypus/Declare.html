@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::Platypus::Declare</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/Platypus.html">Platypus</a>::Declare</div>
+    <!--FFI::Platypus::Declare--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#FUNCTIONS'>FUNCTIONS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#lib'>lib</a>
+    <li class='indexItem indexItem2'><a href='#type'>type</a>
+    <li class='indexItem indexItem2'><a href='#custom_type'>custom_type</a>
+    <li class='indexItem indexItem2'><a href='#load_custom_type'>load_custom_type</a>
+    <li class='indexItem indexItem2'><a href='#type_meta'>type_meta</a>
+    <li class='indexItem indexItem2'><a href='#attach'>attach</a>
+    <li class='indexItem indexItem2'><a href='#closure'>closure</a>
+    <li class='indexItem indexItem2'><a href='#sticky'>sticky</a>
+    <li class='indexItem indexItem2'><a href='#cast'>cast</a>
+    <li class='indexItem indexItem2'><a href='#attach_cast'>attach_cast</a>
+    <li class='indexItem indexItem2'><a href='#sizeof'>sizeof</a>
+    <li class='indexItem indexItem2'><a href='#lang'>lang</a>
+    <li class='indexItem indexItem2'><a href='#abi'>abi</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::Platypus::Declare - (discouraged) Declarative interface to FFI::Platypus</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 1.34</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<pre class="sh_perl"> use FFI::Platypus::Declare &#39;string&#39;, &#39;int&#39;;
+ 
+ lib undef; # use libc
+ attach puts =&#62; [string] =&#62; int;
+ 
+ puts(&#34;hello world&#34;);</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>This module is officially <b>discouraged</b>. The idea was to provide a simpler declarative interface without the need of (directly) creating an <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> instance. In practice it is almost as complicated and makes it difficult to upgrade to the proper OO interface if the need arises. I have stopped using it mainly for this reason. It will remain as part of the Platypus core distribution to keep old code working, but you are encouraged to write new code using the OO interface. Alternatively, you can try the Perl 6 inspired <a href="https://metacpan.org/pod/NativeCall" class="podlinkpod"
+>NativeCall</a>, which provides most of the goals this module was intended for (that is a simple interface at the cost of some power), without much of the complexity. The remainder of this document describes the interface.</p>
+
+<p>This module provides a declarative interface to <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a>. It provides a more concise interface at the cost of a little less power, and a little more namespace pollution.</p>
+
+<p>Any strings passed into the <code>use</code> line will be declared as types and exported as constants into your namespace, so that you can use them without quotation marks.</p>
+
+<p>Aliases can be declared using a list reference:</p>
+
+<pre class="sh_perl"> use FFI::Platypus [ &#39;int[48]&#39; =&#62; &#39;my_integer_array&#39; ];</pre>
+
+<p>Custom types can also be declared as a list reference (the type name must include a ::):</p>
+
+<pre class="sh_perl"> use FFI::Platypus [ &#39;::StringPointer&#39; =&#62; &#39;my_string_pointer&#39; ];
+ # short for FFI::Platypus::Type::StringPointer</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="FUNCTIONS"
+>FUNCTIONS</a></h1>
+
+<p>All functions are exported into your namespace. If you do not want that, then use the OO interface (see <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a>).</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="lib"
+>lib</a></h2>
+
+<pre class="sh_perl"> lib $libpath;</pre>
+
+<p>Specify one or more dynamic libraries to search for symbols. If you are unsure of the location / version of the library then you can use <a href="https://metacpan.org/pod/FFI%3A%3ACheckLib%23find_lib" class="podlinkpod"
+>FFI::CheckLib#find_lib</a>.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="type"
+>type</a></h2>
+
+<pre class="sh_perl"> type $type;
+ type $type = $alias;</pre>
+
+<p>Declare the given type.</p>
+
+<p>Examples:</p>
+
+<pre class="sh_perl"> type &#39;uint8&#39;; # only really checks that uint8 is a valid type
+ type &#39;uint8&#39; =&#62; &#39;my_unsigned_int_8&#39;;</pre>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="custom_type"
+>custom_type</a></h2>
+
+<pre class="sh_perl"> custom_type $alias =&#62; \%args;</pre>
+
+<p>Declare the given custom type. See <a href="https://metacpan.org/pod/FFI%3A%3APlatypus%3A%3AType%23Custom-Types" class="podlinkpod"
+>FFI::Platypus::Type#Custom-Types</a> for details.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="load_custom_type"
+>load_custom_type</a></h2>
+
+<pre class="sh_perl"> load_custom_type $name =&#62; $alias, @type_args;</pre>
+
+<p>Load the custom type defined in the module <i>$name</i>, and make an alias with the name <i>$alias</i>. If the custom type requires any arguments, they may be passed in as <i>@type_args</i>. See <a href="https://metacpan.org/pod/FFI%3A%3APlatypus%3A%3AType%23Custom-Types" class="podlinkpod"
+>FFI::Platypus::Type#Custom-Types</a> for details.</p>
+
+<p>If <i>$name</i> contains <code>::</code> then it will be assumed to be a fully qualified package name. If not, then <code>FFI::Platypus::Type::</code> will be prepended to it.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="type_meta"
+>type_meta</a></h2>
+
+<pre class="sh_perl"> my $meta = type_meta $type;</pre>
+
+<p>Get the type meta data for the given type.</p>
+
+<p>Example:</p>
+
+<pre class="sh_perl"> my $meta = type_meta &#39;int&#39;;</pre>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="attach"
+>attach</a></h2>
+
+<pre class="sh_perl"> attach $name =&#62; \@argument_types =&#62; $return_type;
+ attach [$c_name =&#62; $perl_name] =&#62; \@argument_types =&#62; $return_type;
+ attach [$address =&#62; $perl_name] =&#62; \@argument_types =&#62; $return_type;</pre>
+
+<p>Find and attach a C function as a Perl function as a real live xsub.</p>
+
+<p>If just one <i>$name</i> is given, then the function will be attached in Perl with the same name as it has in C. The second form allows you to give the Perl function a different name. You can also provide a memory address (the third form) of a function to attach.</p>
+
+<p>Examples:</p>
+
+<pre class="sh_perl"> attach &#39;my_function&#39;, [&#39;uint8&#39;] =&#62; &#39;string&#39;;
+ attach [&#39;my_c_function_name&#39; =&#62; &#39;my_perl_function_name&#39;], [&#39;uint8&#39;] =&#62; &#39;string&#39;;
+ my $string1 = my_function($int);
+ my $string2 = my_perl_function_name($int);</pre>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="closure"
+>closure</a></h2>
+
+<pre class="sh_perl"> my $closure = closure $codeblock;</pre>
+
+<p>Create a closure that can be passed into a C function. For details on closures, see <a href="https://metacpan.org/pod/FFI%3A%3APlatypus%3A%3AType%23Closures" class="podlinkpod"
+>FFI::Platypus::Type#Closures</a>.</p>
+
+<p>Example:</p>
+
+<pre class="sh_perl"> my $closure1 = closure { return $_[0] * 2 };
+ my $closure2 = closure sub { return $_[0] * 4 };</pre>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="sticky"
+>sticky</a></h2>
+
+<pre class="sh_perl"> my $closure = sticky closure $codeblock;</pre>
+
+<p>Keyword to indicate the closure should not be deallocated for the life of the current process.</p>
+
+<p>If you pass a closure into a C function without saving a reference to it like this:</p>
+
+<pre class="sh_perl"> foo(closure { ... });         # BAD</pre>
+
+<p>Perl will not see any references to it and try to free it immediately. (this has to do with the way Perl and C handle responsibilities for memory allocation differently). One fix for this is to make sure the closure remains in scope using either <code>my</code> or <code>our</code>. If you know the closure will need to remain in existence for the life of the process (or if you do not care about leaking memory), then you can add the sticky keyword to tell <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> to keep the thing in memory.</p>
+
+<pre class="sh_perl"> foo(sticky closure { ... });  # OKAY</pre>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="cast"
+>cast</a></h2>
+
+<pre class="sh_perl"> my $converted_value = cast $original_type, $converted_type, $original_value;</pre>
+
+<p>The <code>cast</code> function converts an existing <i>$original_value</i> of type <i>$original_type</i> into one of type <i>$converted_type</i>. Not all types are supported, so care must be taken. For example, to get the address of a string, you can do this:</p>
+
+<pre class="sh_perl"> my $address = cast &#39;string&#39; =&#62; &#39;opaque&#39;, $string_value;</pre>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="attach_cast"
+>attach_cast</a></h2>
+
+<pre class="sh_perl"> attach_cast &#34;cast_name&#34;, $original_type, $converted_type;
+ my $converted_value = cast_name($original_value);</pre>
+
+<p>This function creates a subroutine which can be used to convert variables just like the <a href="https://metacpan.org/pod/FFI%3A%3APlatypus%3A%3ADeclare%23cast" class="podlinkpod"
+>cast</a> function above. The above synopsis is roughly equivalent to this:</p>
+
+<pre class="sh_perl"> sub cast_name { cast($original_type, $converted_type, $_[0]) }
+ my $converted_value = cast_name($original_value);</pre>
+
+<p>Except that the <a href="https://metacpan.org/pod/FFI%3A%3APlatypus%3A%3ADeclare%23attach_cast" class="podlinkpod"
+>attach_cast</a> variant will be much faster if called multiple times since the cast does not need to be dynamically allocated on each instance.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="sizeof"
+>sizeof</a></h2>
+
+<pre class="sh_perl"> my $size = sizeof $type;</pre>
+
+<p>Returns the total size of the given type. For example to get the size of an integer:</p>
+
+<pre class="sh_perl"> my $intsize = sizeof &#39;int&#39;; # usually 4 or 8 depending on platform</pre>
+
+<p>You can also get the size of arrays</p>
+
+<pre class="sh_perl"> my $intarraysize = sizeof &#39;int[64]&#39;;</pre>
+
+<p>Keep in mind that &#34;pointer&#34; types will always be the pointer / word size for the platform that you are using. This includes strings, opaque and pointers to other types.</p>
+
+<p>This function is not very fast, so you might want to save this value as a constant, particularly if you need the size in a loop with many iterations.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="lang"
+>lang</a></h2>
+
+<pre class="sh_perl"> lang $language;</pre>
+
+<p>Specifies the foreign language that you will be interfacing with. The default is C. The foreign language specified with this attribute changes the default native types (for example, if you specify <a href="/pod/FFI/Platypus/Lang/Rust.html" class="podlinkpod"
+>Rust</a>, you will get <code>i32</code> as an alias for <code>sint32</code> instead of <code>int</code> as you do with <a href="/pod/FFI/Platypus/Lang/C.html" class="podlinkpod"
+>C</a>).</p>
+
+<p>In the future this may attribute may offer hints when doing demangling of languages that require it like <a href="/pod/FFI/Platypus/Lang/CPP.html" class="podlinkpod"
+>C++</a>.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="abi"
+>abi</a></h2>
+
+<pre class="sh_perl"> abi $abi;</pre>
+
+<p>Set the ABI or calling convention for use in subsequent calls to <a href="#attach" class="podlinkpod"
+>&#34;attach&#34;</a>. May be either a string name or integer value from <a href="https://metacpan.org/pod/FFI%3A%3APlatypus%23abis" class="podlinkpod"
+>FFI::Platypus#abis</a>.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SEE_ALSO"
+>SEE ALSO</a></h1>
+
+<dl>
+<dt><a name="FFI::Platypus"
+><a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a></a></dt>
+
+<dd>
+<p>Object oriented interface to Platypus.</p>
+
+<dt><a name="FFI::Platypus::Type"
+><a href="/pod/FFI/Platypus/Type.html" class="podlinkpod"
+>FFI::Platypus::Type</a></a></dt>
+
+<dd>
+<p>Type definitions for Platypus.</p>
+
+<dt><a name="FFI::Platypus::API"
+><a href="/pod/FFI/Platypus/API.html" class="podlinkpod"
+>FFI::Platypus::API</a></a></dt>
+
+<dd>
+<p>Custom types API for Platypus.</p>
+
+<dt><a name="FFI::Platypus::Memory"
+><a href="/pod/FFI/Platypus/Memory.html" class="podlinkpod"
+>FFI::Platypus::Memory</a></a></dt>
+
+<dd>
+<p>memory functions for FFI.</p>
+
+<dt><a name="FFI::CheckLib"
+><a href="/pod/FFI/CheckLib.html" class="podlinkpod"
+>FFI::CheckLib</a></a></dt>
+
+<dd>
+<p>Find dynamic libraries in a portable way.</p>
+
+<dt><a name="FFI::TinyCC"
+><a href="/pod/FFI/TinyCC.html" class="podlinkpod"
+>FFI::TinyCC</a></a></dt>
+
+<dd>
+<p>JIT compiler for FFI.</p>
+</dd>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Author: Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<p>Contributors:</p>
+
+<p>Carlos D. &#193;lvaro (cdalvaro)</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2020 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

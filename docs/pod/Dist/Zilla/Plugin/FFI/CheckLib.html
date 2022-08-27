@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Dist::Zilla::Plugin::FFI::CheckLib</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> Dist::Zilla::Plugin::<a href="/pod/Dist/Zilla/Plugin/FFI.html">FFI</a>::CheckLib</div>
+    <!--Dist::Zilla::Plugin::FFI::CheckLib--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#CONFIGURATION_OPTIONS'>CONFIGURATION OPTIONS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#lib'>lib</a>
+    <li class='indexItem indexItem2'><a href='#symbol'>symbol</a>
+    <li class='indexItem indexItem2'><a href='#systempath'>systempath</a>
+    <li class='indexItem indexItem2'><a href='#libpath'>libpath</a>
+    <li class='indexItem indexItem2'><a href='#alien'>alien</a>
+    <li class='indexItem indexItem2'><a href='#recursive'>recursive</a>
+    <li class='indexItem indexItem2'><a href='#try_linker_script'>try_linker_script</a>
+    <li class='indexItem indexItem2'><a href='#verify'>verify</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>Dist::Zilla::Plugin::FFI::CheckLib - FFI::CheckLib alternative to Dist::Zilla::Plugin::CheckLib</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 1.05</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<p>In your <em>dist.ini</em>:</p>
+
+<pre class="sh_perl"> [FFI::CheckLib]
+ lib = zmq</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>This is a <a href="https://metacpan.org/pod/Dist%3A%3AZilla" class="podlinkpod"
+>Dist::Zilla</a> plugin that modifies the <em>Makefile.PL</em> or <em>Build.PL</em> in your distribution to check for a dynamic library <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> (or similar) can access; uses <a href="/pod/FFI/CheckLib.html" class="podlinkpod"
+>FFI::CheckLib</a> to perform the check.</p>
+
+<p>If the library is not available, the program exits with a status of zero, which will result in a NA result on a CPAN test reporter.</p>
+
+<p>This module is adapted directly from Dist::Zilla::Plugin::CheckLib, copyright (c) 2014 by Karen Etheridge (CPAN: ETHER). Look there for XS modules.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CONFIGURATION_OPTIONS"
+>CONFIGURATION OPTIONS</a></h1>
+
+<p>All options are as documented in <a href="/pod/FFI/CheckLib.html" class="podlinkpod"
+>FFI::CheckLib</a>:</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="lib"
+><code>lib</code></a></h2>
+
+<p>The name of a single dynamic library (for example, <code>zmq</code>). Can be used more than once.</p>
+
+<p><a href="/pod/FFI/CheckLib.html" class="podlinkpod"
+>FFI::CheckLib</a> will prepend <code>lib</code> and append an appropriate dynamic library suffix as needed.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="symbol"
+><code>symbol</code></a></h2>
+
+<p>A symbol that must be found. Can be used more than once.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="systempath"
+><code>systempath</code></a></h2>
+
+<p>The system search path to use (instead of letting <a href="/pod/FFI/CheckLib.html" class="podlinkpod"
+>FFI::CheckLib</a> determine paths). Can be used more than once.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="libpath"
+><code>libpath</code></a></h2>
+
+<p>Additional path to search for libraries. Can be used more than once.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="alien"
+><code>alien</code></a></h2>
+
+<p>The name of an <a href="https://metacpan.org/pod/Alien" class="podlinkpod"
+>Alien</a> class that provides the <a href="https://metacpan.org/pod/Alien%3A%3ABase" class="podlinkpod"
+>Alien::Base</a> interface for dynamic libraries.</p>
+
+<p>Can be used more than once.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="recursive"
+><code>recursive</code></a></h2>
+
+<p>If set to true, directories specified in <code>libpath</code> will be searched recursively.</p>
+
+<p>Defaults to false.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="try_linker_script"
+><code>try_linker_script</code></a></h2>
+
+<p>If set to true, uses the linker command to attempt to resolve <code>.so</code> files for platforms where <code>.so</code> files are linker scripts.</p>
+
+<p>Defaults to false.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="verify"
+><code>verify</code></a></h2>
+
+<p>The verify function body to use. For each usage, is one line of the function body. You can prefix with the pipe <code>|</code> character to get proper indentation.</p>
+
+<pre class="sh_perl"> verify = | my($name, $libpath) = @_;
+ verify = | my $ffi = FFI::Platypus-&#62;new;
+ verify = | $ffi-&#62;lib($libpath);
+ verify = | my $f = $ffi-&#62;function(&#39;foo_version&#39;, [] =&#62; &#39;int&#39;);
+ verify = | if($f) {
+ verify = |   return $f-&#62;call() &#62;= 500; # we accept version 500 or better
+ verify = | } else {
+ verify = |   return;
+ verify = | }</pre>
+
+<p>If you use any modules, such as <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> in this example, be sure that you declare them as configure requires.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SEE_ALSO"
+>SEE ALSO</a></h1>
+
+<ul>
+<li><a href="/pod/FFI/CheckLib.html" class="podlinkpod"
+>FFI::CheckLib</a></li>
+
+<li><a href="https://metacpan.org/pod/Devel%3A%3ACheckLib" class="podlinkpod"
+>Devel::CheckLib</a> and <a href="https://metacpan.org/pod/Dist%3A%3AZilla%3A%3APlugin%3A%3ACheckLib" class="podlinkpod"
+>Dist::Zilla::Plugin::CheckLib</a></li>
+
+<li><a href="https://metacpan.org/pod/Devel%3A%3AAssertOS" class="podlinkpod"
+>Devel::AssertOS</a> and <a href="https://metacpan.org/pod/Dist%3A%3AZilla%3A%3APlugin%3A%3AAssertOS" class="podlinkpod"
+>Dist::Zilla::Plugin::AssertOS</a></li>
+</ul>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2018 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>

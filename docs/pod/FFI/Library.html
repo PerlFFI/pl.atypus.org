@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::Library</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::Library</div>
+    <!--FFI::Library--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#CONSTRUCTOR'>CONSTRUCTOR</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#new'>new</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#FUNCTIONS'>FUNCTIONS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#address'>address</a>
+    <li class='indexItem indexItem2'><a href='#function'>function</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#EXAMPLES'>EXAMPLES</a>
+  <li class='indexItem indexItem1'><a href='#SUPPORT'>SUPPORT</a>
+  <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::Library - Perl Access to Dynamically Loaded Libraries</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 1.15</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<pre class="sh_perl"> # call function from arbitrary dynamic library
+ use FFI::Library;
+ $lib = FFI::Library-&#62;new(&#34;mylib&#34;);
+ $fn = $lib-&#62;function(&#34;fn&#34;, &#34;signature&#34;);
+ $ret = $fn-&#62;(...);
+
+ # call function from libc
+ $clib_file = ($^O eq &#34;MSWin32&#34;) ? &#34;MSVCRT40.DLL&#34; : &#34;-lc&#34;;
+ $clib = FFI::Library-&#62;new($clib_file);
+ $strlen = $clib-&#62;function(&#34;strlen&#34;, &#34;cIp&#34;);
+ $n = $strlen-&#62;($my_string);</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p><b>NOTE</b>: Newer and better maintained FFI modules such as <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> provide more functionality and so it is strongly recommend that you use one of them for new projects and even consider migrating to one of them for existing projects.</p>
+
+<p>This module provides access from Perl to functions exported from dynamically linked libraries. Functions are described by <code>signatures</code>, for details of which see the <a href="/pod/FFI.html" class="podlinkpod"
+>FFI</a> module&#39;s documentation.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CONSTRUCTOR"
+>CONSTRUCTOR</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="new"
+>new</a></h2>
+
+<pre class="sh_perl"> my $lib = FFI::Library-&#62;new($libname);</pre>
+
+<p>Creates an instance of <code>FFI::Library</code>.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="FUNCTIONS"
+>FUNCTIONS</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="address"
+>address</a></h2>
+
+<pre class="sh_perl"> my $address = $lib-&#62;address($function_name);</pre>
+
+<p>Returns the symbol of the given function. Returns <code>undef</code> if the symbol is not found.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="function"
+>function</a></h2>
+
+<pre class="sh_perl"> my $sub = $lib-&#62;function($function_name, $signature);</pre>
+
+<p>Creates a code-reference like object which you can call.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="EXAMPLES"
+>EXAMPLES</a></h1>
+
+<pre class="sh_perl"> $clib_file = ($^O eq &#34;MSWin32&#34;) ? &#34;MSVCRT40.DLL&#34; : &#34;-lc&#34;;
+ $clib = FFI::Library-&#62;new($clib_file);
+ $strlen = $clib-&#62;function(&#34;strlen&#34;, &#34;cIp&#34;);
+ $n = $strlen-&#62;($my_string);</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SUPPORT"
+>SUPPORT</a></h1>
+
+<p>Please open any support tickets with this project&#39;s GitHub repository here:</p>
+
+<p><a href="https://github.com/Perl5-FFI/FFI/issues" class="podlinkurl"
+>https://github.com/Perl5-FFI/FFI/issues</a></p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SEE_ALSO"
+>SEE ALSO</a></h1>
+
+<dl>
+<dt><a name="FFI"
+><a href="/pod/FFI.html" class="podlinkpod"
+>FFI</a></a></dt>
+
+<dd>
+<p>Low level interface to ffcall that this module is based on</p>
+
+<dt><a name="FFI::CheckLib"
+><a href="/pod/FFI/CheckLib.html" class="podlinkpod"
+>FFI::CheckLib</a></a></dt>
+
+<dd>
+<p>Portable functions for finding libraries.</p>
+
+<dt><a name="FFI::Platypus"
+><a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a></a></dt>
+
+<dd>
+<p>Platypus is another FFI interface based on libffi. It has a more extensive feature set, and libffi has a less restrictive license.</p>
+</dd>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Original author: Paul Moore &#60;gustav@morpheus.demon.co.uk&#62;</p>
+
+<p>Current maintainer: Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<p>Contributors:</p>
+
+<p>Anatoly Vorobey &#60;avorobey@pobox.com&#62;</p>
+
+<p>Gaal Yahas &#60;gaal@forum2.org&#62;</p>
+
+<p>Mitchell Charity &#60;mcharity@vendian.org&#62;</p>
+
+<p>Reini Urban &#60;&#60;RURBAN@cpan.org&#62;</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2016-2018 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>Copyright &copy; 2022 Graham Ollis</p>
+    </div>
+  </body>
+</html>
