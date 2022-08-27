@@ -1,7 +1,9 @@
-#requires 'Template';
-#requires 'Path::Tiny';
-#requires 'Text::Markdown::PerlExtensions';
-requires 'Plack';
-requires 'Plack::Middleware::DirIndex';
+requires 'XOR', url => "https://dist.wdlabs.com/XOR-0.02.tar.gz";
+requires 'Plack::Builder';
+requires 'Path::Tiny';
+
 requires 'Test2::V0';
-#requires 'Template::Plugin::Markdown';
+requires 'Test2::Tools::HTTP';
+requires 'Mojo::DOM58';
+requires 'HTTP::Request::Common';
+

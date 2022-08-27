@@ -12,7 +12,18 @@
     <div class="nx-header-flag-1"></div>
     <div class="nx-header-flag-2"></div>
     <div class="nx-header-title"><a href="/">🌻</a> pl.atypus.org - The Home for the Perl FFI::Platypus Project</div>
-    <p><img src="/mascot.png" /></td></p>
+    <p><img src="/mascot.png" align="right"></p>
+
+<p><a href="/pod/FFI/Platypus.html" class="module">FFI::Platypus</a> (pronounced as just "Platypus" when nonambiguous) is a Perl library for creating interfaces
+to machine code libraries written in languages like C, <a href="/pod/FFI/Platypus/Lang/CPP.html" class="module">C++</a>, <a href="/pod/FFI/Platypus/Lang/Go.html" class="module">Go</a>,
+<a href="/pod/FFI/Platypus/Lang/Fortran.html" class="module">Fortran</a>, <a href="/pod/FFI/Platypus/Lang/Pascal.html" class="module">Pascal</a> and <a href="/pod/FFI/Platypus/Lang/Rust.html" class="module">Rust</a>.</p>
+
+<p>Platypus has several advantages over XS for writing library bindings in Perl:</p>
+
+<ul>
+<li><strong>Platypus does not require messing with the guts of Perl</strong>.  XS is less of an API and more odf the guts of Perl, which is very useful when you are extending the langauge, but can be frustrating when you don't need to do that.</li>
+<li><strong>Platypus is portable</strong>.  Lots of languages (including Raku) have FFI interfaces, and it is subjectively easier to take FFI bindings in another language and port it to Perl.</li>
+</ul>
 
 <h2>Resources hosted here</h2>
 
