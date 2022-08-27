@@ -2,6 +2,10 @@
 
 <img src="/mascot.png" align="right">
 
+M<FFI::Platypus> (pronounced as just "Platypus" when nonambiguous) is a Perl library for creating interfaces
+to machine code libraries written in languages like C, M<C++|FFI::Platypus::Lang::CPP>, M<Go|FFI::Platypus::Lang::Go>,
+M<Fortran|FFI::Platypus::Lang::Fortran>, M<Pascal|FFI::Platypus::Lang::Pascal> and M<Rust|FFI::Platypus::Lang::Rust>.
+
 ```perl
 use FFI::Platypus 2.00;
 my $ffi = FFI::Platypus->new( api => 2 );
@@ -9,10 +13,6 @@ $ffi->lib(undef); # search libc
 $ffi->attach( puts => ['string'] => 'int' );
 puts('hello world');
 ```
-
-M<FFI::Platypus> (pronounced as just "Platypus" when nonambiguous) is a Perl library for creating interfaces
-to machine code libraries written in languages like C, M<C++|FFI::Platypus::Lang::CPP>, M<Go|FFI::Platypus::Lang::Go>,
-M<Fortran|FFI::Platypus::Lang::Fortran>, M<Pascal|FFI::Platypus::Lang::Pascal> and M<Rust|FFI::Platypus::Lang::Rust>.
 
 Platypus has several advantages over XS for writing library bindings in Perl:
 

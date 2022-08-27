@@ -14,16 +14,16 @@
     <div class="nx-header-title"><a href="/">🌻</a> pl.atypus.org - The Home for the Perl FFI::Platypus Project</div>
     <p><img src="/mascot.png" align="right"></p>
 
+<p><a href="/pod/FFI/Platypus.html" class="module">FFI::Platypus</a> (pronounced as just "Platypus" when nonambiguous) is a Perl library for creating interfaces
+to machine code libraries written in languages like C, <a href="/pod/FFI/Platypus/Lang/CPP.html" class="module">C++</a>, <a href="/pod/FFI/Platypus/Lang/Go.html" class="module">Go</a>,
+<a href="/pod/FFI/Platypus/Lang/Fortran.html" class="module">Fortran</a>, <a href="/pod/FFI/Platypus/Lang/Pascal.html" class="module">Pascal</a> and <a href="/pod/FFI/Platypus/Lang/Rust.html" class="module">Rust</a>.</p>
+
 <p><pre class="sh_perl">use FFI::Platypus 2.00;
 my $ffi = FFI::Platypus-&gt;new( api =&gt; 2 );
 $ffi-&gt;lib(undef); # search libc
 $ffi-&gt;attach( puts =&gt; ['string'] =&gt; 'int' );
 puts('hello world');
 </pre></p>
-
-<p><a href="/pod/FFI/Platypus.html" class="module">FFI::Platypus</a> (pronounced as just "Platypus" when nonambiguous) is a Perl library for creating interfaces
-to machine code libraries written in languages like C, <a href="/pod/FFI/Platypus/Lang/CPP.html" class="module">C++</a>, <a href="/pod/FFI/Platypus/Lang/Go.html" class="module">Go</a>,
-<a href="/pod/FFI/Platypus/Lang/Fortran.html" class="module">Fortran</a>, <a href="/pod/FFI/Platypus/Lang/Pascal.html" class="module">Pascal</a> and <a href="/pod/FFI/Platypus/Lang/Rust.html" class="module">Rust</a>.</p>
 
 <p>Platypus has several advantages over XS for writing library bindings in Perl:</p>
 
