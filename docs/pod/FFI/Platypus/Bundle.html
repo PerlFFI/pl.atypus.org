@@ -501,21 +501,21 @@ name="Compiler_or_linker_flags_example"
 name="Using_bundled_code_with_Alien."
 >Using bundled code with Alien.</a></h2>
 
-<p>A useful technique is to use Platypus with <a href="https://metacpan.org/pod/Alien" class="podlinkpod"
->Alien</a> technology. The <a href="https://metacpan.org/pod/Alien" class="podlinkpod"
->Alien</a> namespace is reserved for providing external non-Perl dependencies for CPAN modules. The nominal <a href="https://metacpan.org/pod/Alien" class="podlinkpod"
+<p>A useful technique is to use Platypus with <a href="https://alienfile.org/pod/Alien.html" class="podlinkpod"
+>Alien</a> technology. The <a href="https://alienfile.org/pod/Alien.html" class="podlinkpod"
+>Alien</a> namespace is reserved for providing external non-Perl dependencies for CPAN modules. The nominal <a href="https://alienfile.org/pod/Alien.html" class="podlinkpod"
 >Alien</a> module when installed looks for the library locally, and if it can&#39;t be found it fetches it from the internet, builds it, and installs it in a private directory so that it can be used by other CPAN modules. For <a href="https://metacpan.org/pod/Aliens" class="podlinkpod"
->Aliens</a> that provide shared libraries, and that have simple interfaces that do not require additional C code you can easily just pass the shared libraries to Platypus directly. For modules that require some bundled C code and an <a href="https://metacpan.org/pod/Alien" class="podlinkpod"
->Alien</a> you have to link the <a href="https://metacpan.org/pod/Alien" class="podlinkpod"
->Alien</a> library with your bundled code. If the <a href="https://metacpan.org/pod/Alien" class="podlinkpod"
->Alien</a> uses the <a href="https://metacpan.org/pod/Alien%3A%3ABase" class="podlinkpod"
->Alien::Base</a> interface then all you have to do is give the name of the <a href="https://metacpan.org/pod/Alien" class="podlinkpod"
+>Aliens</a> that provide shared libraries, and that have simple interfaces that do not require additional C code you can easily just pass the shared libraries to Platypus directly. For modules that require some bundled C code and an <a href="https://alienfile.org/pod/Alien.html" class="podlinkpod"
+>Alien</a> you have to link the <a href="https://alienfile.org/pod/Alien.html" class="podlinkpod"
+>Alien</a> library with your bundled code. If the <a href="https://alienfile.org/pod/Alien.html" class="podlinkpod"
+>Alien</a> uses the <a href="https://alienfile.org/pod/Alien/Base.html" class="podlinkpod"
+>Alien::Base</a> interface then all you have to do is give the name of the <a href="https://alienfile.org/pod/Alien.html" class="podlinkpod"
 >Alien</a> to <a href="/pod/FFI/Build.html" class="podlinkpod"
 >FFI::Build</a>.</p>
 
 <p>For example, the <code>bzip2</code> library provides an interface that requires the caller to allocate a C <code>struct</code> and then pass it to its various functions. The <code>struct</code> is actually pretty simple and you could use <a href="/pod/FFI/C.html" class="podlinkpod"
 >FFI::C</a> or <a href="/pod/FFI/Platypus/Record.html" class="podlinkpod"
->FFI::Platypus::Record</a>, but here is an example of how you would connect bundled C code with an <a href="https://metacpan.org/pod/Alien" class="podlinkpod"
+>FFI::Platypus::Record</a>, but here is an example of how you would connect bundled C code with an <a href="https://alienfile.org/pod/Alien.html" class="podlinkpod"
 >Alien</a>.</p>
 
 <p><code>ffi/compress.c</code>:</p>
@@ -575,7 +575,7 @@ name="Using_bundled_code_with_Alien."
  
  1;</pre>
 
-<p>The <code>.fbx</code> file that goes with this to make it work with <a href="https://metacpan.org/pod/Alien%3A%3ALibbz2" class="podlinkpod"
+<p>The <code>.fbx</code> file that goes with this to make it work with <a href="https://alienfile.org/pod/Alien/Libbz2.html" class="podlinkpod"
 >Alien::Libbz2</a> is now pretty trivial:</p>
 
 <p><code>ffi/bz2.fbx</code>:</p>
