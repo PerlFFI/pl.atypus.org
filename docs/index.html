@@ -14,6 +14,13 @@
     <div class="nx-header-title"><a href="/">🌻</a> pl.atypus.org - The Home for the Perl FFI::Platypus Project</div>
     <p><img src="/mascot.png" align="right"></p>
 
+<p><pre class="sh_perl">use FFI::Platypus 2.00;
+my $ffi = FFI::Platypus-&gt;new( api =&gt; 2 );
+$ffi-&gt;lib(undef); # search libc
+$ffi-&gt;attach( puts =&gt; ['string'] =&gt; 'int' );
+puts('hello world');
+</pre></p>
+
 <p><a href="/pod/FFI/Platypus.html" class="module">FFI::Platypus</a> (pronounced as just "Platypus" when nonambiguous) is a Perl library for creating interfaces
 to machine code libraries written in languages like C, <a href="/pod/FFI/Platypus/Lang/CPP.html" class="module">C++</a>, <a href="/pod/FFI/Platypus/Lang/Go.html" class="module">Go</a>,
 <a href="/pod/FFI/Platypus/Lang/Fortran.html" class="module">Fortran</a>, <a href="/pod/FFI/Platypus/Lang/Pascal.html" class="module">Pascal</a> and <a href="/pod/FFI/Platypus/Lang/Rust.html" class="module">Rust</a>.</p>
@@ -23,7 +30,15 @@ to machine code libraries written in languages like C, <a href="/pod/FFI/Platypu
 <ul>
 <li><strong>Platypus does not require messing with the guts of Perl</strong>.  XS is less of an API and more odf the guts of Perl, which is very useful when you are extending the langauge, but can be frustrating when you don't need to do that.</li>
 <li><strong>Platypus is portable</strong>.  Lots of languages (including Raku) have FFI interfaces, and it is subjectively easier to take FFI bindings in another language and port it to Perl.</li>
+<li><strong>Platypus is pure perl (sorta)</strong>. One Platypus script or module works on any platform where the libraries it uses are available.  That means you can deploy your Platypus script in a shared filesystem where they may be run on different platforms.  It also means that Platypus modules do not need to be installed in the platform specific Perl library path.</li>
+<li><strong>Platypus is not tied to C</strong>. XS is implemented primarily as a bunch of C macros, which require a solid understanding of both C and the Perl internals.  Platypus, on the other hand, is happy to call into other compiled languages, like <a href="/pod/FFI/Platypus/Lang/Go.html" class="module">Go</a>, <a href="/pod/FFI/Platypus/Lang/Fortran.html" class="module">Fortran</a>, <a href="/pod/FFI/Platypus/Lang/Pascal.html" class="module">Pascal</a> and <a href="/pod/FFI/Platypus/Lang/Rust.html" class="module">Rust</a> without any C wrappers.</li>
+<li><strong>Platypus does not require a parser</strong>.  <a href="https://metacpan.org/pod/Inline" class="module">Inline</a> isolates the extension developer from XS to some extent, but it also requires a parser.</li>
 </ul>
+
+<p>Platypus is implemented on <a href="https://sourceware.org/libffi/">libffi</a>, which has been battle tested on a number of other scripting languages, like Python and Ruby
+to serve a similar role.</p>
+
+<p>Excited to learn more?  The <a href="/pod/FFI/Platypus.html#EXAMPLES" class="module">FFI::Platypus documentation includes a number of helpful examples</a>.</p>
 
 <h2>Resources hosted here</h2>
 
@@ -34,9 +49,9 @@ to machine code libraries written in languages like C, <a href="/pod/FFI/Platypu
 <h2>External Links</h2>
 
 <ul>
-<li><a href="https://kiwiirc.com/nextclient/#irc://irc.perl.org/#native?nick=mc-guest-?">#native on irc.perl.org</a></li>
+<li>#️⃣ <a href="https://kiwiirc.com/nextclient/#irc://irc.perl.org/#native?nick=mc-guest-?">#native on irc.perl.org</a></li>
 <li>🐦 <a href="https://twitter.com/PerlFFI">@PerlFFI</a> - the official twitter acount of the FFI::Platypus project</li>
-<li><a href="https://github.com/PerlFFI">PerlFFI organization on GitHub</a></li>
+<li>🌏 <a href="https://github.com/PerlFFI">PerlFFI organization on GitHub</a></li>
 </ul>
 
 
