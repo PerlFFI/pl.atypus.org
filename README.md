@@ -1,6 +1,6 @@
 ## pl.atypus.org
 
-This is the source for the pl.atypus.org website.  The intent is to make this the
+This is the source for the [pl.atypus.org](https://pl.atypus.org) website.  The intent is to make this the
 go to place for information about Perl/Alien, and for these related Alien projects:
 
  * FFI::Platypus
