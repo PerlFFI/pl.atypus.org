@@ -1,4 +1,4 @@
-# pl.atypus.org - The Home for the Perl FFI::Platypus Project
+# pl.atypus.org - Home for the Perl Platypus Project
 
 <img src="/mascot.png" align="right">
 
