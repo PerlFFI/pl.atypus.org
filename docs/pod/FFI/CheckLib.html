@@ -33,6 +33,7 @@
     <li class='indexItem indexItem2'><a href='#has_symbols'>has_symbols</a>
     <li class='indexItem indexItem2'><a href='#system_path'>system_path</a>
   </ul>
+  <li class='indexItem indexItem1'><a href='#ENVIRONMENT'>ENVIRONMENT</a>
   <li class='indexItem indexItem1'><a href='#FAQ'>FAQ</a>
   <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
   <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
@@ -50,7 +51,7 @@ name="NAME"
 name="VERSION"
 >VERSION</a></h1>
 
-<p>version 0.30</p>
+<p>version 0.31</p>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
 name="SYNOPSIS"
@@ -296,6 +297,52 @@ name="system_path"
 <p>This function is not exportable, even on request.</p>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
+name="ENVIRONMENT"
+>ENVIRONMENT</a></h1>
+
+<p><a href="/pod/FFI/CheckLib.html" class="podlinkpod"
+>FFI::CheckLib</a> responds to these environment variables:</p>
+
+<dl>
+<dt><a name="FFI_CHECKLIB_PACKAGE"
+>FFI_CHECKLIB_PACKAGE</a></dt>
+
+<dd>
+<p>On macOS platforms with <a href="http://brew.sh" class="podlinkurl"
+>Homebrew</a> and/or <a href="https://www.macports.org" class="podlinkurl"
+>MacPorts</a> installed, their corresponding lib paths will be automatically appended to <code>$system_path</code>. In case of having both managers installed, Homebrew will appear before.</p>
+
+<p>This behaviour can be overridden using the environment variable <code>FFI_CHECKLIB_PACKAGE</code>.</p>
+
+<p>Allowed values are:</p>
+
+<p>- <code>none</code>: Won&#39;t use either Homebrew&#39;s path nor MacPorts - <code>homebrew</code>: Will append <code>$(brew --prefix)/lib</code> to the system paths - <code>macports</code>: Will append <code>port</code>&#39;s default lib path</p>
+
+<p>A comma separated list is also valid:</p>
+
+<pre class="sh_perl"> export FFI_CHECKLIB_PACKAGE=macports,homebrew</pre>
+
+<p>Order matters. So in this example, MacPorts&#39; lib path appears before Homebrew&#39;s path.</p>
+
+<dt><a name="FFI_CHECKLIB_PATH"
+>FFI_CHECKLIB_PATH</a></dt>
+
+<dd>
+<p>List of directories that will be considered by <a href="/pod/FFI/CheckLib.html" class="podlinkpod"
+>FFI::CheckLib</a> as additional &#34;system directories&#34;. They will be searched before other system directories but after <code>libpath</code>. The variable is colon separated on Unix and semicolon separated on Windows. If you use this variable, <code>FFI_CHECKLIB_PACKAGE</code> will be ignored.</p>
+
+<dt><a name="PATH"
+>PATH</a></dt>
+
+<dd>
+<p>On Windows the <code>PATH</code> environment variable will be used as a search path for libraries.</p>
+</dd>
+</dl>
+
+<p>On some operating systems <code>LD_LIBRARY_PATH</code>, <code>DYLD_LIBRARY_PATH</code>, <code>DYLD_FALLBACK_LIBRARY_PATH</code> or others <i>may</i> be used as part of the search for dynamic libraries and <i>may</i> be used (indirectly) by <a href="/pod/FFI/CheckLib.html" class="podlinkpod"
+>FFI::CheckLib</a> as well.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
 name="FAQ"
 >FAQ</a></h1>
 
@@ -393,6 +440,8 @@ name="AUTHOR"
 <p>Michael R. Davis (MRDVT)</p>
 
 <p>Shawn Laffan (SLAFFAN)</p>
+
+<p>Carlos D. &#193;lvaro (cdalvaro)</p>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
 name="COPYRIGHT_AND_LICENSE"
