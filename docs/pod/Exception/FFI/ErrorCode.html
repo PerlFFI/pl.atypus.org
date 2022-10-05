@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Exception::FFI::ErrorCode</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="https://hatch.wdlabs.com/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> Exception::FFI::ErrorCode</div>
+    <!--Exception::FFI::ErrorCode--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#METHODS'>METHODS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#import'>import</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#Exception%3A%3AFFI%3A%3AErrorCode%3A%3ABase'>Exception::FFI::ErrorCode::Base</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#throw'>throw</a>
+    <li class='indexItem indexItem2'><a href='#strerror'>strerror</a>
+    <li class='indexItem indexItem2'><a href='#as_string'>as_string</a>
+    <li class='indexItem indexItem2'><a href='#package'>package</a>
+    <li class='indexItem indexItem2'><a href='#filename'>filename</a>
+    <li class='indexItem indexItem2'><a href='#line'>line</a>
+    <li class='indexItem indexItem2'><a href='#code'>code</a>
+    <li class='indexItem indexItem2'><a href='#SEE_ALSO'>SEE ALSO</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>Exception::FFI::ErrorCode - Exception class based on integer error codes common in C code</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 0.01</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<p>Throwing:</p>
+
+<pre class="sh_perl"> # realish world example for use with libcurl
+ package Curl::Error {
+   use Exception::FFI::ErrorCode
+     code =&#62; {
+       CURLE_OK                   =&#62; 0,
+       CURLE_UNKNOWN_OPTION       =&#62; 48
+       ...
+     };
+   $ffi-&#62;attach( [ curl_easy_strerror =&#62; strerror ] =&#62; [&#39;enum&#39;] =&#62; &#39;string&#39; =&#62; sub {
+     my($xsub, $self, $code) = @_;
+     $xsub-&#62;($code);
+   });
+ }
+
+ # foo is an unknown option, so this will return 48
+ my $code = $curl-&#62;setopt( &#34;foo&#34; =&#62; &#34;bar&#34; );
+ # throw as an exception
+ Curl::Error-&#62;throw( code =&#62; $code ) if $code != Curl::Error::CURLE_OK;</pre>
+
+<p>Defining error class without a strerror</p>
+
+<pre class="sh_perl"> package Curl::&#60;Error {
+   use Exception::FFI::ErrorCode
+     code =&#62; {
+       CURLE_OK                   =&#62; [ 0,  &#39;no error&#39;                        ],
+       CURLE_UNKNOWN_OPTION       =&#62; [ 48, &#39;unknown option passed to setopt&#39; ],
+       ...
+     };
+ }
+ ...</pre>
+
+<p>Catching:</p>
+
+<pre class="sh_perl"> try {
+   might_die;
+ }
+ catch ($ex) {
+   if($ex isa Curl::Error) {
+     my $package  = $ex-&#62;package;   # the package where thrown
+     my $filename = $ex-&#62;filename;  # the filename where thrown
+     my $line     = $ex-&#62;line;      # the linenumber where thrown
+     my $code     = $ex-&#62;code;      # the error code
+     my $human    = $ex-&#62;strerror;  # human readable error
+     my $diag     = $ex-&#62;as_string; # human readable error at filename.pl line xxx
+     my $diag     = &#34;$ex&#34;;          # same as $ex-&#62;as_string
+
+     if($ex-&#62;code == Curl::Error::UNKNOWN_OPTION) {
+       # handle the unknown option variant of this error
+     }
+   }
+ }</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>A common pattern in C libraries is to return an integer error code to classify an error. When translating those APIs to Perl you often want to instead throw an exception. This class provides an interface for building exception classes that help with that pattern.</p>
+
+<p>For APIs that provide a <code>strerror</code> or similar function that converts the error code into a human readable diagnostic, you can simply attach it. If not you can provide human readable diagnostics for each error code using an array reference, as shown above.</p>
+
+<p>The base class for your exception class will be set to <a href="#Exception%3A%3AFFI%3A%3AErrorCode%3A%3ABase" class="podlinkpod"
+>Exception::FFI::ErrorCode::Base</a>. The base class handles determining the location of where the exception was thrown and will stringify in a way to look like a regular Perl string exception with the filename and line number you would expect.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="METHODS"
+>METHODS</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="import"
+>import</a></h2>
+
+<pre class="sh_perl"> use Exception::FFI::ErrorCode
+   %options;</pre>
+
+<p>The <code>import</code> method will set the base class, and set up any specific error codes. Options include:</p>
+
+<dl>
+<dt><a name="class"
+>class</a></dt>
+
+<dd>
+<p>The exception class. If not provided this will be determined using <code>caller</code>.</p>
+
+<dt><a name="codes"
+>codes</a></dt>
+
+<dd>
+<p>The error codes. This is a hash reference. The keys are the constant names, in C and Perl these are usually all upper case like <code>FOO_BAD_FILENAME</code>. The values can be either an integer constant, or an array reference with the integer constant and human readable diagnostic. The former is intended for when there is a <code>strerror</code> type function that will convert the error code into a diagnostic for you.</p>
+
+<dt><a name="const_class"
+>const_class</a></dt>
+
+<dd>
+<p>Where to put the constants. If not provided, these will be be the same as <code>class</code>.</p>
+</dd>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="Exception::FFI::ErrorCode::Base"
+>Exception::FFI::ErrorCode::Base</a></h1>
+
+<p>The base class uses <a href="https://metacpan.org/pod/Class%3A%3ATiny" class="podlinkpod"
+>Class::Tiny</a>, so feel free to add additional attributes. The base class provides these attributes and methods:</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="throw"
+>throw</a></h2>
+
+<pre class="sh_perl"> Exception::FFI::ErrorCode::Base-&#62;throw( code =&#62; $code );</pre>
+
+<p>Throws the exception with the given code. Obviously you would throw the subclass, not the base class.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="strerror"
+>strerror</a></h2>
+
+<pre class="sh_perl"> my $string = $ex-&#62;strerror;</pre>
+
+<p>Returns a human readable message for the exception. If available this should be overridden by attaching the appropriate C function.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="as_string"
+>as_string</a></h2>
+
+<pre class="sh_perl"> my $string = $ex-&#62;as_string;
+ my $string = &#34;$ex&#34;;</pre>
+
+<p>Returns a human readable diagnostic. This is in the form of a familiar Perl warning or string exception, including the filename and line number where the exception was thrown. If you stringify the exception it will use this method.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="package"
+>package</a></h2>
+
+<pre class="sh_perl"> my $package = $ex-&#62;package;</pre>
+
+<p>The package where the exception happened.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="filename"
+>filename</a></h2>
+
+<pre class="sh_perl"> my $filename = $ex-&#62;filename;</pre>
+
+<p>The filename where the exception happened.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="line"
+>line</a></h2>
+
+<pre class="sh_perl"> my $line = $ex-&#62;line;</pre>
+
+<p>The line number where the exception happened.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="code"
+>code</a></h2>
+
+<pre class="sh_perl"> my $code = $ex-&#62;code;</pre>
+
+<p>The integer error code.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="SEE_ALSO"
+>SEE ALSO</a></h2>
+
+<dl>
+<dt><a name="FFI::Platypus"
+><a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a></a></dt>
+
+<dd>
+<dt><a name="Exception::Class"
+><a href="https://metacpan.org/pod/Exception%3A%3AClass" class="podlinkpod"
+>Exception::Class</a></a></dt>
+
+<dd>
+<dt><a name="Class:Tiny"
+><a href="Class:Tiny" class="podlinkurl"
+>Class:Tiny</a></a></dt>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2022 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>
+        [
+            <a href="https://wdlabs.com">wdlabs.com</a> |
+            <a href="https://alienfile.org">alienfile.org</a> |
+            <a href="https://pl.atypus.org">pl.atypus.org</a> |
+            <a href="https://perlwasm.github.io">perlwasm</a> |
+            <a href="https://uperl.github.io">uperl</a>
+        ]
+        Copyright &copy; 2022 Graham Ollis
+      </p>
+    </div>
+  </body>
+</html>

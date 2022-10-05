@@ -148,6 +148,15 @@
       ]
    },
    {
+      "name" : "Exception-FFI-ErrorCode",
+      "pods" : [
+         {
+            "href" : "/pod/Exception/FFI/ErrorCode.html",
+            "name" : "Exception::FFI::ErrorCode"
+         }
+      ]
+   },
+   {
       "name" : "FFI",
       "pods" : [
          {
