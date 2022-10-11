@@ -55,7 +55,7 @@ name="NAME"
 name="VERSION"
 >VERSION</a></h1>
 
-<p>version 0.02</p>
+<p>version 0.03</p>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
 name="SYNOPSIS"
@@ -84,7 +84,7 @@ name="SYNOPSIS"
 
 <p>Defining error class without a strerror</p>
 
-<pre class="sh_perl"> package Curl::&#60;Error {
+<pre class="sh_perl"> package Curl::Error {
    use Exception::FFI::ErrorCode
      code =&#62; {
        CURLE_OK                   =&#62; [ 0,  &#39;no error&#39;                        ],
@@ -191,9 +191,15 @@ name="Exception::FFI::ErrorCode::Base"
 name="throw"
 >throw</a></h2>
 
-<pre class="sh_perl"> Exception::FFI::ErrorCode::Base-&#62;throw( code =&#62; $code );</pre>
+<pre class="sh_perl"> Exception::FFI::ErrorCode::Base-&#62;throw( code =&#62; $code, %attr );
+ Exception::FFI::ErrorCode::Base-&#62;throw( code =&#62; $code, frame =&#62; $frame, %attr );</pre>
 
 <p>Throws the exception with the given code. Obviously you would throw the subclass, not the base class.</p>
+
+<p>If you have added additional attributes via <a href="https://metacpan.org/pod/Class%3A%3ATiny" class="podlinkpod"
+>Class::Tiny</a> you can provide them as <code>%attr</code>.</p>
+
+<p>If you want the exception to appear to happen from a different frame then you can specify it with <code>$frame</code>.</p>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
 name="strerror"
