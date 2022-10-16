@@ -1,5 +1,14 @@
 [
    {
+      "name" : "Acme-Color-Rust",
+      "pods" : [
+         {
+            "href" : "/pod/Acme/Color/Rust.html",
+            "name" : "Acme::Color::Rust"
+         }
+      ]
+   },
+   {
       "name" : "Alien-FFI",
       "pods" : [
          {
