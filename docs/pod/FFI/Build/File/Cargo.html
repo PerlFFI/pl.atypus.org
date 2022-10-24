@@ -17,8 +17,10 @@
 <div class='indexgroup'>
 <ul   class='indexList indexList1'>
   <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
   <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
   <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#ENVIRONMENT'>ENVIRONMENT</a>
   <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
   <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
   <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
@@ -29,7 +31,13 @@
 name="NAME"
 >NAME</a></h1>
 
-<p>FFI::Build::File::Cargo - Write Perl extensions in Rust!</p>
+<p>FFI::Build::File::Cargo</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 0.10</p>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
 name="SYNOPSIS"
@@ -43,7 +51,7 @@ name="SYNOPSIS"
 <p>Add this to your <code>ffi/Cargo.toml</code> file to get dynamic libraries:</p>
 
 <pre class="sh_perl"> [lib]
- crate-type = [&#34;dylib&#34;]</pre>
+ crate-type = [&#34;cdylib&#34;]</pre>
 
 <p>Your library goes in <code>lib/MyLib.pm</code>:</p>
 
@@ -94,10 +102,10 @@ name="DESCRIPTION"
 <p>This module provides the necessary machinery to bundle rust code with your Perl extension. It uses <a href="/pod/FFI/Build.html" class="podlinkpod"
 >FFI::Build</a> and <code>cargo</code> to do the heavy lifting.</p>
 
-<p>A complete example comes with this distribution in the <code>examples/Person</code> directory, incouding tests. You can browse this example on the web here:</p>
+<p>A complete example comes with this distribution in the <code>examples/Person</code> directory, including tests. You can browse this example on the web here:</p>
 
-<p><a href="https://github.com/Perl5-FFI/FFI-Platypus-Lang-Rust/tree/master/examples/Person" class="podlinkurl"
->https://github.com/Perl5-FFI/FFI-Platypus-Lang-Rust/tree/master/examples/Person</a></p>
+<p><a href="https://github.com/PerlFFI/FFI-Platypus-Lang-Rust/tree/main/examples/Person" class="podlinkurl"
+>https://github.com/PerlFFI/FFI-Platypus-Lang-Rust/tree/main/examples/Person</a></p>
 
 <p>The distribution that follows the pattern above works just like a regular Pure-Perl or XS distribution, except:</p>
 
@@ -120,6 +128,24 @@ name="DESCRIPTION"
 
 <p>For more details using Perl + Rust with FFI, see <a href="/pod/FFI/Platypus/Lang/Rust.html" class="podlinkpod"
 >FFI::Platypus::Lang::Rust</a>.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="ENVIRONMENT"
+>ENVIRONMENT</a></h1>
+
+<dl>
+<dt><a name="PERL_FFI_CARGO_FLAGS"
+><code>PERL_FFI_CARGO_FLAGS</code></a></dt>
+
+<dd>
+<p>This environment variable changes the flags that are passed into <code>cargo test</code> and <code>cargo build</code>.</p>
+
+<p>By default this module passes <code>--release</code> into both <code>cargo test</code> and <code>cargo build</code>. It does this so that you will get optimized libraries when your Perl extension is installed. You may require a different profile when testing so you can, for example, set this environment variable to something else:</p>
+
+<pre class="sh_perl"> $ export PERL_FFI_CARGO_FLAGS=&#39;--profile test&#39;
+ $ ...</pre>
+</dd>
+</dl>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
 name="SEE_ALSO"
@@ -146,13 +172,17 @@ name="SEE_ALSO"
 name="AUTHOR"
 >AUTHOR</a></h1>
 
-<p>Graham Ollis &#60;plicease@cpan.org&#62;</p>
+<p>Author: Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<p>Contributors:</p>
+
+<p>Andrew Grangaard (SPAZM)</p>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
 name="COPYRIGHT_AND_LICENSE"
 >COPYRIGHT AND LICENSE</a></h1>
 
-<p>This software is copyright (c) 2015 by Graham Ollis.</p>
+<p>This software is copyright (c) 2015-2022 by Graham Ollis.</p>
 
 <p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
 
