@@ -535,6 +535,19 @@
       ]
    },
    {
+      "name" : "FFI-Platypus-Lang-Zig",
+      "pods" : [
+         {
+            "href" : "/pod/FFI/Build/File/Zig.html",
+            "name" : "FFI::Build::File::Zig"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/Lang/Zig.html",
+            "name" : "FFI::Platypus::Lang::Zig"
+         }
+      ]
+   },
+   {
       "name" : "FFI-Platypus-Legacy-Raw",
       "pods" : [
          {
