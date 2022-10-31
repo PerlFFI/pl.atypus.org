@@ -20,6 +20,23 @@
   <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
   <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
   <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#EXAMPLES'>EXAMPLES</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#Passing_and_Returning_Integers'>Passing and Returning Integers</a>
+    <ul   class='indexList indexList3'>
+      <li class='indexItem indexItem3'><a href='#Go'>Go</a>
+      <li class='indexItem indexItem3'><a href='#Perl'>Perl</a>
+      <li class='indexItem indexItem3'><a href='#Execute'>Execute</a>
+      <li class='indexItem indexItem3'><a href='#Discussion'>Discussion</a>
+    </ul>
+    <li class='indexItem indexItem2'><a href='#Module'>Module</a>
+    <ul   class='indexList indexList3'>
+      <li class='indexItem indexItem3'><a href='#Go'>Go</a>
+      <li class='indexItem indexItem3'><a href='#Perl'>Perl</a>
+      <li class='indexItem indexItem3'><a href='#Execute'>Execute</a>
+      <li class='indexItem indexItem3'><a href='#Discussion'>Discussion</a>
+    </ul>
+  </ul>
   <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
   <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
   <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
@@ -36,13 +53,128 @@ name="NAME"
 name="VERSION"
 >VERSION</a></h1>
 
-<p>version 0.01</p>
+<p>version 0.02</p>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
 name="SYNOPSIS"
 >SYNOPSIS</a></h1>
 
 <p>Go code:</p>
+
+<pre class="sh_perl"> package main
+ 
+ import &#34;C&#34;
+ 
+ //export add
+ func add(x, y int) int {
+     return x + y
+ }
+ 
+ func main() {}</pre>
+
+<p>Perl code:</p>
+
+<pre class="sh_perl"> use FFI::Platypus 2.00;
+ use FFI::CheckLib qw( find_lib_or_die );
+ use File::Basename qw( dirname );
+ 
+ my $ffi = FFI::Platypus-&#62;new(
+   api  =&#62; 2,
+   lib  =&#62; &#39;./add.so&#39;,
+   lang =&#62; &#39;Go&#39;,
+ );
+ $ffi-&#62;attach( add =&#62; [&#39;goint&#39;, &#39;goint&#39;] =&#62; &#39;goint&#39; );
+ 
+ print add(1,2), &#34;\n&#34;;  # prints 3</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>This distribution is the Go language plugin for Platypus. It provides the definition for native Go types, like <code>goint</code> and <code>gostring</code>. It also provides a <a href="/pod/FFI/Build.html" class="podlinkpod"
+>FFI::Build</a> interface for building Perl extensions written in Go (see <a href="/pod/FFI/Build/File/GoMod.html" class="podlinkpod"
+>FFI::Build::File::GoMod</a> for details).</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="EXAMPLES"
+>EXAMPLES</a></h1>
+
+<p>The examples in this discussion are bundled with this distribution and can be found in the <code>examples</code> directory.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Passing_and_Returning_Integers"
+>Passing and Returning Integers</a></h2>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Go"
+>Go</a></h3>
+
+<pre class="sh_perl"> package main
+ 
+ import &#34;C&#34;
+ 
+ //export add
+ func add(x, y int) int {
+     return x + y
+ }
+ 
+ func main() {}</pre>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Perl"
+>Perl</a></h3>
+
+<pre class="sh_perl"> use FFI::Platypus 2.00;
+ use FFI::CheckLib qw( find_lib_or_die );
+ use File::Basename qw( dirname );
+ 
+ my $ffi = FFI::Platypus-&#62;new(
+   api  =&#62; 2,
+   lib  =&#62; &#39;./add.so&#39;,
+   lang =&#62; &#39;Go&#39;,
+ );
+ $ffi-&#62;attach( add =&#62; [&#39;goint&#39;, &#39;goint&#39;] =&#62; &#39;goint&#39; );
+ 
+ print add(1,2), &#34;\n&#34;;  # prints 3</pre>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Execute"
+>Execute</a></h3>
+
+<pre class="sh_perl"> $ go build -o add.so -buildmode=c-shared add.go
+ $ perl add.pl
+ 3</pre>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Discussion"
+>Discussion</a></h3>
+
+<p>The Go code has to:</p>
+
+<dl>
+<dt><a name="1_Import_the_pseudo_package_&#34;C&#34;"
+>1 Import the pseudo package <code>&#34;C&#34;</code></a></dt>
+
+<dd>
+<dt><a name="2_Mark_any_exported_function_with_the_command_//export"
+>2 Mark any exported function with the command <code>//export</code></a></dt>
+
+<dd>
+<dt><a name="3_Include_a_main_function,_even_if_you_do_not_use_it."
+>3 Include a <code>main</code> function, even if you do not use it.</a></dt>
+</dl>
+
+<p>From the Perl side, the Go types have a <code>go</code> prefix, so <code>int</code> in Go is <code>goint</code> in Perl.</p>
+
+<p>Aside from that passing basic types like integers and floats is trivial with FFI.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Module"
+>Module</a></h2>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Go"
+>Go</a></h3>
 
 <pre class="sh_perl"> /*
   * borrowed from
@@ -83,7 +215,11 @@ name="SYNOPSIS"
  
  func main() {}</pre>
 
-<p>Perl code:</p>
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Perl"
+>Perl</a></h3>
+
+<p>Module:</p>
 
 <pre class="sh_perl"> package Awesome::FFI;
  
@@ -106,14 +242,43 @@ name="SYNOPSIS"
  
  1;</pre>
 
-<h1><a class='u' href='#___top' title='click to go to top of document'
-name="DESCRIPTION"
->DESCRIPTION</a></h1>
+<p>Test:</p>
 
-<p>This distribution is the Go language plugin for Platypus. It provides the definition for native Go types, like <code>goint</code> and <code>gostring</code>. It also provides a <a href="/pod/FFI/Build.html" class="podlinkpod"
->FFI::Build</a> interface for building Perl extensions written in Go.</p>
+<pre class="sh_perl"> use Test2::V0 -no_srand =&#62; 1;
+ use Awesome::FFI qw( Add Cosine Log );
+ use Capture::Tiny qw( capture );
+ use FFI::Go::String;
+ 
+ is( Add(1,2), 3 );
+ is( Cosine(0), 1.0 );
+ 
+ is(
+   [capture { Log(&#34;Hello Perl!&#34;) }],
+   [&#34;Hello Perl!\n&#34;, &#39;&#39;, 1]
+ );
+ 
+ done_testing;</pre>
 
-<p>For a full working example based on the synopsis above, including support files like <code>Makefile.PL</code> and tests, see the <code>examples/Awesome-FFI</code> directory that came with this distribution.</p>
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Execute"
+>Execute</a></h3>
+
+<pre class="sh_perl"> $ prove -lvm t/awesome_ffi.t
+ t/awesome_ffi.t ..
+ ok 1
+ ok 2
+ ok 3
+ 1..3
+ ok
+ All tests successful.
+ Files=1, Tests=3,  1 wallclock secs ( 0.01 usr  0.00 sys +  1.28 cusr  0.48 csys =  1.77 CPU)
+ Result: PASS</pre>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Discussion"
+>Discussion</a></h3>
+
+<p>This is a full working example of a Perl distribution / module included in the <code>examples/Awesome-FFI</code> directory.</p>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
 name="SEE_ALSO"
@@ -148,7 +313,10 @@ name="SEE_ALSO"
 <dd>
 <p><a href="/pod/FFI/Build.html" class="podlinkpod"
 >FFI::Build</a> class for handling Go modules.</p>
-</dd>
+
+<dt><a name="Calling_Go_Functions_from_Other_Languages_using_C_Shared_Libraries"
+><a href="https://github.com/vladimirvivien/go-cshared-examples" class="podlinkurl"
+>Calling Go Functions from Other Languages using C Shared Libraries</a></a></dt>
 </dl>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
@@ -161,7 +329,7 @@ name="AUTHOR"
 name="COPYRIGHT_AND_LICENSE"
 >COPYRIGHT AND LICENSE</a></h1>
 
-<p>This software is copyright (c) 2018 by Graham Ollis.</p>
+<p>This software is copyright (c) 2018-2022 by Graham Ollis.</p>
 
 <p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
 
