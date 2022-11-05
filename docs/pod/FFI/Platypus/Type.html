@@ -72,7 +72,7 @@ name="NAME"
 name="VERSION"
 >VERSION</a></h1>
 
-<p>version 2.03</p>
+<p>version 2.04</p>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
 name="SYNOPSIS"
@@ -816,95 +816,6 @@ name="Records"
  $ffi-&#62;attach( my_function2 =&#62; [ ] =&#62; &#39;my_class&#39; );</pre>
 
 <p>The only thing that your class MUST provide is either a <code>ffi_record_size</code> or <code>_ffi_record_size</code> class method that returns the size of the record in bytes.</p>
-
-<p>Here is a longer practical example, once again using the tm struct:</p>
-
-<pre class="sh_perl"> package Unix::TimeStruct;
- 
- use FFI::Platypus 2.00;
- use FFI::TinyCC;
- use FFI::TinyCC::Inline &#39;tcc_eval&#39;;
- 
- # store the source of the tm struct
- # for repeated use later
- my $tm_source = &#60;&#60;ENDTM;
-   struct tm {
-     int tm_sec;
-     int tm_min;
-     int tm_hour;
-     int tm_mday;
-     int tm_mon;
-     int tm_year;
-     int tm_wday;
-     int tm_yday;
-     int tm_isdst;
-     long int tm_gmtoff;
-     const char *tm_zone;
-   };
- ENDTM
- 
- # calculate the size of the tm struct
- # this time using Tiny CC
- my $tm_size = tcc_eval qq{
-   $tm_source
-   int main()
-   {
-     return sizeof(struct tm);
-   }
- };
- 
- # To use Unix::TimeStruct as a record class, we need to
- # specify a size for the record, a function called
- # either ffi_record_size or _ffi_record_size should
- # return the size in bytes.  This function has to
- # be defined before you try to define it as a type.
- sub _ffi_record_size { $tm_size };
- 
- my $ffi = FFI::Platypus-&#62;new( api =&#62; 2 );
- $ffi-&#62;lib(undef);
- # define a record class Unix::TimeStruct and alias it
- # to &#34;tm&#34;
- $ffi-&#62;type(&#34;record(Unix::TimeStruct)*&#34; =&#62; &#39;tm&#39;);
- 
- # attach the C localtime function as a constructor
- $ffi-&#62;attach( [ localtime =&#62; &#39;_new&#39; ] =&#62; [&#39;time_t*&#39;] =&#62; &#39;tm&#39; );
- 
- # the constructor needs to be wrapped in a Perl sub,
- # because localtime is expecting the time_t (if provided)
- # to come in as the first argument, not the second.
- # We could also acomplish something similar using
- # custom types.
- sub new { _new(\($_[1] || time)) }
- 
- # for each attribute that we are interested in, create
- # get and set accessors.  We just make accessors for
- # hour, minute and second, but we could make them for
- # all the fields if we needed.
- foreach my $attr (qw( hour min sec ))
- {
-   my $tcc = FFI::TinyCC-&#62;new;
-   $tcc-&#62;compile_string(qq{
-     $tm_source
-     int
-     get_$attr (struct tm *tm)
-     {
-       return tm-&#62;tm_$attr;
-     }
-     void
-     set_$attr (struct tm *tm, int value)
-     {
-       tm-&#62;tm_$attr = value;
-     }
-   });
-   $ffi-&#62;attach( [ $tcc-&#62;get_symbol(&#34;get_$attr&#34;) =&#62; &#34;get_$attr&#34; ] =&#62; [ &#39;tm&#39; ] =&#62; &#39;int&#39; );
-   $ffi-&#62;attach( [ $tcc-&#62;get_symbol(&#34;set_$attr&#34;) =&#62; &#34;set_$attr&#34; ] =&#62; [ &#39;tm&#39; ] =&#62; &#39;int&#39; );
- }
- 
- package main;
- 
- # now we can actually use our Unix::TimeStruct class
- my $time = Unix::TimeStruct-&#62;new;
- printf &#34;time is %d:%d:%d\n&#34;, $time-&#62;get_hour, $time-&#62;get_min, $time-&#62;get_sec;</pre>
 
 <p>Contrast a record type which is stored as a scalar string of bytes in Perl to an opaque pointer which is stored as an integer in Perl. Both are treated as pointers in C functions. The situations when you usually want to use a record are when you know ahead of time what the size of the object that you are working with and probably something about its structure. Because a function that returns a structure copies the structure into a Perl data structure, you want to make sure that it is okay to copy the record objects that you are dealing with if any of your functions will be returning one of them.</p>
 

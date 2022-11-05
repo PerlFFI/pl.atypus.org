@@ -48,7 +48,7 @@ name="NAME"
 name="VERSION"
 >VERSION</a></h1>
 
-<p>version 2.03</p>
+<p>version 2.04</p>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
 name="SYNOPSIS"
@@ -72,6 +72,26 @@ name="DESCRIPTION"
 
 <p>This module provides an interface to common memory functions provided by the standard C library. They may be useful when constructing interfaces to C libraries with FFI. It works mostly with the <code>opaque</code> type and it is worth reviewing the section on opaque pointers in <a href="/pod/FFI/Platypus/Type.html" class="podlinkpod"
 >FFI::Platypus::Type</a>.</p>
+
+<p>Allocating memory and forgetting to free it is a common source of memory leaks in C and when using this module. Very recent Perls have a <code>defer</code> keyword that lets you automatically call functions like <code>free</code> when a block ends. This can be especially handy when you have multiple code paths or possible exceptions to keep track of.</p>
+
+<pre class="sh_perl"> use feature &#39;defer&#39;;
+ use FFI::Platypus::Memory qw( malloc free );
+
+ sub run {
+   my $ptr = malloc 66;
+   defer { free $ptr };
+
+   my $data = do_something($ptr);
+
+   # do not need to remember to place free $ptr here, as it will
+   # run through defer.
+
+   return $data;
+ }</pre>
+
+<p>If you are not lucky enough to have the <code>defer</code> feature in your version of Perl you may be able to use <a href="https://metacpan.org/pod/Feature%3A%3ACompat%3A%3ADefer" class="podlinkpod"
+>Feature::Compat::Defer</a>, which will use the feature if available, and provides its own mostly compatible version if not.</p>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
 name="FUNCTIONS"

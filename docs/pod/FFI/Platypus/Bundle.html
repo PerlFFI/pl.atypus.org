@@ -41,7 +41,7 @@ name="NAME"
 name="VERSION"
 >VERSION</a></h1>
 
-<p>version 2.03</p>
+<p>version 2.04</p>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
 name="SYNOPSIS"
@@ -58,8 +58,7 @@ name="SYNOPSIS"
  } foo_t;
  
  foo_t*
- foo__new(const char *class_name, const char *name, int value)
- {
+ foo__new(const char *class_name, const char *name, int value) {
    (void)class_name;
    foo_t *self = malloc( sizeof( foo_t ) );
    self-&#62;name = strdup(name);
@@ -68,20 +67,17 @@ name="SYNOPSIS"
  }
  
  const char *
- foo__name(foo_t *self)
- {
+ foo__name(foo_t *self) {
    return self-&#62;name;
  }
  
  int
- foo__value(foo_t *self)
- {
+ foo__value(foo_t *self) {
    return self-&#62;value;
  }
  
  void
- foo__DESTROY(foo_t *self)
- {
+ foo__DESTROY(foo_t *self) {
    free(self-&#62;name);
    free(self);
  }</pre>
@@ -94,23 +90,21 @@ name="SYNOPSIS"
  use warnings;
  use FFI::Platypus 2.00;
  
- {
-   my $ffi = FFI::Platypus-&#62;new( api =&#62; 2 );
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 2 );
  
-   $ffi-&#62;type(&#39;object(Foo)&#39; =&#62; &#39;foo_t&#39;);
-   $ffi-&#62;mangler(sub {
-     my $name = shift;
-     $name =~ s/^/foo__/;
-     $name;
-   });
+ $ffi-&#62;type(&#39;object(Foo)&#39; =&#62; &#39;foo_t&#39;);
+ $ffi-&#62;mangler(sub {
+   my $name = shift;
+   $name =~ s/^/foo__/;
+   $name;
+ });
  
-   $ffi-&#62;bundle;
+ $ffi-&#62;bundle;
  
-   $ffi-&#62;attach( new =&#62;     [ &#39;string&#39;, &#39;string&#39;, &#39;int&#39; ] =&#62; &#39;foo_t&#39;  );
-   $ffi-&#62;attach( name =&#62;    [ &#39;foo_t&#39; ]                   =&#62; &#39;string&#39; );
-   $ffi-&#62;attach( value =&#62;   [ &#39;foo_t&#39; ]                   =&#62; &#39;int&#39;    );
-   $ffi-&#62;attach( DESTROY =&#62; [ &#39;foo_t&#39; ]                   =&#62; &#39;void&#39;   );
- }
+ $ffi-&#62;attach( new =&#62;     [ &#39;string&#39;, &#39;string&#39;, &#39;int&#39; ] =&#62; &#39;foo_t&#39;  );
+ $ffi-&#62;attach( name =&#62;    [ &#39;foo_t&#39; ]                   =&#62; &#39;string&#39; );
+ $ffi-&#62;attach( value =&#62;   [ &#39;foo_t&#39; ]                   =&#62; &#39;int&#39;    );
+ $ffi-&#62;attach( DESTROY =&#62; [ &#39;foo_t&#39; ]                   =&#62; &#39;void&#39;   );
  
  1;</pre>
 
@@ -448,9 +442,7 @@ name="Compiler_or_linker_flags_example"
 
 <p><code>ffi/answer.c</code>:</p>
 
-<pre class="sh_perl"> #include &#60;answer.h&#62;
- 
- int
+<pre class="sh_perl"> int
  answer(void)
  {
    /* the answer to life the universe and everything */
