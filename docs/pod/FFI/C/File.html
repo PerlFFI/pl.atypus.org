@@ -57,7 +57,7 @@ name="NAME"
 name="VERSION"
 >VERSION</a></h1>
 
-<p>version 0.14</p>
+<p>version 0.15</p>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
 name="SYNOPSIS"
@@ -175,6 +175,8 @@ name="freopen"
 <pre class="sh_perl"> $file-&#62;freopen($filename, $mode);</pre>
 
 <p>Re-open the file stream. If <code>$filename</code> is <code>undef</code>, then the same file is reopened. This can be useful for reopening a file in a different mode. Note that the mode changes that are allowed are platform dependent.</p>
+
+<p>On some platforms (Linux, macOS and possibly some others) you can pass <code>undef</code> as the <code>$filename</code>. This is a way to change the <code>$mode</code> without changing the file.</p>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
 name="fread"
