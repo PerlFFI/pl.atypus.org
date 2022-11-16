@@ -11,7 +11,7 @@
   <body onload="sh_highlightDocument();">
     <div class="nx-header-flag-1"></div>
     <div class="nx-header-flag-2"></div>
-    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/Platypus.html">Platypus</a>::<a href="/pod/FFI/Platypus/Type.html">Type</a>::PtrObject</div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::Platypus::Type::PtrObject</div>
     <!--FFI::Platypus::Type::PtrObject--><a name='___top' class='dummyTopAnchor' ></a>
 
 <div class='indexgroup'>
@@ -135,7 +135,7 @@ name="SYNOPSIS"
 name="DESCRIPTION"
 >DESCRIPTION</a></h1>
 
-<p>This is a helper type for <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+<p>This is a helper type for <a href="https://metacpan.org/pod/FFI%3A%3APlatypus" class="podlinkpod"
 >FFI::Platypus</a> that handles type checking for the common pattern where a Perl class is a simple wrapper around an opaque pointer. The class should be implemented as a hash reference, and the pointer itself is expected to be stored on the <code>ptr</code> key. If the caller of the interface (Perl) is responsible for cleaning up the memory, then it normally should be done in the <code>DESTROY</code> method (as above).</p>
 
 <p>If you do not pass in the correct type, it will be detected before the C code is called and an exception will be thrown. (otherwise you would probably get a segment violation SEGV).</p>

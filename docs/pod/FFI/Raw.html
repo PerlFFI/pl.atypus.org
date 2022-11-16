@@ -180,10 +180,10 @@ name="TYPES"
 <p>Caveats on the way types were defined by the original <a href="/pod/FFI/Raw.html" class="podlinkpod"
 >FFI::Raw</a>:</p>
 
-<p>This module uses the common convention that <code>char</code> is 8 bits, <code>short</code> is 16 bits, <code>int</code> is 32 bits, <code>long</code> is 32 bits on a 32bit arch and 64 bits on a 64 bit arch, <code>int64</code> is 64 bits. While this is probably true on most modern platforms (if not all), it isn&#39;t technically guaranteed by the standard. <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+<p>This module uses the common convention that <code>char</code> is 8 bits, <code>short</code> is 16 bits, <code>int</code> is 32 bits, <code>long</code> is 32 bits on a 32bit arch and 64 bits on a 64 bit arch, <code>int64</code> is 64 bits. While this is probably true on most modern platforms (if not all), it isn&#39;t technically guaranteed by the standard. <a href="https://metacpan.org/pod/FFI%3A%3APlatypus" class="podlinkpod"
 >FFI::Platypus</a> itself, differs in that <code>int</code>, <code>long</code>, etc are the native sizes, even if they do not follow this common convention and you need to use <code>sint32</code>, <code>sint64</code>, etc if you want a specific sized type.</p>
 
-<p>This module also assumes that <code>char</code> is signed. Although this is commonly true on many platforms it is not guaranteed by the standard. On Windows, for example the <code>char</code> type is unsigned. <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+<p>This module also assumes that <code>char</code> is signed. Although this is commonly true on many platforms it is not guaranteed by the standard. On Windows, for example the <code>char</code> type is unsigned. <a href="https://metacpan.org/pod/FFI%3A%3APlatypus" class="podlinkpod"
 >FFI::Platypus</a> by contrast follows to the standard where <code>char</code> uses the native behavior, and if you want an signed character type you can use <code>sint8</code> instead.</p>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
@@ -312,7 +312,7 @@ name="ptr"
 name="SEE_ALSO"
 >SEE ALSO</a></h1>
 
-<p><a href="/pod/FFI/Platypus.html" class="podlinkpod"
+<p><a href="https://metacpan.org/pod/FFI%3A%3APlatypus" class="podlinkpod"
 >FFI::Platypus</a>, <a href="/pod/Alt/FFI/Raw/Platypus.html" class="podlinkpod"
 >Alt::FFI::Raw::Platypus</a></p>
 

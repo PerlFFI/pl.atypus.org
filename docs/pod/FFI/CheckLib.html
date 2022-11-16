@@ -73,10 +73,10 @@ name="DESCRIPTION"
 
 <p>This module checks whether a particular dynamic library is available for FFI to use. It is modeled heavily on <a href="https://metacpan.org/pod/Devel%3A%3ACheckLib" class="podlinkpod"
 >Devel::CheckLib</a>, but will find dynamic libraries even when development packages are not installed. It also provides a <a href="https://metacpan.org/pod/FFI%3A%3ACheckLib%23find_lib" class="podlinkpod"
->find_lib</a> function that will return the full path to the found dynamic library, which can be feed directly into <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>find_lib</a> function that will return the full path to the found dynamic library, which can be feed directly into <a href="https://metacpan.org/pod/FFI%3A%3APlatypus" class="podlinkpod"
 >FFI::Platypus</a> or another FFI system.</p>
 
-<p>Although intended mainly for FFI modules via <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+<p>Although intended mainly for FFI modules via <a href="https://metacpan.org/pod/FFI%3A%3APlatypus" class="podlinkpod"
 >FFI::Platypus</a> and similar, this module does not actually use any FFI to do its detection and probing. This module does not have any non-core runtime dependencies. The test suite does depend on <a href="https://metacpan.org/pod/Test2%3A%3ASuite" class="podlinkpod"
 >Test2::Suite</a>.</p>
 
@@ -136,7 +136,7 @@ name="find_lib"
 >verify</a></dt>
 
 <dd>
-<p>A code reference used to verify a library really is the one that you want. It should take two arguments, which is the name of the library and the full path to the library pathname. It should return true if it is acceptable, and false otherwise. You can use this in conjunction with <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+<p>A code reference used to verify a library really is the one that you want. It should take two arguments, which is the name of the library and the full path to the library pathname. It should return true if it is acceptable, and false otherwise. You can use this in conjunction with <a href="https://metacpan.org/pod/FFI%3A%3APlatypus" class="podlinkpod"
 >FFI::Platypus</a> to determine if it is going to meet your needs. Example:</p>
 
 <pre class="sh_perl"> use FFI::CheckLib;
@@ -170,7 +170,7 @@ name="find_lib"
 <dd>
 <p>[version 0.24]</p>
 
-<p>Some vendors provide <code>.so</code> files that are linker scripts that point to the real binary shared library. These linker scripts can be used by gcc or clang, but are not directly usable by <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+<p>Some vendors provide <code>.so</code> files that are linker scripts that point to the real binary shared library. These linker scripts can be used by gcc or clang, but are not directly usable by <a href="https://metacpan.org/pod/FFI%3A%3APlatypus" class="podlinkpod"
 >FFI::Platypus</a> and friends. On select platforms, this options will use the linker command (<code>ld</code>) to attempt to resolve the real <code>.so</code> for non-binary files. Since there is extra overhead this is off by default.</p>
 
 <p>An example is libyaml on Red Hat based Linux distributions. On Debian these are handled with symlinks and no trickery is required.</p>
@@ -403,7 +403,7 @@ name="SEE_ALSO"
 
 <dl>
 <dt><a name="FFI::Platypus"
-><a href="/pod/FFI/Platypus.html" class="podlinkpod"
+><a href="https://metacpan.org/pod/FFI%3A%3APlatypus" class="podlinkpod"
 >FFI::Platypus</a></a></dt>
 
 <dd>

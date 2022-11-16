@@ -11,7 +11,7 @@
   <body onload="sh_highlightDocument();">
     <div class="nx-header-flag-1"></div>
     <div class="nx-header-flag-2"></div>
-    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/Platypus.html">Platypus</a>::<a href="/pod/FFI/Platypus/Lang.html">Lang</a>::Rust</div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::Platypus::Lang::Rust</div>
     <!--FFI::Platypus::Lang::Rust--><a name='___top' class='dummyTopAnchor' ></a>
 
 <div class='indexgroup'>
@@ -152,10 +152,10 @@ name="SYNOPSIS"
 name="DESCRIPTION"
 >DESCRIPTION</a></h1>
 
-<p>This module provides native Rust types for <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+<p>This module provides native Rust types for <a href="https://metacpan.org/pod/FFI%3A%3APlatypus" class="podlinkpod"
 >FFI::Platypus</a> in order to reduce cognitive load and concentrate on Rust and forget about C types. This document also documents issues and caveats that I have discovered in my attempts to work with Rust and FFI.</p>
 
-<p>Note that in addition to using pre-compiled Rust libraries, you can bundle Rust code with your Perl distribution using <a href="/pod/FFI/Build.html" class="podlinkpod"
+<p>Note that in addition to using pre-compiled Rust libraries, you can bundle Rust code with your Perl distribution using <a href="https://metacpan.org/pod/FFI%3A%3ABuild" class="podlinkpod"
 >FFI::Build</a> and <a href="/pod/FFI/Build/File/Cargo.html" class="podlinkpod"
 >FFI::Build::File::Cargo</a>.</p>
 
@@ -745,7 +745,7 @@ name="Execute"
 name="Notes"
 >Notes</a></h3>
 
-<p>Rust&#39;s tuples do not have a standard representation that can be used directly from Perl, but if your tuple contains only simple types you can use the <a href="/pod/FFI/Platypus/Record.html" class="podlinkpod"
+<p>Rust&#39;s tuples do not have a standard representation that can be used directly from Perl, but if your tuple contains only simple types you can use the <a href="https://metacpan.org/pod/FFI%3A%3APlatypus%3A%3ARecord" class="podlinkpod"
 >Platypus Record class</a> and translate in Rust between the tuple and the <code>struct</code>.</p>
 
 <p>Because we are passing in and out the entire <code>struct</code>, not pointers to a <code>struct</code> we don&#39;t have to worry about freeing them from Perl. They just get allocated and freed on the stack.</p>
@@ -919,7 +919,7 @@ name="Notes"
 
 <p>This example includes excerpts from a full <code>Person</code> dist which you can find in the <code>examples/Person</code> directory of this distribution. You can install it like a normal Perl distribution using <a href="https://metacpan.org/pod/ExtUtils%3A%3AMakeMaker" class="podlinkpod"
 >ExtUtils::MakeMaker</a>, or you can simply run the test file by using <a href="https://metacpan.org/pod/App%3A%3AProve" class="podlinkpod"
->App::Prove</a>. That is because we are using <a href="/pod/FFI/Build.html" class="podlinkpod"
+>App::Prove</a>. That is because we are using <a href="https://metacpan.org/pod/FFI%3A%3ABuild" class="podlinkpod"
 >FFI::Build</a> and <a href="/pod/FFI/Build/File/Cargo.html" class="podlinkpod"
 >FFI::Build::File::Cargo</a> to build the Rust parts for us, which know how to work in either mode. There are some stuff that we don&#39;t show you here for brevity: the <code>Makefile.PL</code> for example, and also the rust tests in <code>ffi/src/test.rs</code> which test the Rust crate by calling both its Rust and C interface.</p>
 
@@ -1009,7 +1009,7 @@ name="Notes"
 name="METHODS"
 >METHODS</a></h1>
 
-<p>Generally you will not use this class directly, instead interacting with the <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+<p>Generally you will not use this class directly, instead interacting with the <a href="https://metacpan.org/pod/FFI%3A%3APlatypus" class="podlinkpod"
 >FFI::Platypus</a> instance. However, the public methods used by Platypus are documented here.</p>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
@@ -1039,7 +1039,7 @@ name="SEE_ALSO"
 
 <dl>
 <dt><a name="FFI::Platypus"
-><a href="/pod/FFI/Platypus.html" class="podlinkpod"
+><a href="https://metacpan.org/pod/FFI%3A%3APlatypus" class="podlinkpod"
 >FFI::Platypus</a></a></dt>
 
 <dd>

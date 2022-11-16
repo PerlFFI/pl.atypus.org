@@ -11,7 +11,7 @@
   <body onload="sh_highlightDocument();">
     <div class="nx-header-flag-1"></div>
     <div class="nx-header-flag-2"></div>
-    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/Platypus.html">Platypus</a>::<a href="/pod/FFI/Platypus/Record.html">Record</a>::StringArray</div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::Platypus::Record::StringArray</div>
     <!--FFI::Platypus::Record::StringArray--><a name='___top' class='dummyTopAnchor' ></a>
 
 <div class='indexgroup'>
@@ -60,7 +60,7 @@ name="DESCRIPTION"
 
 <p>Experimental interface for an array of C strings, useful for FFI record classes.</p>
 
-<p>The Platypus record class doesn&#39;t easily support an array of strings, and trying to use an <code>opaque</code> type to implement this is possible but more than a little arcane. This class provides an interface for creating a C array of strings which can be used to provide an <code>opaque</code> pointer than can be used by an <a href="/pod/FFI/Platypus/Record.html" class="podlinkpod"
+<p>The Platypus record class doesn&#39;t easily support an array of strings, and trying to use an <code>opaque</code> type to implement this is possible but more than a little arcane. This class provides an interface for creating a C array of strings which can be used to provide an <code>opaque</code> pointer than can be used by an <a href="https://metacpan.org/pod/FFI%3A%3APlatypus%3A%3ARecord" class="podlinkpod"
 >FFI::Platypus::Record</a> object.</p>
 
 <p>Care needs to be taken! Because Perl has no way of knowing if/when the opaque pointer is no longer being used by C, you have to make sure that the <a href="/pod/FFI/Platypus/Record/StringArray.html" class="podlinkpod"
