@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::Platypus::Bundle</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="https://hatch.wdlabs.com/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/Platypus.html">Platypus</a>::Bundle</div>
+    <!--FFI::Platypus::Bundle--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#Basic_example'>Basic example</a>
+    <li class='indexItem indexItem2'><a href='#Initialization_example'>Initialization example</a>
+    <li class='indexItem indexItem2'><a href='#Compiler_or_linker_flags_example'>Compiler or linker flags example</a>
+    <li class='indexItem indexItem2'><a href='#Using_bundled_code_with_Alien.'>Using bundled code with Alien.</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::Platypus::Bundle - Bundle foreign code with your Perl module</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 2.05</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<p><code>ffi/foo.c</code>:</p>
+
+<pre class="sh_perl"> #include &#60;ffi_platypus_bundle.h&#62;
+ #include &#60;string.h&#62;
+ 
+ typedef struct {
+   char *name;
+   int value;
+ } foo_t;
+ 
+ foo_t*
+ foo__new(const char *class_name, const char *name, int value) {
+   (void)class_name;
+   foo_t *self = malloc( sizeof( foo_t ) );
+   self-&#62;name = strdup(name);
+   self-&#62;value = value;
+   return self;
+ }
+ 
+ const char *
+ foo__name(foo_t *self) {
+   return self-&#62;name;
+ }
+ 
+ int
+ foo__value(foo_t *self) {
+   return self-&#62;value;
+ }
+ 
+ void
+ foo__DESTROY(foo_t *self) {
+   free(self-&#62;name);
+   free(self);
+ }</pre>
+
+<p><code>lib/Foo.pm</code>:</p>
+
+<pre class="sh_perl"> package Foo;
+ 
+ use strict;
+ use warnings;
+ use FFI::Platypus 2.00;
+ 
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 2 );
+ 
+ $ffi-&#62;type(&#39;object(Foo)&#39; =&#62; &#39;foo_t&#39;);
+ $ffi-&#62;mangler(sub {
+   my $name = shift;
+   $name =~ s/^/foo__/;
+   $name;
+ });
+ 
+ $ffi-&#62;bundle;
+ 
+ $ffi-&#62;attach( new =&#62;     [ &#39;string&#39;, &#39;string&#39;, &#39;int&#39; ] =&#62; &#39;foo_t&#39;  );
+ $ffi-&#62;attach( name =&#62;    [ &#39;foo_t&#39; ]                   =&#62; &#39;string&#39; );
+ $ffi-&#62;attach( value =&#62;   [ &#39;foo_t&#39; ]                   =&#62; &#39;int&#39;    );
+ $ffi-&#62;attach( DESTROY =&#62; [ &#39;foo_t&#39; ]                   =&#62; &#39;void&#39;   );
+ 
+ 1;</pre>
+
+<p><code>t/foo.t</code></p>
+
+<pre class="sh_perl"> use Test2::V0;
+ use Foo;
+ 
+ my $foo = Foo-&#62;new(&#34;platypus&#34;, 10);
+ isa_ok $foo, &#39;Foo&#39;;
+ is $foo-&#62;name, &#34;platypus&#34;;
+ is $foo-&#62;value, 10;
+ 
+ done_testing;</pre>
+
+<p><code>Makefile.PL</code>:</p>
+
+<pre class="sh_perl"> use ExtUtils::MakeMaker;
+ use FFI::Build::MM;
+ my $fbmm = FFI::Build::MM-&#62;new;
+ WriteMakefile(
+   $fbmm-&#62;mm_args(
+     NAME     =&#62; &#39;Foo&#39;,
+     DISTNAME =&#62; &#39;Foo&#39;,
+     VERSION  =&#62; &#39;1.00&#39;,
+     # ...
+   )
+ );
+ 
+ sub MY::postamble
+ {
+   $fbmm-&#62;mm_postamble;
+ }</pre>
+
+<p>or <code>dist.ini</code>:</p>
+
+<pre class="sh_perl"> name    = Foo
+ version = 0.01
+ ...
+ 
+ [FFI::Build]
+ version = 1.04</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>This document serves as a tutorial for using the new bundling interface provided by <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> as of api version 1. It requires <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> of at least 1.00.</p>
+
+<p>Sometimes when writing FFI bindings you need to include a little C code (or your favorite compiled language) to finish things off. Alternatively, you might just want to write some C code (or your favorite compiled language) to include with your Perl module to make a tight loop faster. The bundling interface has you covered.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Basic_example"
+>Basic example</a></h2>
+
+<p>To illustrate we will go through the files in the synopsis and explain how and why they work. To start with we have some C code which emulates object oriented code using <code>foo__</code> as a prefix. We use a C struct that we call <code>foo_t</code> to store our object data. On the C level the struct acts as a class, when combined with its functions that act as methods. The constructor just allocates the memory it needs for the <code>foo_t</code> instance, fills in the appropriate fields and returns the pointer:</p>
+
+<pre class="sh_perl"> foo_t*
+ foo__new(const char *class_name, const char *name, int value)
+ {
+   (void) class_name;
+   foo_t *self = malloc( sizeof( foo_t ) );
+   self-&#62;name = strdup(name);
+   self-&#62;value = value;
+   return self;
+ }</pre>
+
+<p>We include a class name as the first argument, because Perl will include that when calling the constructor, but we do not use it here. An exercise for the reader would be to add hierarchical inheritance.</p>
+
+<p>There are also some methods which return member values. This class has only read only members, but you could have read/write or other methods depending on your needs.</p>
+
+<pre class="sh_perl"> const char *
+ foo__name(foo_t *self)
+ {
+   return self-&#62;name;
+ }</pre>
+
+<p>We also include a destructor so that the memory owned by the object can be freed when it is no longer needed.</p>
+
+<pre class="sh_perl"> void
+ foo__DESTROY(foo_t *self)
+ {
+   free(self-&#62;name);
+   free(self);
+ }</pre>
+
+<p>This might start to look a little like a Perl module, and when we look at the Perl code that binds to this code, you will see why. First lets prepare the <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> instance and specify the correct api version:</p>
+
+<pre class="sh_perl"> my $ffi = FFI::Platypus-&#62;new( api =&#62; 2 );</pre>
+
+<p>The bundle interface is only supported with api version 1, so if you try to use version 0 it will not work. Next we define an object type for <code>foo_t</code> which will associate it with the Perl class <code>Foo</code>.</p>
+
+<pre class="sh_perl"> $ffi-&#62;type(&#39;object(Foo)&#39; =&#62; &#39;foo_t&#39;);</pre>
+
+<p>As object type is a blessed reference to an opaque (default) or integer type which can be used as a Perl object. Platypus does the translating of Perl object to and from the foo_t pointers that the C code understands. For more details on Platypus types see <a href="/pod/FFI/Platypus/Type.html" class="podlinkpod"
+>FFI::Platypus::Type</a>.</p>
+
+<p>Next we set the mangler on the Platypus instance so that we can refer to function names without the <code>foo__</code> prefix. You could just not use the prefix in your C code and skip this step, or you could refer to the function names in their full in your Perl code, however, this saves extra typing and allows you to bundle more than one class with your Perl code without having to worry about name conflicts.</p>
+
+<pre class="sh_perl"> $ffi-&#62;mangler(sub {
+   my $name = shift;
+   $name =~ s/^/foo__/;
+   $name;
+ });</pre>
+
+<p>Finally we let Platypus know that we will be bundling code.</p>
+
+<pre class="sh_perl"> $ffi-&#62;bundle;</pre>
+
+<p>By default, this searches for the appropriate place for your dynamic libraries using the current package. In some cases you may need to override this, for example if your dist is named <code>Foo-Bar</code> but your specific class is named <code>Foo::Bar::Baz</code>, you&#39;d want something like this:</p>
+
+<pre class="sh_perl"> package Foo::Bar::Baz;
+ use FFI::Platypus 2.00;
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 2 );
+ $ffi-&#62;bundle(&#39;Foo::Bar&#39;);
+ ...</pre>
+
+<p>Now, finally we can attach the methods for our class:</p>
+
+<pre class="sh_perl"> $ffi-&#62;attach( new =&#62;     [ &#39;string&#39;, &#39;int&#39; ] =&#62; &#39;foo_t&#39;  );
+ $ffi-&#62;attach( name =&#62;    [ &#39;foo_t&#39; ]         =&#62; &#39;string&#39; );
+ $ffi-&#62;attach( value =&#62;   [ &#39;foo_t&#39; ]         =&#62; &#39;int&#39;    );
+ $ffi-&#62;attach( DESTROY =&#62; [ &#39;foo_t&#39; ]         =&#62; &#39;void&#39;   );</pre>
+
+<p>Note that we do not have to include the <code>foo__</code> prefix because of the way we set up the mangler. If we hadn&#39;t done that then we could instead attach with the full names:</p>
+
+<pre class="sh_perl"> $ffi-&#62;attach( [ &#39;foo__new&#39;  =&#62; &#39;new&#39; ]  =&#62; [ &#39;string&#39;, &#39;int&#39; ] =&#62; &#39;foo_t&#39;  );
+ $ffi-&#62;attach( [ &#39;foo__name&#39; =&#62; &#39;name&#39; ] =&#62; [ &#39;foo_t&#39; ]         =&#62; &#39;string&#39; );
+ ...</pre>
+
+<p>You&#39;re done! You can now use this class. Lets write a test to make sure it works,</p>
+
+<pre class="sh_perl"> use Test2::V0;
+ use Foo;
+ 
+ my $foo = Foo-&#62;new(&#34;platypus&#34;, 10);
+ isa_ok $foo, &#39;Foo&#39;;
+ is $foo-&#62;name, &#34;platypus&#34;;
+ is $foo-&#62;value, 10;
+ 
+ done_testing;</pre>
+
+<p>and use <code>prove</code> to check that it works:</p>
+
+<pre class="sh_perl"> % prove -lvm
+ t/foo.t ..
+ ok 1 - An object of class &#39;Foo&#39; isa &#39;Foo&#39;
+ ok 2
+ ok 3
+ 1..3
+ ok
+ All tests successful.
+ Files=1, Tests=3,  0 wallclock secs ( 0.02 usr  0.00 sys +  0.14 cusr  0.03 csys =  0.19 CPU)
+ Result: PASS</pre>
+
+<p>Platypus automatically compiles and links the dynamic library for you:</p>
+
+<pre class="sh_perl"> % ls ffi/_build
+ foo.c.o  libFoo.so</pre>
+
+<p>The C code will be rebuilt next time if the source code is newer than the object or dynamic libraries files. If the source files are not changed, then it won&#39;t be rebuilt to save time. If you are using the code without MakeMaker, or another build system you are responsible for cleaning up these files. This is intended as a convenience to allow you to test your code without having to invoke MakeMaker, or <code>dzil</code> or whatever build system you are using.</p>
+
+<p>When you distribute your module though, you will want the dynamic library built just once at build-time and installed correctly so that it can be found at run-time. You don&#39;t need to make any changes to your C or Perl code, but you do need to tell MakeMaker to build and install the appropriate files using <a href="/pod/FFI/Build/MM.html" class="podlinkpod"
+>FFI::Build::MM</a>:</p>
+
+<pre class="sh_perl"> use ExtUtils::MakeMaker;
+ use FFI::Build::MM;
+ my $fbmm = FFI::Build::MM-&#62;new;
+ WriteMakefile(
+   $fbmm-&#62;mm_args(
+     NAME     =&#62; &#39;Foo&#39;,
+     DISTNAME =&#62; &#39;Foo&#39;,
+     VERSION  =&#62; &#39;1.00&#39;,
+     # ...
+   )
+ );
+ 
+ sub MY::postamble
+ {
+   $fbmm-&#62;mm_postamble;
+ }</pre>
+
+<p>And we can invoke all the normal MakeMaker style stuff and our C code will be compiled, linked and installed at the appropriate steps.</p>
+
+<pre class="sh_perl"> % perl Makefile.PL
+ Generating a Unix-style Makefile
+ Writing Makefile for Foo
+ Writing MYMETA.yml and MYMETA.json
+ % make
+ cp lib/Foo.pm blib/lib/Foo.pm
+ &#34;/Users/ollisg/perl5/perlbrew/perls/perl-5.30.0/bin/perl&#34; -MFFI::Build::MM=cmd -e fbx_build
+ CC ffi/foo.c
+ LD blib/lib/auto/share/dist/Foo/lib/libFoo.dylib
+ % make test
+ &#34;/Users/ollisg/perl5/perlbrew/perls/perl-5.30.0/bin/perl&#34; -MFFI::Build::MM=cmd -e fbx_build
+ &#34;/Users/ollisg/perl5/perlbrew/perls/perl-5.30.0/bin/perl&#34; -MFFI::Build::MM=cmd -e fbx_test
+ PERL_DL_NONLAZY=1 &#34;/Users/ollisg/perl5/perlbrew/perls/perl-5.30.0/bin/perl&#34; &#34;-MExtUtils::Command::MM&#34; &#34;-MTest::Harness&#34; &#34;-e&#34; &#34;undef *Test::Harness::Switches; test_harness(0, &#39;blib/lib&#39;, &#39;blib/arch&#39;)&#34; t/*.t
+ t/foo.t .. ok
+ All tests successful.
+ Files=1, Tests=3,  0 wallclock secs ( 0.01 usr  0.00 sys +  0.06 cusr  0.01 csys =  0.08 CPU)
+ Result: PASS</pre>
+
+<p>If the <code>Makefile.PL</code> file above looks overly complicated, you can use the <a href="/pod/Dist/Zilla/Plugin/FFI/Build.html" class="podlinkpod"
+>Dist::Zilla::Plugin::FFI::Build</a> plugin to simplify your life if you are using <a href="https://metacpan.org/pod/Dist%3A%3AZilla" class="podlinkpod"
+>Dist::Zilla</a>:</p>
+
+<pre class="sh_perl"> [FFI::Build]
+ version = 1.04</pre>
+
+<p>Specifying version 1.04 will ensure that any <code>.o</code> or <code>.so</code> files are pruned from your build tree and not distributed by mistake.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Initialization_example"
+>Initialization example</a></h2>
+
+<p>The bundle interface also gives you entry points which will be called automatically when your code is loaded and unloaded if they are found.</p>
+
+<dl>
+<dt><a name="ffi_pl_bundle_init"
+><code>ffi_pl_bundle_init</code></a></dt>
+
+<dd>
+<pre class="sh_perl"> void ffi_pl_bundle_init(const char *package, int argc, void *argv[]);</pre>
+
+<p>Called when the dynamic library is loaded. <code>package</code> is the Perl package that called <code>bundle</code> from Perl space. <code>argc</code> and <code>argv</code> represents an array of opaque pointers that can be passed as an array to bundle as the last argument. (the count <code>argc</code> is a little redundant because <code>argv</code> is also NULL terminated).</p>
+
+<dt><a name="ffi_pl_bundle_constant"
+><code>ffi_pl_bundle_constant</code></a></dt>
+
+<dd>
+<pre class="sh_perl"> void ffi_pl_bundle_constant(const char *package, ffi_platypus_constant_t *c);</pre>
+
+<p>Called immediately after <code>ffi_pl_bundle_init</code>, and is intended to allow you to set Perl constants from C space. For details on how this works and what methods you can call on the <code>ffi_platypus_constant_t</code> instance, see <a href="/pod/FFI/Platypus/Constant.html" class="podlinkpod"
+>FFI::Platypus::Constant</a>.</p>
+
+<dt><a name="ffi_pl_bundle_fini"
+><code>ffi_pl_bundle_fini</code></a></dt>
+
+<dd>
+<pre class="sh_perl"> void ffi_pl_bundle_fini(const char *package);</pre>
+
+<p>Called when the dynamic library is unloaded. <code>package</code> is the Perl package that called <code>bundle</code> from Perl space when the library was loaded. <b>CAVEAT</b>: if you attach any functions then this will never be called, because attaching functions locks the Platypus instance into memory along with the libraries which it is using.</p>
+</dd>
+</dl>
+
+<p>Here is an example that passes the version and a callback back into Perl space that emulates the Perl 5.10 <code>say</code> feature.</p>
+
+<p><code>ffi/init.c</code>:</p>
+
+<pre class="sh_perl"> #include &#60;ffi_platypus_bundle.h&#62;
+ 
+ char buffer[512];
+ const char *version;
+ void (*say)(const char *);
+ 
+ void
+ ffi_pl_bundle_init(const char *package, int argc, void *argv[])
+ {
+   version = argv[0];
+   say     = argv[1];
+ 
+   say(&#34;in init!&#34;);
+ 
+   snprintf(buffer, 512, &#34;package = %s, version = %s&#34;, package, version);
+   say(buffer);
+ 
+   snprintf(buffer, 512, &#34;args = %d&#34;, argc);
+   say(buffer);
+ }
+ 
+ void
+ ffi_pl_bundle_fini(const char *package)
+ {
+   say(&#34;in fini!&#34;);
+ }</pre>
+
+<p><code>lib/Init.pm</code>:</p>
+
+<pre class="sh_perl"> package Init;
+ 
+ use strict;
+ use warnings;
+ use FFI::Platypus 2.00;
+ 
+ our $VERSION = &#39;1.00&#39;;
+ 
+ {
+   my $ffi = FFI::Platypus-&#62;new( api =&#62; 2 );
+ 
+   my $say = $ffi-&#62;closure(sub {
+     my $string = shift;
+     print &#34;$string\n&#34;;
+   });
+ 
+   $ffi-&#62;bundle([
+     $ffi-&#62;cast( &#39;string&#39; =&#62; &#39;opaque&#39;, $VERSION ),
+     $ffi-&#62;cast( &#39;(string)-&#62;void&#39; =&#62; &#39;opaque&#39;, $say ),
+   ]);
+ 
+   undef $ffi;
+   undef $say;
+ }
+ 
+ 1;</pre>
+
+<p>The deinitialization order for the <code>$say</code> callback and the <code>$ffi</code> instance is essential here, so we do it manually with <code>undef</code>:</p>
+
+<pre class="sh_perl"> undef $ffi;
+ undef $say;</pre>
+
+<p>First we deallocate <code>$ffi</code> which calls <code>ffi_pl_bundle_fini</code>, which calls <code>$say</code>, so we want to make sure the latter is still allocated. Once <code>ffi_pl_bundle_fini</code> is done, we can safely deallocate <code>$say</code>.</p>
+
+<p>If <code>ffi_pl_bundle_fini</code> didn&#39;t call back into Perl space like this then we don&#39;t have to be as careful about deallocating things in Perl space.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Compiler_or_linker_flags_example"
+>Compiler or linker flags example</a></h2>
+
+<p>There are times when you will want to specify your own compiler and linker flags for the C code that you are bundling. The <code>TL;DR</code> is that you can put a <code>.fbx</code> file in your <code>ffi</code> directory. This is a Perl script that returns a hash reference that is passed into the <a href="/pod/FFI/Build.html" class="podlinkpod"
+>FFI::Build</a> constructor. This allows you to set a number of options, including compiler and linker flags. A more detailed example follows:</p>
+
+<p>You may want or need to set compiler and linker flags for your bundled C code. For example, say we have a header file, but instead of putting it in the <code>ffi</code> directory we want to put it in a separate directory called <code>include</code>.</p>
+
+<p><code>include/answer.h</code>:</p>
+
+<pre class="sh_perl"> #ifndef ANSWER_H
+ #define ANSWER_H
+ 
+ int answer(void);
+ 
+ #endif</pre>
+
+<p><code>ffi/answer.c</code>:</p>
+
+<pre class="sh_perl"> int
+ answer(void)
+ {
+   /* the answer to life the universe and everything */
+   return 42;
+ }</pre>
+
+<p><code>lib/Answer.pm</code>:</p>
+
+<pre class="sh_perl"> package Answer;
+ 
+ use strict;
+ use warnings;
+ use FFI::Platypus 2.00;
+ use Exporter qw( import );
+ 
+ our @EXPORT = qw( answer );
+ 
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 2 );
+ $ffi-&#62;bundle;
+ $ffi-&#62;attach( answer =&#62; [] =&#62; &#39;int&#39; );
+ 
+ 1;</pre>
+
+<p>If you try to use this module just as-is you will get an error, about not being able to find the header file. Probably something like this:</p>
+
+<pre class="sh_perl"> ffi/answer.c:1:10: fatal error: &#39;answer.h&#39; file not found</pre>
+
+<p>So we put a <code>answer.fbx</code> file in the <code>ffi</code> directory. (In case you are wondering FBX stands for &#34;Ffi Build and file eXtensions should whenever possible be three characters long&#34;). The name of the file can be anything so long as it ends in <code>.fbx</code>, we just choose <code>answer</code> here because that is the name of the project.</p>
+
+<p><code>ffi/answer.fbx</code>:</p>
+
+<pre class="sh_perl"> our $DIR;
+ 
+ return {
+   cflags =&#62; &#34;-I/include&#34;,
+   source =&#62; &#34;$DIR/*.c&#34;,
+ }</pre>
+
+<p>The <code>$DIR</code> variable is provided by the builder code. It is the root of the distribution, and is helpful if you need a fully qualified path. In this case you could have also used <code>ffi/*.c</code>.</p>
+
+<p>The script returns a hash reference which is passed into the <a href="/pod/FFI/Build.html" class="podlinkpod"
+>FFI::Build</a> constructor, so you can use any of the options supported by that class. Now we should be able to use our bundled module:</p>
+
+<pre class="sh_perl"> % perl -Ilib -MAnswer=answer -E &#39;say answer&#39;
+ 42</pre>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Using_bundled_code_with_Alien."
+>Using bundled code with Alien.</a></h2>
+
+<p>A useful technique is to use Platypus with <a href="https://alienfile.org/pod/Alien.html" class="podlinkpod"
+>Alien</a> technology. The <a href="https://alienfile.org/pod/Alien.html" class="podlinkpod"
+>Alien</a> namespace is reserved for providing external non-Perl dependencies for CPAN modules. The nominal <a href="https://alienfile.org/pod/Alien.html" class="podlinkpod"
+>Alien</a> module when installed looks for the library locally, and if it can&#39;t be found it fetches it from the internet, builds it, and installs it in a private directory so that it can be used by other CPAN modules. For <a href="https://alienfile.org/pod/Alien.html" class="podlinkpod"
+>Alien</a>s that provide shared libraries, and that have simple interfaces that do not require additional C code you can easily just pass the shared libraries to Platypus directly. For modules that require some bundled C code and an <a href="https://alienfile.org/pod/Alien.html" class="podlinkpod"
+>Alien</a> you have to link the <a href="https://alienfile.org/pod/Alien.html" class="podlinkpod"
+>Alien</a> library with your bundled code. If the <a href="https://alienfile.org/pod/Alien.html" class="podlinkpod"
+>Alien</a> uses the <a href="https://alienfile.org/pod/Alien/Base.html" class="podlinkpod"
+>Alien::Base</a> interface then all you have to do is give the name of the <a href="https://alienfile.org/pod/Alien.html" class="podlinkpod"
+>Alien</a> to <a href="/pod/FFI/Build.html" class="podlinkpod"
+>FFI::Build</a>.</p>
+
+<p>For example, the <code>bzip2</code> library provides an interface that requires the caller to allocate a C <code>struct</code> and then pass it to its various functions. The <code>struct</code> is actually pretty simple and you could use <a href="/pod/FFI/C.html" class="podlinkpod"
+>FFI::C</a> or <a href="/pod/FFI/Platypus/Record.html" class="podlinkpod"
+>FFI::Platypus::Record</a>, but here is an example of how you would connect bundled C code with an <a href="https://alienfile.org/pod/Alien.html" class="podlinkpod"
+>Alien</a>.</p>
+
+<p><code>ffi/compress.c</code>:</p>
+
+<pre class="sh_perl"> #include &#60;bzlib.h&#62;
+ #include &#60;stdlib.h&#62;
+ 
+ int
+ bzip2__new(bz_stream **stream, int blockSize100k, int verbosity, int workFactor )
+ {
+   *stream = malloc(sizeof(bz_stream));
+   (*stream)-&#62;bzalloc = NULL;
+   (*stream)-&#62;bzfree  = NULL;
+   (*stream)-&#62;opaque  = NULL;
+ 
+   return BZ2_bzCompressInit(*stream, blockSize100k, verbosity, workFactor );
+ }</pre>
+
+<p><code>lib/Bzip2.pm</code>:</p>
+
+<pre class="sh_perl"> package Bzip2;
+ 
+ use strict;
+ use warnings;
+ use FFI::Platypus 2.00;
+ use FFI::Platypus::Memory qw( free );
+ 
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 2 );
+ $ffi-&#62;bundle;
+ 
+ $ffi-&#62;mangler(sub {
+   my $name = shift;
+   $name =~ s/^/bzip2__/ unless $name =~ /^BZ2_/;
+   $name;
+ });
+ 
+ =head2 new
+ 
+  my $bzip2 = Bzip2-&#62;new($block_size_100k, $verbosity, $work_flow);
+ 
+ =cut
+ 
+ $ffi-&#62;attach( new =&#62; [&#39;opaque*&#39;, &#39;int&#39;, &#39;int&#39;, &#39;int&#39;] =&#62; &#39;int&#39; =&#62; sub {
+   my $xsub = shift;
+   my $class = shift;
+   my $ptr;
+   my $ret = $xsub-&#62;(\$ptr, @_);
+   return bless \$ptr, $class;
+ });
+ 
+ $ffi-&#62;attach( [ BZ2_bzCompressEnd =&#62; &#39;DESTROY&#39; ] =&#62; [&#39;opaque&#39;] =&#62; &#39;int&#39; =&#62; sub {
+   my $xsub = shift;
+   my $self = shift;
+   my $ret = $xsub-&#62;($$self);
+   free $$self;
+ });
+ 
+ 1;</pre>
+
+<p>The <code>.fbx</code> file that goes with this to make it work with <a href="https://alienfile.org/pod/Alien/Libbz2.html" class="podlinkpod"
+>Alien::Libbz2</a> is now pretty trivial:</p>
+
+<p><code>ffi/bz2.fbx</code>:</p>
+
+<pre class="sh_perl"> {
+   alien =&#62; [&#39;Alien::Libbz2&#39;],
+   source =&#62; [&#39;ffi/*.c&#39;],
+ };</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Author: Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<p>Contributors:</p>
+
+<p>Bakkiaraj Murugesan (bakkiaraj)</p>
+
+<p>Dylan Cali (calid)</p>
+
+<p>pipcet</p>
+
+<p>Zaki Mughal (zmughal)</p>
+
+<p>Fitz Elliott (felliott)</p>
+
+<p>Vickenty Fesunov (vyf)</p>
+
+<p>Gregor Herrmann (gregoa)</p>
+
+<p>Shlomi Fish (shlomif)</p>
+
+<p>Damyan Ivanov</p>
+
+<p>Ilya Pavlov (Ilya33)</p>
+
+<p>Petr P&#237;sa&#345; (ppisar)</p>
+
+<p>Mohammad S Anwar (MANWAR)</p>
+
+<p>H&#229;kon H&#230;gland (hakonhagland, HAKONH)</p>
+
+<p>Meredith (merrilymeredith, MHOWARD)</p>
+
+<p>Diab Jerius (DJERIUS)</p>
+
+<p>Eric Brine (IKEGAMI)</p>
+
+<p>szTheory</p>
+
+<p>Jos&#233; Joaqu&#237;n Atria (JJATRIA)</p>
+
+<p>Pete Houston (openstrike, HOUSTON)</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2015-2022 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>
+        [
+            <a href="https://wdlabs.com">wdlabs.com</a> |
+            <a href="https://alienfile.org">alienfile.org</a> |
+            <a href="https://pl.atypus.org">pl.atypus.org</a> |
+            <a href="https://perlwasm.github.io">perlwasm</a> |
+            <a href="https://uperl.github.io">uperl</a>
+        ]
+        Copyright &copy; 2022 Graham Ollis
+      </p>
+    </div>
+  </body>
+</html>

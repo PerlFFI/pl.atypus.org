@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::Probe</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="https://hatch.wdlabs.com/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::Probe</div>
+    <!--FFI::Probe--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#CONSTRUCTOR'>CONSTRUCTOR</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#new'>new</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#METHODS'>METHODS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#check_header'>check_header</a>
+    <li class='indexItem indexItem2'><a href='#check_cpp'>check_cpp</a>
+    <li class='indexItem indexItem2'><a href='#check_eval'>check_eval</a>
+    <li class='indexItem indexItem2'><a href='#check'>check</a>
+    <li class='indexItem indexItem2'><a href='#check_type_int'>check_type_int</a>
+    <li class='indexItem indexItem2'><a href='#check_type_enum'>check_type_enum</a>
+    <li class='indexItem indexItem2'><a href='#check_type_enum'>check_type_enum</a>
+    <li class='indexItem indexItem2'><a href='#check_type_float'>check_type_float</a>
+    <li class='indexItem indexItem2'><a href='#check_type_pointer'>check_type_pointer</a>
+    <li class='indexItem indexItem2'><a href='#set'>set</a>
+    <li class='indexItem indexItem2'><a href='#save'>save</a>
+    <li class='indexItem indexItem2'><a href='#data'>data</a>
+    <li class='indexItem indexItem2'><a href='#log'>log</a>
+    <li class='indexItem indexItem2'><a href='#log_code'>log_code</a>
+    <li class='indexItem indexItem2'><a href='#template'>template</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::Probe - System detection and probing for FFI extensions.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 2.05</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<pre class="sh_perl"> use FFI::Probe;
+ 
+ my $probe = FFI::Probe-&#62;new;
+ $probe-&#62;check_header(&#39;foo.h&#39;);
+ ...</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>This class provides an interface for probing for system capabilities. It is used internally as part of the <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> build process, but it may also be useful for extensions that use Platypus as well.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CONSTRUCTOR"
+>CONSTRUCTOR</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="new"
+>new</a></h2>
+
+<pre class="sh_perl"> my $probe = FFI::Probe-&#62;new(%args);</pre>
+
+<p>Creates a new instance.</p>
+
+<dl>
+<dt><a name="log"
+>log</a></dt>
+
+<dd>
+<p>Path to a log or file handle to write to.</p>
+
+<dt><a name="data_filename"
+>data_filename</a></dt>
+
+<dd>
+<p>Path to a file which will be used to store/cache results.</p>
+</dd>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="METHODS"
+>METHODS</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="check_header"
+>check_header</a></h2>
+
+<pre class="sh_perl"> my $bool = $probe-&#62;check_header($header);</pre>
+
+<p>Checks that the given C header file is available. Stores the result, and returns a true/false value.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="check_cpp"
+>check_cpp</a></h2>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="check_eval"
+>check_eval</a></h2>
+
+<pre class="sh_perl"> my $bool = $probe&#62;check_eval(%args);</pre>
+
+<dl>
+<dt><a name="headers"
+>headers</a></dt>
+
+<dd>
+<p>Any additional headers.</p>
+
+<dt><a name="decl"
+>decl</a></dt>
+
+<dd>
+<p>Any C declarations that need to be made before the <code>dlmain</code> function.</p>
+
+<dt><a name="stmt"
+>stmt</a></dt>
+
+<dd>
+<p>Any C statements that should be made before the evaluation.</p>
+
+<dt><a name="eval"
+>eval</a></dt>
+
+<dd>
+<p>Any evaluations that should be returned.</p>
+</dd>
+</dl>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="check"
+>check</a></h2>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="check_type_int"
+>check_type_int</a></h2>
+
+<pre class="sh_perl"> my $type = $probe-&#62;check_type_int($type);</pre>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="check_type_enum"
+>check_type_enum</a></h2>
+
+<pre class="sh_perl"> my $type = $probe-&#62;check_type_enum;</pre>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="check_type_enum"
+>check_type_enum</a></h2>
+
+<pre class="sh_perl"> my $type = $probe-&#62;check_type_enum;</pre>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="check_type_float"
+>check_type_float</a></h2>
+
+<pre class="sh_perl"> my $type = $probe-&#62;check_type_float($type);</pre>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="check_type_pointer"
+>check_type_pointer</a></h2>
+
+<pre class="sh_perl"> my $type = $probe-&#62;check_type_pointer;</pre>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="set"
+>set</a></h2>
+
+<pre class="sh_perl"> $probe-&#62;set(@key, $value);</pre>
+
+<p>Used internally to store a value.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="save"
+>save</a></h2>
+
+<pre class="sh_perl"> $probe-&#62;save;</pre>
+
+<p>Saves the values already detected.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="data"
+>data</a></h2>
+
+<pre class="sh_perl"> my $data = $probe-&#62;data;</pre>
+
+<p>Returns a hashref of the data already detected.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="log"
+>log</a></h2>
+
+<pre class="sh_perl"> $probe-&#62;log($string);</pre>
+
+<p>Sends the given string to the log.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="log_code"
+>log_code</a></h2>
+
+<pre class="sh_perl"> $prbe-&#62;log_code($string);</pre>
+
+<p>Sends the given multi-line code block to the log.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="template"
+>template</a></h2>
+
+<pre class="sh_perl"> my $template = $probe-&#62;template;</pre>
+
+<p>Returns the C code template used for <code>check_eval</code> and other <code>check_</code> methods.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Author: Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<p>Contributors:</p>
+
+<p>Bakkiaraj Murugesan (bakkiaraj)</p>
+
+<p>Dylan Cali (calid)</p>
+
+<p>pipcet</p>
+
+<p>Zaki Mughal (zmughal)</p>
+
+<p>Fitz Elliott (felliott)</p>
+
+<p>Vickenty Fesunov (vyf)</p>
+
+<p>Gregor Herrmann (gregoa)</p>
+
+<p>Shlomi Fish (shlomif)</p>
+
+<p>Damyan Ivanov</p>
+
+<p>Ilya Pavlov (Ilya33)</p>
+
+<p>Petr P&#237;sa&#345; (ppisar)</p>
+
+<p>Mohammad S Anwar (MANWAR)</p>
+
+<p>H&#229;kon H&#230;gland (hakonhagland, HAKONH)</p>
+
+<p>Meredith (merrilymeredith, MHOWARD)</p>
+
+<p>Diab Jerius (DJERIUS)</p>
+
+<p>Eric Brine (IKEGAMI)</p>
+
+<p>szTheory</p>
+
+<p>Jos&#233; Joaqu&#237;n Atria (JJATRIA)</p>
+
+<p>Pete Houston (openstrike, HOUSTON)</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2015-2022 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>
+        [
+            <a href="https://wdlabs.com">wdlabs.com</a> |
+            <a href="https://alienfile.org">alienfile.org</a> |
+            <a href="https://pl.atypus.org">pl.atypus.org</a> |
+            <a href="https://perlwasm.github.io">perlwasm</a> |
+            <a href="https://uperl.github.io">uperl</a>
+        ]
+        Copyright &copy; 2022 Graham Ollis
+      </p>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::Platypus::Constant</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="https://hatch.wdlabs.com/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/Platypus.html">Platypus</a>::Constant</div>
+    <!--FFI::Platypus::Constant--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#Example'>Example</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::Platypus::Constant - Define constants in C space for Perl</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 2.05</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<p><code>ffi/foo.c</code>:</p>
+
+<pre class="sh_perl"> #include &#60;ffi_platypus_bundle.h&#62;
+ 
+ void
+ ffi_pl_bundle_constant(const char *package, ffi_platypus_constant_t *c)
+ {
+   c-&#62;set_str(&#34;FOO&#34;, &#34;BAR&#34;);       /* sets $package::FOO to &#34;BAR&#34; */
+   c-&#62;set_str(&#34;ABC::DEF&#34;, &#34;GHI&#34;);  /* sets ABC::DEF to GHI        */
+ }</pre>
+
+<p><code>lib/Foo.pm</code>:</p>
+
+<pre class="sh_perl"> package Foo;
+ 
+ use strict;
+ use warnings;
+ use FFI::Platypus 2.00;
+ use Exporter qw( import );
+ 
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 2 );
+ # sets constants Foo::FOO and ABC::DEF from C
+ $ffi-&#62;bundle;
+ 
+ 1;</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>The Platypus bundle interface (see <a href="/pod/FFI/Platypus/Bundle.html" class="podlinkpod"
+>FFI::Platypus::Bundle</a>) has an entry point <code>ffi_pl_bundle_constant</code> that lets you define constants in Perl space from C.</p>
+
+<pre class="sh_perl"> void ffi_pl_bundle_constant(const char *package, ffi_platypus_constant_t *c);</pre>
+
+<p>The first argument <code>package</code> is the name of the Perl package. The second argument <code>c</code> is a struct with function pointers that lets you define constants of different types. The first argument for each function is the name of the constant and the second is the value. If <code>::</code> is included in the constant name then it will be defined in that package space. If it isn&#39;t then the constant will be defined in whichever package called <code>bundle</code>.</p>
+
+<dl>
+<dt><a name="set_str"
+>set_str</a></dt>
+
+<dd>
+<pre class="sh_perl"> c-&#62;set_str(name, value);</pre>
+
+<p>Sets a string constant.</p>
+
+<dt><a name="set_sint"
+>set_sint</a></dt>
+
+<dd>
+<pre class="sh_perl"> c-&#62;set_sint(name, value);</pre>
+
+<p>Sets a 64-bit signed integer constant.</p>
+
+<dt><a name="set_uint"
+>set_uint</a></dt>
+
+<dd>
+<pre class="sh_perl"> c-&#62;set_uint(name, value);</pre>
+
+<p>Sets a 64-bit unsigned integer constant.</p>
+
+<dt><a name="set_double"
+>set_double</a></dt>
+
+<dd>
+<pre class="sh_perl"> c-&#62;set_double(name, value);</pre>
+
+<p>Sets a double precision floating point constant.</p>
+</dd>
+</dl>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Example"
+>Example</a></h2>
+
+<p>Suppose you have a header file <code>myheader.h</code>:</p>
+
+<pre class="sh_perl"> #ifndef MYHEADER_H
+ #define MYHEADER_H
+ 
+ #define MYVERSION_STRING &#34;1.2.3&#34;
+ #define MYVERSION_MAJOR 1
+ #define MYVERSION_MINOR 2
+ #define MYVERSION_PATCH 3
+ 
+ enum {
+   MYBAD = -1,
+   MYOK  = 1
+ };
+ 
+ #define MYPI 3.14
+ 
+ #endif</pre>
+
+<p>You can define these constants from C:</p>
+
+<pre class="sh_perl"> #include &#60;ffi_platypus_bundle.h&#62;
+ #include &#34;myheader.h&#34;
+ 
+ void ffi_pl_bundle_constant(const char *package, ffi_platypus_constant_t *c)
+ {
+   c-&#62;set_str(&#34;MYVERSION_STRING&#34;, MYVERSION_STRING);
+   c-&#62;set_uint(&#34;MYVERSION_MAJOR&#34;, MYVERSION_MAJOR);
+   c-&#62;set_uint(&#34;MYVERSION_MINOR&#34;, MYVERSION_MINOR);
+   c-&#62;set_uint(&#34;MYVERSION_PATCH&#34;, MYVERSION_PATCH);
+   c-&#62;set_sint(&#34;MYBAD&#34;, MYBAD);
+   c-&#62;set_sint(&#34;MYOK&#34;, MYOK);
+   c-&#62;set_double(&#34;MYPI&#34;, MYPI);
+ }</pre>
+
+<p>Your Perl code doesn&#39;t have to do anything when calling bundle:</p>
+
+<pre class="sh_perl"> package Const;
+ 
+ use strict;
+ use warnings;
+ use FFI::Platypus 2.00;
+ 
+ {
+   my $ffi = FFI::Platypus-&#62;new( api =&#62; 2 );
+   $ffi-&#62;bundle;
+ }
+ 
+ 1;</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Author: Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<p>Contributors:</p>
+
+<p>Bakkiaraj Murugesan (bakkiaraj)</p>
+
+<p>Dylan Cali (calid)</p>
+
+<p>pipcet</p>
+
+<p>Zaki Mughal (zmughal)</p>
+
+<p>Fitz Elliott (felliott)</p>
+
+<p>Vickenty Fesunov (vyf)</p>
+
+<p>Gregor Herrmann (gregoa)</p>
+
+<p>Shlomi Fish (shlomif)</p>
+
+<p>Damyan Ivanov</p>
+
+<p>Ilya Pavlov (Ilya33)</p>
+
+<p>Petr P&#237;sa&#345; (ppisar)</p>
+
+<p>Mohammad S Anwar (MANWAR)</p>
+
+<p>H&#229;kon H&#230;gland (hakonhagland, HAKONH)</p>
+
+<p>Meredith (merrilymeredith, MHOWARD)</p>
+
+<p>Diab Jerius (DJERIUS)</p>
+
+<p>Eric Brine (IKEGAMI)</p>
+
+<p>szTheory</p>
+
+<p>Jos&#233; Joaqu&#237;n Atria (JJATRIA)</p>
+
+<p>Pete Houston (openstrike, HOUSTON)</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2015-2022 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>
+        [
+            <a href="https://wdlabs.com">wdlabs.com</a> |
+            <a href="https://alienfile.org">alienfile.org</a> |
+            <a href="https://pl.atypus.org">pl.atypus.org</a> |
+            <a href="https://perlwasm.github.io">perlwasm</a> |
+            <a href="https://uperl.github.io">uperl</a>
+        ]
+        Copyright &copy; 2022 Graham Ollis
+      </p>
+    </div>
+  </body>
+</html>
