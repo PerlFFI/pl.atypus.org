@@ -34,5 +34,6 @@ Excited to learn more?  The M<FFI::Platypus documentation includes a number of h
 ## External Links
 
  * #️⃣ [#native on irc.perl.org](https://kiwiirc.com/nextclient/#irc://irc.perl.org/#native?nick=mc-guest-?)
+ * 🌏 <a rel="me" href="https://fosstodon.org/@PerlFFI">@PerlFFI@fosstodon.org</a>
  * 🐦 [@PerlFFI](https://twitter.com/PerlFFI) - the official twitter acount of the FFI::Platypus project
  * 🌏 [PerlFFI organization on GitHub](https://github.com/PerlFFI)
