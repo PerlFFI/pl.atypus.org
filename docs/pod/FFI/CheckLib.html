@@ -181,14 +181,14 @@ name="find_lib"
 <dd>
 <p>[version 0.25]</p>
 
-<p>If no libraries can be found, try the given aliens instead. The Alien classes specified must provide the <a href="https://metacpan.org/pod/Alien%3A%3ABase" class="podlinkpod"
+<p>If no libraries can be found, try the given aliens instead. The Alien classes specified must provide the <a href="https://alienfile.org/pod/Alien/Base.html" class="podlinkpod"
 >Alien::Base</a> interface for dynamic libraries, which is to say they should provide a method called <code>dynamic_libs</code> that returns a list of dynamic libraries.</p>
 
 <p>[version 0.28]</p>
 
 <p>In 0.28 and later, if the <a href="https://alienfile.org/pod/Alien.html" class="podlinkpod"
 >Alien</a> is not installed then it will be ignored and this module will search in system or specified directories only. This module <i>will</i> still throw an exception, if the <a href="https://alienfile.org/pod/Alien.html" class="podlinkpod"
->Alien</a> doesn&#39;t look like a module name or if it does not provide a <code>dynamic_libs</code> method (which is implemented by all <a href="https://metacpan.org/pod/Alien%3A%3ABase" class="podlinkpod"
+>Alien</a> doesn&#39;t look like a module name or if it does not provide a <code>dynamic_libs</code> method (which is implemented by all <a href="https://alienfile.org/pod/Alien/Base.html" class="podlinkpod"
 >Alien::Base</a> subclasses).</p>
 
 <p>[version 0.30] [breaking change]</p>
