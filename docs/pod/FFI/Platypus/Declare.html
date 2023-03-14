@@ -11,7 +11,7 @@
   <body onload="sh_highlightDocument();">
     <div class="nx-header-flag-1"></div>
     <div class="nx-header-flag-2"></div>
-    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/Platypus.html">Platypus</a>::Declare</div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::Platypus::Declare</div>
     <!--FFI::Platypus::Declare--><a name='___top' class='dummyTopAnchor' ></a>
 
 <div class='indexgroup'>
@@ -69,11 +69,11 @@ name="SYNOPSIS"
 name="DESCRIPTION"
 >DESCRIPTION</a></h1>
 
-<p>This module is officially <b>discouraged</b>. The idea was to provide a simpler declarative interface without the need of (directly) creating an <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+<p>This module is officially <b>discouraged</b>. The idea was to provide a simpler declarative interface without the need of (directly) creating an <a href="https://metacpan.org/pod/FFI%3A%3APlatypus" class="podlinkpod"
 >FFI::Platypus</a> instance. In practice it is almost as complicated and makes it difficult to upgrade to the proper OO interface if the need arises. I have stopped using it mainly for this reason. It will remain as part of the Platypus core distribution to keep old code working, but you are encouraged to write new code using the OO interface. Alternatively, you can try the Perl 6 inspired <a href="https://metacpan.org/pod/NativeCall" class="podlinkpod"
 >NativeCall</a>, which provides most of the goals this module was intended for (that is a simple interface at the cost of some power), without much of the complexity. The remainder of this document describes the interface.</p>
 
-<p>This module provides a declarative interface to <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+<p>This module provides a declarative interface to <a href="https://metacpan.org/pod/FFI%3A%3APlatypus" class="podlinkpod"
 >FFI::Platypus</a>. It provides a more concise interface at the cost of a little less power, and a little more namespace pollution.</p>
 
 <p>Any strings passed into the <code>use</code> line will be declared as types and exported as constants into your namespace, so that you can use them without quotation marks.</p>
@@ -91,7 +91,7 @@ name="DESCRIPTION"
 name="FUNCTIONS"
 >FUNCTIONS</a></h1>
 
-<p>All functions are exported into your namespace. If you do not want that, then use the OO interface (see <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+<p>All functions are exported into your namespace. If you do not want that, then use the OO interface (see <a href="https://metacpan.org/pod/FFI%3A%3APlatypus" class="podlinkpod"
 >FFI::Platypus</a>).</p>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
@@ -194,7 +194,7 @@ name="sticky"
 
 <pre class="sh_perl"> foo(closure { ... });         # BAD</pre>
 
-<p>Perl will not see any references to it and try to free it immediately. (this has to do with the way Perl and C handle responsibilities for memory allocation differently). One fix for this is to make sure the closure remains in scope using either <code>my</code> or <code>our</code>. If you know the closure will need to remain in existence for the life of the process (or if you do not care about leaking memory), then you can add the sticky keyword to tell <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+<p>Perl will not see any references to it and try to free it immediately. (this has to do with the way Perl and C handle responsibilities for memory allocation differently). One fix for this is to make sure the closure remains in scope using either <code>my</code> or <code>our</code>. If you know the closure will need to remain in existence for the life of the process (or if you do not care about leaking memory), then you can add the sticky keyword to tell <a href="https://metacpan.org/pod/FFI%3A%3APlatypus" class="podlinkpod"
 >FFI::Platypus</a> to keep the thing in memory.</p>
 
 <pre class="sh_perl"> foo(sticky closure { ... });  # OKAY</pre>
@@ -250,7 +250,7 @@ name="lang"
 <pre class="sh_perl"> lang $language;</pre>
 
 <p>Specifies the foreign language that you will be interfacing with. The default is C. The foreign language specified with this attribute changes the default native types (for example, if you specify <a href="/pod/FFI/Platypus/Lang/Rust.html" class="podlinkpod"
->Rust</a>, you will get <code>i32</code> as an alias for <code>sint32</code> instead of <code>int</code> as you do with <a href="/pod/FFI/Platypus/Lang/C.html" class="podlinkpod"
+>Rust</a>, you will get <code>i32</code> as an alias for <code>sint32</code> instead of <code>int</code> as you do with <a href="https://metacpan.org/pod/FFI%3A%3APlatypus%3A%3ALang%3A%3AC" class="podlinkpod"
 >C</a>).</p>
 
 <p>In the future this may attribute may offer hints when doing demangling of languages that require it like <a href="/pod/FFI/Platypus/Lang/CPP.html" class="podlinkpod"
@@ -272,28 +272,28 @@ name="SEE_ALSO"
 
 <dl>
 <dt><a name="FFI::Platypus"
-><a href="/pod/FFI/Platypus.html" class="podlinkpod"
+><a href="https://metacpan.org/pod/FFI%3A%3APlatypus" class="podlinkpod"
 >FFI::Platypus</a></a></dt>
 
 <dd>
 <p>Object oriented interface to Platypus.</p>
 
 <dt><a name="FFI::Platypus::Type"
-><a href="/pod/FFI/Platypus/Type.html" class="podlinkpod"
+><a href="https://metacpan.org/pod/FFI%3A%3APlatypus%3A%3AType" class="podlinkpod"
 >FFI::Platypus::Type</a></a></dt>
 
 <dd>
 <p>Type definitions for Platypus.</p>
 
 <dt><a name="FFI::Platypus::API"
-><a href="/pod/FFI/Platypus/API.html" class="podlinkpod"
+><a href="https://metacpan.org/pod/FFI%3A%3APlatypus%3A%3AAPI" class="podlinkpod"
 >FFI::Platypus::API</a></a></dt>
 
 <dd>
 <p>Custom types API for Platypus.</p>
 
 <dt><a name="FFI::Platypus::Memory"
-><a href="/pod/FFI/Platypus/Memory.html" class="podlinkpod"
+><a href="https://metacpan.org/pod/FFI%3A%3APlatypus%3A%3AMemory" class="podlinkpod"
 >FFI::Platypus::Memory</a></a></dt>
 
 <dd>
