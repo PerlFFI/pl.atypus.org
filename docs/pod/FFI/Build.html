@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::Build</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="https://hatch.wdlabs.com/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::Build</div>
+    <!--FFI::Build--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#CONSTRUCTOR'>CONSTRUCTOR</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#new'>new</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#METHODS'>METHODS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#dir'>dir</a>
+    <li class='indexItem indexItem2'><a href='#buildname'>buildname</a>
+    <li class='indexItem indexItem2'><a href='#export'>export</a>
+    <li class='indexItem indexItem2'><a href='#file'>file</a>
+    <li class='indexItem indexItem2'><a href='#platform'>platform</a>
+    <li class='indexItem indexItem2'><a href='#verbose'>verbose</a>
+    <li class='indexItem indexItem2'><a href='#cflags'>cflags</a>
+    <li class='indexItem indexItem2'><a href='#cflags_I'>cflags_I</a>
+    <li class='indexItem indexItem2'><a href='#libs'>libs</a>
+    <li class='indexItem indexItem2'><a href='#libs_L'>libs_L</a>
+    <li class='indexItem indexItem2'><a href='#alien'>alien</a>
+    <li class='indexItem indexItem2'><a href='#source'>source</a>
+    <li class='indexItem indexItem2'><a href='#build'>build</a>
+    <li class='indexItem indexItem2'><a href='#clean'>clean</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::Build - Build shared libraries for use with FFI</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 2.07</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<pre class="sh_perl"> use FFI::Platypus 2.00;
+ use FFI::Build;
+ 
+ my $build = FFI::Build-&#62;new(
+   &#39;frooble&#39;,
+   source =&#62; &#39;ffi/*.c&#39;,
+ );
+ 
+ # $lib is an instance of FFI::Build::File::Library
+ my $lib = $build-&#62;build;
+ 
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 2 );
+ # The filename will be platform dependant, but something like libfrooble.so or frooble.dll
+ $ffi-&#62;lib($lib-&#62;path);
+ 
+ ... # use $ffi to attach functions in ffi/*.c</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>Using libffi based <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> is a great alternative to XS for writing library bindings for Perl. Sometimes, however, you need to bundle a little C code with your FFI module, but this has never been that easy to use. <a href="https://metacpan.org/pod/Module%3A%3ABuild%3A%3AFFI" class="podlinkpod"
+>Module::Build::FFI</a> was an early attempt to address this use case, but it uses the now out of fashion <a href="https://metacpan.org/pod/Module%3A%3ABuild" class="podlinkpod"
+>Module::Build</a>.</p>
+
+<p>This module itself doesn&#39;t directly integrate with CPAN installers like <a href="https://metacpan.org/pod/ExtUtils%3A%3AMakeMaker" class="podlinkpod"
+>ExtUtils::MakeMaker</a> or <a href="https://metacpan.org/pod/Module%3A%3ABuild" class="podlinkpod"
+>Module::Build</a>, but there is a light weight layer <a href="/pod/FFI/Build/MM.html" class="podlinkpod"
+>FFI::Build::MM</a> that will allow you to easily use this module with <a href="https://metacpan.org/pod/ExtUtils%3A%3AMakeMaker" class="podlinkpod"
+>ExtUtils::MakeMaker</a>. If you are using <a href="https://metacpan.org/pod/Dist%3A%3AZilla" class="podlinkpod"
+>Dist::Zilla</a> as your dist builder, then there is also <a href="/pod/Dist/Zilla/Plugin/FFI/Build.html" class="podlinkpod"
+>Dist::Zilla::Plugin::FFI::Build</a>, which will help with the connections.</p>
+
+<p>There is some functional overlap with <a href="https://metacpan.org/pod/ExtUtils%3A%3ACBuilder" class="podlinkpod"
+>ExtUtils::CBuilder</a>, which was in fact used by <a href="https://metacpan.org/pod/Module%3A%3ABuild%3A%3AFFI" class="podlinkpod"
+>Module::Build::FFI</a>. For this iteration I have decided not to use that module because although it will generate dynamic libraries that can sometimes be used by <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a>, it is really designed for building XS modules, and trying to coerce it into a more general solution has proved difficult in the past.</p>
+
+<p>Supported languages out of the box are C, C++ and Fortran. Rust is supported via a language plugin, see <a href="/pod/FFI/Platypus/Lang/Rust.html" class="podlinkpod"
+>FFI::Platypus::Lang::Rust</a>.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CONSTRUCTOR"
+>CONSTRUCTOR</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="new"
+>new</a></h2>
+
+<pre class="sh_perl"> my $build = FFI::Build-&#62;new($name, %options);</pre>
+
+<p>Create an instance of this class. The <code>$name</code> argument is used when computing the file name for the library. The actual name will be something like <code>lib$name.so</code> or <code>$name.dll</code>. The following options are supported:</p>
+
+<dl>
+<dt><a name="alien"
+>alien</a></dt>
+
+<dd>
+<p>List of Aliens to compile/link against. <a href="/pod/FFI/Build.html" class="podlinkpod"
+>FFI::Build</a> will work with any <a href="https://alienfile.org/pod/Alien/Base.html" class="podlinkpod"
+>Alien::Base</a> based alien, or modules that provide a compatible API.</p>
+
+<dt><a name="buildname"
+>buildname</a></dt>
+
+<dd>
+<p>Directory name that will be used for building intermediate files, such as object files. This is <code>_build</code> by default.</p>
+
+<dt><a name="cflags"
+>cflags</a></dt>
+
+<dd>
+<p>Extra compiler flags to use. Things like <code>-I/foo/include</code> or <code>-DFOO=1</code>.</p>
+
+<dt><a name="dir"
+>dir</a></dt>
+
+<dd>
+<p>The directory where the library will be written. This is <code>.</code> by default.</p>
+
+<dt><a name="export"
+>export</a></dt>
+
+<dd>
+<p>Functions that should be exported (Windows + Visual C++ only)</p>
+
+<dt><a name="file"
+>file</a></dt>
+
+<dd>
+<p>An instance of <a href="/pod/FFI/Build/File/Library.html" class="podlinkpod"
+>FFI::Build::File::Library</a> to which the library will be written. Normally not needed.</p>
+
+<dt><a name="libs"
+>libs</a></dt>
+
+<dd>
+<p>Extra library flags to use. Things like <code>-L/foo/lib -lfoo</code>.</p>
+
+<dt><a name="platform"
+>platform</a></dt>
+
+<dd>
+<p>An instance of <a href="/pod/FFI/Build/Platform.html" class="podlinkpod"
+>FFI::Build::Platform</a>. Usually you want to omit this and use the default instance.</p>
+
+<dt><a name="source"
+>source</a></dt>
+
+<dd>
+<p>List of source files. You can use wildcards supported by <code>bsd_glob</code> from <a href="https://metacpan.org/pod/File%3A%3AGlob" class="podlinkpod"
+>File::Glob</a>.</p>
+
+<dt><a name="verbose"
+>verbose</a></dt>
+
+<dd>
+<p>By default this class does not print out the actual compiler and linker commands used in building the library unless there is a failure. You can alter this behavior with this option. Set to one of these values:</p>
+
+<dl>
+<dt><a name="zero_(0)"
+>zero (0)</a></dt>
+
+<dd>
+<p>Default, quiet unless there is a failure.</p>
+
+<dt><a name="one_(1)"
+>one (1)</a></dt>
+
+<dd>
+<p>Output the operation (compile, link, etc) and the file, but nothing else</p>
+
+<dt><a name="two_(2)"
+>two (2)</a></dt>
+
+<dd>
+<p>Output the complete commands run verbatim.</p>
+</dd>
+</dl>
+
+<p>If the environment variable <code>V</code> is set to a true value then the verbosity will be set to <code>2</code> regardless of what is passed in.</p>
+</dd>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="METHODS"
+>METHODS</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="dir"
+>dir</a></h2>
+
+<pre class="sh_perl"> my $dir = $build-&#62;dir;</pre>
+
+<p>Returns the directory where the library will be written.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="buildname"
+>buildname</a></h2>
+
+<pre class="sh_perl"> my $builddir = $build-&#62;builddir;</pre>
+
+<p>Returns the build name. This is used in computing a directory to save intermediate files like objects. For example, if you specify a file like <code>ffi/foo.c</code>, then the object file will be stored in <code>ffi/_build/foo.o</code> by default. <code>_build</code> in this example (the default) is the build name.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="export"
+>export</a></h2>
+
+<pre class="sh_perl"> my $exports = $build-&#62;export;</pre>
+
+<p>Returns a array reference of the exported functions (Windows + Visual C++ only)</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="file"
+>file</a></h2>
+
+<pre class="sh_perl"> my $file = $build-&#62;file;</pre>
+
+<p>Returns an instance of <a href="/pod/FFI/Build/File/Library.html" class="podlinkpod"
+>FFI::Build::File::Library</a> corresponding to the library being built. This is also returned by the <code>build</code> method below.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="platform"
+>platform</a></h2>
+
+<pre class="sh_perl"> my $platform = $build-&#62;platform;</pre>
+
+<p>An instance of <a href="/pod/FFI/Build/Platform.html" class="podlinkpod"
+>FFI::Build::Platform</a>, which contains information about the platform on which you are building. The default is usually reasonable.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="verbose"
+>verbose</a></h2>
+
+<pre class="sh_perl"> my $verbose = $build-&#62;verbose;</pre>
+
+<p>Returns the verbose flag.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="cflags"
+>cflags</a></h2>
+
+<pre class="sh_perl"> my @cflags = @{ $build-&#62;cflags };</pre>
+
+<p>Returns the compiler flags.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="cflags_I"
+>cflags_I</a></h2>
+
+<pre class="sh_perl"> my @cflags_I = @{ $build-&#62;cflags_I };</pre>
+
+<p>Returns the <code>-I</code> cflags.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="libs"
+>libs</a></h2>
+
+<pre class="sh_perl"> my @libs = @{ $build-&#62;libs };</pre>
+
+<p>Returns the library flags.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="libs_L"
+>libs_L</a></h2>
+
+<pre class="sh_perl"> my @libs = @{ $build-&#62;libs };</pre>
+
+<p>Returns the <code>-L</code> library flags.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="alien"
+>alien</a></h2>
+
+<pre class="sh_perl"> my @aliens = @{ $build-&#62;alien };</pre>
+
+<p>Returns a the list of aliens being used.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="source"
+>source</a></h2>
+
+<pre class="sh_perl"> $build-&#62;source(@files);</pre>
+
+<p>Add the <code>@files</code> to the list of source files that will be used in building the library. The format is the same as with the <code>source</code> attribute above.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="build"
+>build</a></h2>
+
+<pre class="sh_perl"> my $lib = $build-&#62;build;</pre>
+
+<p>This compiles the source files and links the library. Files that have already been compiled or linked may be reused without recompiling/linking if the timestamps are newer than the source files. An instance of <a href="/pod/FFI/Build/File/Library.html" class="podlinkpod"
+>FFI::Build::File::Library</a> is returned which can be used to get the path to the library, which can be feed into <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> or similar.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="clean"
+>clean</a></h2>
+
+<pre class="sh_perl"> $build-&#62;clean;</pre>
+
+<p>Removes the library and intermediate files.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Author: Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<p>Contributors:</p>
+
+<p>Bakkiaraj Murugesan (bakkiaraj)</p>
+
+<p>Dylan Cali (calid)</p>
+
+<p>pipcet</p>
+
+<p>Zaki Mughal (zmughal)</p>
+
+<p>Fitz Elliott (felliott)</p>
+
+<p>Vickenty Fesunov (vyf)</p>
+
+<p>Gregor Herrmann (gregoa)</p>
+
+<p>Shlomi Fish (shlomif)</p>
+
+<p>Damyan Ivanov</p>
+
+<p>Ilya Pavlov (Ilya33)</p>
+
+<p>Petr P&#237;sa&#345; (ppisar)</p>
+
+<p>Mohammad S Anwar (MANWAR)</p>
+
+<p>H&#229;kon H&#230;gland (hakonhagland, HAKONH)</p>
+
+<p>Meredith (merrilymeredith, MHOWARD)</p>
+
+<p>Diab Jerius (DJERIUS)</p>
+
+<p>Eric Brine (IKEGAMI)</p>
+
+<p>szTheory</p>
+
+<p>Jos&#233; Joaqu&#237;n Atria (JJATRIA)</p>
+
+<p>Pete Houston (openstrike, HOUSTON)</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2015-2022 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>
+        [
+            <a href="https://wdlabs.com">wdlabs.com</a> |
+            <a href="https://alienfile.org">alienfile.org</a> |
+            <a href="https://pl.atypus.org">pl.atypus.org</a> |
+            <a href="https://perlwasm.github.io">perlwasm</a> |
+            <a href="https://uperl.github.io">uperl</a>
+        ]
+        Copyright &copy; 2022 Graham Ollis
+      </p>
+    </div>
+  </body>
+</html>

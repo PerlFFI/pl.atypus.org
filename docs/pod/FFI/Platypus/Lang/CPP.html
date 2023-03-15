@@ -11,7 +11,7 @@
   <body onload="sh_highlightDocument();">
     <div class="nx-header-flag-1"></div>
     <div class="nx-header-flag-2"></div>
-    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::Platypus::Lang::CPP</div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/Platypus.html">Platypus</a>::<a href="/pod/FFI/Platypus/Lang.html">Lang</a>::CPP</div>
     <!--FFI::Platypus::Lang::CPP--><a name='___top' class='dummyTopAnchor' ></a>
 
 <div class='indexgroup'>
@@ -174,7 +174,7 @@ name="DESCRIPTION"
 
 <p>There are numerous difficulties and caveats involved in using C++ libraries from Perl via FFI. This document is intended to enlighten on that subject.</p>
 
-<p>Note that in addition to using pre-compiled C++ libraries you can bundle C++ code with your Perl distribution using <a href="https://metacpan.org/pod/FFI%3A%3ABuild" class="podlinkpod"
+<p>Note that in addition to using pre-compiled C++ libraries you can bundle C++ code with your Perl distribution using <a href="/pod/FFI/Build.html" class="podlinkpod"
 >FFI::Build</a>. For a complete example, which attempts to address the caveats listed below you can take a look at this sample distro on GitHub:</p>
 
 <p><a href="https://github.com/plicease/Color-FFI" class="podlinkurl"
@@ -190,7 +190,7 @@ name="CAVEATS"
 name="name_mangling"
 >name mangling</a></h2>
 
-<p>C++ names are &#34;mangled&#34; to handle features such as function overloading and the fact that some characters in the C++ names are illegal machine code symbol names. What this means is that the C++ member function <code>Foo::get_bar</code> looks like <code>_ZN3Foo7get_barEv</code> to <a href="https://metacpan.org/pod/FFI%3A%3APlatypus" class="podlinkpod"
+<p>C++ names are &#34;mangled&#34; to handle features such as function overloading and the fact that some characters in the C++ names are illegal machine code symbol names. What this means is that the C++ member function <code>Foo::get_bar</code> looks like <code>_ZN3Foo7get_barEv</code> to <a href="/pod/FFI/Platypus.html" class="podlinkpod"
 >FFI::Platypus</a>. What makes this even trickier is that different C++ compilers provide different mangling formats. When you use the <a href="https://metacpan.org/pod/FFI%3A%3APlatypus%23lang" class="podlinkpod"
 >FFI::Platypus#lang</a> method to tell Platypus that you are intending to use it with C++, like this:</p>
 
@@ -290,7 +290,7 @@ name="the_standard_C++_library"
 name="METHODS"
 >METHODS</a></h1>
 
-<p>Generally you will not use this class directly, instead interacting with the <a href="https://metacpan.org/pod/FFI%3A%3APlatypus" class="podlinkpod"
+<p>Generally you will not use this class directly, instead interacting with the <a href="/pod/FFI/Platypus.html" class="podlinkpod"
 >FFI::Platypus</a> instance. However, the public methods used by Platypus are documented here.</p>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
@@ -482,15 +482,15 @@ name="SEE_ALSO"
 
 <dl>
 <dt><a name="FFI::Platypus"
-><a href="https://metacpan.org/pod/FFI%3A%3APlatypus" class="podlinkpod"
+><a href="/pod/FFI/Platypus.html" class="podlinkpod"
 >FFI::Platypus</a></a></dt>
 
 <dd>
 <p>The Core Platypus documentation.</p>
 
 <dt><a name="FFI::Build_+_FFI::Build::File::CXX"
-><a href="https://metacpan.org/pod/FFI%3A%3ABuild" class="podlinkpod"
->FFI::Build</a> + <a href="https://metacpan.org/pod/FFI%3A%3ABuild%3A%3AFile%3A%3ACXX" class="podlinkpod"
+><a href="/pod/FFI/Build.html" class="podlinkpod"
+>FFI::Build</a> + <a href="/pod/FFI/Build/File/CXX.html" class="podlinkpod"
 >FFI::Build::File::CXX</a></a></dt>
 
 <dd>

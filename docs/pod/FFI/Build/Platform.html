@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::Build::Platform</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="https://hatch.wdlabs.com/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/Build.html">Build</a>::Platform</div>
+    <!--FFI::Build::Platform--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#CONSTRUCTOR'>CONSTRUCTOR</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#new'>new</a>
+    <li class='indexItem indexItem2'><a href='#default'>default</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#METHODS'>METHODS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#osname'>osname</a>
+    <li class='indexItem indexItem2'><a href='#object_suffix'>object_suffix</a>
+    <li class='indexItem indexItem2'><a href='#library_suffix'>library_suffix</a>
+    <li class='indexItem indexItem2'><a href='#library_prefix'>library_prefix</a>
+    <li class='indexItem indexItem2'><a href='#cc'>cc</a>
+    <li class='indexItem indexItem2'><a href='#cpp'>cpp</a>
+    <li class='indexItem indexItem2'><a href='#cxx'>cxx</a>
+    <li class='indexItem indexItem2'><a href='#cxxld'>cxxld</a>
+    <li class='indexItem indexItem2'><a href='#for'>for</a>
+    <li class='indexItem indexItem2'><a href='#ld'>ld</a>
+    <li class='indexItem indexItem2'><a href='#shellwords'>shellwords</a>
+    <li class='indexItem indexItem2'><a href='#ccflags'>ccflags</a>
+    <li class='indexItem indexItem2'><a href='#ldflags'>ldflags</a>
+    <li class='indexItem indexItem2'><a href='#cc_mm_works'>cc_mm_works</a>
+    <li class='indexItem indexItem2'><a href='#flag_object_output'>flag_object_output</a>
+    <li class='indexItem indexItem2'><a href='#flag_library_output'>flag_library_output</a>
+    <li class='indexItem indexItem2'><a href='#flag_exe_output'>flag_exe_output</a>
+    <li class='indexItem indexItem2'><a href='#flag_export'>flag_export</a>
+    <li class='indexItem indexItem2'><a href='#which'>which</a>
+    <li class='indexItem indexItem2'><a href='#run'>run</a>
+    <li class='indexItem indexItem2'><a href='#diag'>diag</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::Build::Platform - Platform specific configuration.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 2.07</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<pre class="sh_perl"> use FFI::Build::Platform;</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>This class is used to abstract out the platform specific parts of the <a href="/pod/FFI/Build.html" class="podlinkpod"
+>FFI::Build</a> system. You shouldn&#39;t need to use it directly in most cases, unless you are working on <a href="/pod/FFI/Build.html" class="podlinkpod"
+>FFI::Build</a> itself.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CONSTRUCTOR"
+>CONSTRUCTOR</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="new"
+>new</a></h2>
+
+<pre class="sh_perl"> my $platform = FFI::Build::Platform-&#62;new;</pre>
+
+<p>Create a new instance of <a href="/pod/FFI/Build/Platform.html" class="podlinkpod"
+>FFI::Build::Platform</a>.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="default"
+>default</a></h2>
+
+<pre class="sh_perl"> my $platform = FFI::Build::Platform-&#62;default;</pre>
+
+<p>Returns the default instance of <a href="/pod/FFI/Build/Platform.html" class="podlinkpod"
+>FFI::Build::Platform</a>.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="METHODS"
+>METHODS</a></h1>
+
+<p>All of these methods may be called either as instance or classes methods. If called as a class method, the default instance will be used.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="osname"
+>osname</a></h2>
+
+<pre class="sh_perl"> my $osname = $platform-&#62;osname;</pre>
+
+<p>The &#34;os name&#34; as understood by Perl. This is the same as <code>$^O</code>.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="object_suffix"
+>object_suffix</a></h2>
+
+<pre class="sh_perl"> my $suffix = $platform-&#62;object_suffix;</pre>
+
+<p>The object suffix for the platform. On UNIX this is usually <code>.o</code>. On Windows this is usually <code>.obj</code>.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="library_suffix"
+>library_suffix</a></h2>
+
+<pre class="sh_perl"> my(@suffix) = $platform-&#62;library_suffix;
+ my $suffix  = $platform-&#62;library_suffix;</pre>
+
+<p>The library suffix for the platform. On Linux and some other UNIX this is often <code>.so</code>. On OS X, this is <code>.dylib</code> and <code>.bundle</code>. On Windows this is <code>.dll</code>.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="library_prefix"
+>library_prefix</a></h2>
+
+<pre class="sh_perl"> my $prefix = $platform-&#62;library_prefix;</pre>
+
+<p>The library prefix for the platform. On Unix this is usually <code>lib</code>, as in <code>libfoo</code>.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="cc"
+>cc</a></h2>
+
+<pre class="sh_perl"> my @cc = @{ $platform-&#62;cc };</pre>
+
+<p>The C compiler</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="cpp"
+>cpp</a></h2>
+
+<pre class="sh_perl"> my @cpp = @{ $platform-&#62;cpp };</pre>
+
+<p>The C pre-processor</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="cxx"
+>cxx</a></h2>
+
+<pre class="sh_perl"> my @cxx = @{ $platform-&#62;cxx };</pre>
+
+<p>The C++ compiler that naturally goes with the C compiler.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="cxxld"
+>cxxld</a></h2>
+
+<pre class="sh_perl"> my @cxxld = @{ $platform-&#62;cxxld };</pre>
+
+<p>The C++ linker that naturally goes with the C compiler.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="for"
+>for</a></h2>
+
+<pre class="sh_perl"> my @for = @{ $platform-&#62;for };</pre>
+
+<p>The Fortran compiler that naturally goes with the C compiler.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="ld"
+>ld</a></h2>
+
+<pre class="sh_perl"> my $ld = $platform-&#62;ld;</pre>
+
+<p>The C linker</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="shellwords"
+>shellwords</a></h2>
+
+<pre class="sh_perl"> my @words = $platform-&#62;shellwords(@strings);</pre>
+
+<p>This is a wrapper around <a href="https://metacpan.org/pod/Text%3A%3AParseWords" class="podlinkpod"
+>Text::ParseWords</a>&#39;s <code>shellwords</code> with some platform workarounds applied.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="ccflags"
+>ccflags</a></h2>
+
+<pre class="sh_perl"> my @ccflags = @{ $platform-&#62;cflags};</pre>
+
+<p>The compiler flags, including those needed to compile object files that can be linked into a dynamic library. On Linux, for example, this is usually includes <code>-fPIC</code>.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="ldflags"
+>ldflags</a></h2>
+
+<pre class="sh_perl"> my @ldflags = @{ $platform-&#62;ldflags };</pre>
+
+<p>The linker flags needed to link object files into a dynamic library. This is NOT the <code>libs</code> style library flags that specify the location and name of a library to link against, this is instead the flags that tell the linker to generate a dynamic library. On Linux, for example, this is usually <code>-shared</code>.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="cc_mm_works"
+>cc_mm_works</a></h2>
+
+<pre class="sh_perl"> my $bool = $platform-&#62;cc_mm_works;</pre>
+
+<p>Returns the flags that can be passed into the C compiler to compute dependencies.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="flag_object_output"
+>flag_object_output</a></h2>
+
+<pre class="sh_perl"> my @flags = $platform-&#62;flag_object_output($object_filename);</pre>
+
+<p>Returns the flags that the compiler recognizes as being used to write out to a specific object filename.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="flag_library_output"
+>flag_library_output</a></h2>
+
+<pre class="sh_perl"> my @flags = $platform-&#62;flag_library_output($library_filename);</pre>
+
+<p>Returns the flags that the compiler recognizes as being used to write out to a specific library filename.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="flag_exe_output"
+>flag_exe_output</a></h2>
+
+<pre class="sh_perl"> my @flags = $platform-&#62;flag_exe_output($library_filename);</pre>
+
+<p>Returns the flags that the compiler recognizes as being used to write out to a specific exe filename.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="flag_export"
+>flag_export</a></h2>
+
+<pre class="sh_perl"> my @flags = $platform-&#62;flag_export(@symbols);</pre>
+
+<p>Returns the flags that the linker recognizes for exporting functions.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="which"
+>which</a></h2>
+
+<pre class="sh_perl"> my $path = $platform-&#62;which($command);</pre>
+
+<p>Returns the full path of the given command, if it is available, otherwise <code>undef</code> is returned.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="run"
+>run</a></h2>
+
+<pre class="sh_perl"> $platform-&#62;run(@command);</pre>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="diag"
+>diag</a></h2>
+
+<p>Diagnostic for the platform as a string. This is for human consumption only, and the format may and will change over time so do not attempt to use is programmatically.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Author: Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<p>Contributors:</p>
+
+<p>Bakkiaraj Murugesan (bakkiaraj)</p>
+
+<p>Dylan Cali (calid)</p>
+
+<p>pipcet</p>
+
+<p>Zaki Mughal (zmughal)</p>
+
+<p>Fitz Elliott (felliott)</p>
+
+<p>Vickenty Fesunov (vyf)</p>
+
+<p>Gregor Herrmann (gregoa)</p>
+
+<p>Shlomi Fish (shlomif)</p>
+
+<p>Damyan Ivanov</p>
+
+<p>Ilya Pavlov (Ilya33)</p>
+
+<p>Petr P&#237;sa&#345; (ppisar)</p>
+
+<p>Mohammad S Anwar (MANWAR)</p>
+
+<p>H&#229;kon H&#230;gland (hakonhagland, HAKONH)</p>
+
+<p>Meredith (merrilymeredith, MHOWARD)</p>
+
+<p>Diab Jerius (DJERIUS)</p>
+
+<p>Eric Brine (IKEGAMI)</p>
+
+<p>szTheory</p>
+
+<p>Jos&#233; Joaqu&#237;n Atria (JJATRIA)</p>
+
+<p>Pete Houston (openstrike, HOUSTON)</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2015-2022 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>
+        [
+            <a href="https://wdlabs.com">wdlabs.com</a> |
+            <a href="https://alienfile.org">alienfile.org</a> |
+            <a href="https://pl.atypus.org">pl.atypus.org</a> |
+            <a href="https://perlwasm.github.io">perlwasm</a> |
+            <a href="https://uperl.github.io">uperl</a>
+        ]
+        Copyright &copy; 2022 Graham Ollis
+      </p>
+    </div>
+  </body>
+</html>

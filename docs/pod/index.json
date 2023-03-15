@@ -271,6 +271,183 @@
       ]
    },
    {
+      "name" : "FFI-Platypus",
+      "pods" : [
+         {
+            "href" : "/pod/FFI/Build.html",
+            "name" : "FFI::Build"
+         },
+         {
+            "href" : "/pod/FFI/Build/File/Base.html",
+            "name" : "FFI::Build::File::Base"
+         },
+         {
+            "href" : "/pod/FFI/Build/File/C.html",
+            "name" : "FFI::Build::File::C"
+         },
+         {
+            "href" : "/pod/FFI/Build/File/CXX.html",
+            "name" : "FFI::Build::File::CXX"
+         },
+         {
+            "href" : "/pod/FFI/Build/File/Library.html",
+            "name" : "FFI::Build::File::Library"
+         },
+         {
+            "href" : "/pod/FFI/Build/File/Object.html",
+            "name" : "FFI::Build::File::Object"
+         },
+         {
+            "href" : "/pod/FFI/Build/MM.html",
+            "name" : "FFI::Build::MM"
+         },
+         {
+            "href" : "/pod/FFI/Build/Platform.html",
+            "name" : "FFI::Build::Platform"
+         },
+         {
+            "href" : "/pod/FFI/Build/Plugin.html",
+            "name" : "FFI::Build::Plugin"
+         },
+         {
+            "href" : "/pod/FFI/Build/PluginData.html",
+            "name" : "FFI::Build::PluginData"
+         },
+         {
+            "href" : "/pod/FFI/Platypus.html",
+            "name" : "FFI::Platypus"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/API.html",
+            "name" : "FFI::Platypus::API"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/Buffer.html",
+            "name" : "FFI::Platypus::Buffer"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/Bundle.html",
+            "name" : "FFI::Platypus::Bundle"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/Closure.html",
+            "name" : "FFI::Platypus::Closure"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/Constant.html",
+            "name" : "FFI::Platypus::Constant"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/DL.html",
+            "name" : "FFI::Platypus::DL"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/Function.html",
+            "name" : "FFI::Platypus::Function"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/Internal.html",
+            "name" : "FFI::Platypus::Internal"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/Lang.html",
+            "name" : "FFI::Platypus::Lang"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/Lang/ASM.html",
+            "name" : "FFI::Platypus::Lang::ASM"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/Lang/C.html",
+            "name" : "FFI::Platypus::Lang::C"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/Lang/Win32.html",
+            "name" : "FFI::Platypus::Lang::Win32"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/Legacy.html",
+            "name" : "FFI::Platypus::Legacy"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/Memory.html",
+            "name" : "FFI::Platypus::Memory"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/Record.html",
+            "name" : "FFI::Platypus::Record"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/Record/Meta.html",
+            "name" : "FFI::Platypus::Record::Meta"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/Record/TieArray.html",
+            "name" : "FFI::Platypus::Record::TieArray"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/ShareConfig.html",
+            "name" : "FFI::Platypus::ShareConfig"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/Type.html",
+            "name" : "FFI::Platypus::Type"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/Type/PointerSizeBuffer.html",
+            "name" : "FFI::Platypus::Type::PointerSizeBuffer"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/Type/StringArray.html",
+            "name" : "FFI::Platypus::Type::StringArray"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/Type/StringPointer.html",
+            "name" : "FFI::Platypus::Type::StringPointer"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/Type/WideString.html",
+            "name" : "FFI::Platypus::Type::WideString"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/TypeParser.html",
+            "name" : "FFI::Platypus::TypeParser"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/TypeParser/Version0.html",
+            "name" : "FFI::Platypus::TypeParser::Version0"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/TypeParser/Version1.html",
+            "name" : "FFI::Platypus::TypeParser::Version1"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/TypeParser/Version2.html",
+            "name" : "FFI::Platypus::TypeParser::Version2"
+         },
+         {
+            "href" : "/pod/FFI/Probe.html",
+            "name" : "FFI::Probe"
+         },
+         {
+            "href" : "/pod/FFI/Probe/Runner.html",
+            "name" : "FFI::Probe::Runner"
+         },
+         {
+            "href" : "/pod/FFI/Probe/Runner/Builder.html",
+            "name" : "FFI::Probe::Runner::Builder"
+         },
+         {
+            "href" : "/pod/FFI/Probe/Runner/Result.html",
+            "name" : "FFI::Probe::Runner::Result"
+         },
+         {
+            "href" : "/pod/FFI/Temp.html",
+            "name" : "FFI::Temp"
+         }
+      ]
+   },
+   {
       "name" : "FFI-Platypus-Declare",
       "pods" : [
          {

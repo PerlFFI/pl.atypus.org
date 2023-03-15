@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::Platypus::DL</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="https://hatch.wdlabs.com/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/Platypus.html">Platypus</a>::DL</div>
+    <!--FFI::Platypus::DL--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#FUNCTIONS'>FUNCTIONS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#dlopen'>dlopen</a>
+    <li class='indexItem indexItem2'><a href='#dlsym'>dlsym</a>
+    <li class='indexItem indexItem2'><a href='#dlclose'>dlclose</a>
+    <li class='indexItem indexItem2'><a href='#dlerror'>dlerror</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#CAVEATS'>CAVEATS</a>
+  <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::Platypus::DL - Slightly non-portable interface to libdl</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 2.07</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<pre class="sh_perl"> use FFI::Platypus 2.00;
+ use FFI::Platypus::DL;
+ 
+ my $handle = dlopen(&#34;./libfoo.so&#34;, RTLD_PLATYPUS_DEFAULT);
+ my $address = dlsym($handle, &#34;my_function_named_foo&#34;);
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 2 );
+ $ffi-&#62;function($address =&#62; [] =&#62; &#39;void&#39;)-&#62;call;
+ dlclose($handle);</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>This module provides an interface to libdl, the dynamic loader on UNIX. The underlying interface has always been used by <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a>, but it wasn&#39;t a public interface until version 0.52. The name was changed with that version when it became a public interface, so be sure to specify that version if you are going to use it.</p>
+
+<p>It is somewhat non-portable for these reasons:</p>
+
+<dl>
+<dt><a name="GNU_extensions"
+>GNU extensions</a></dt>
+
+<dd>
+<p>It provides some GNU extensions to platforms such as Linux that support them.</p>
+
+<dt><a name="Windows"
+>Windows</a></dt>
+
+<dd>
+<p>It provides an emulation layer on Windows. The emulation layer only supports <code>RTLD_PLATYPUS_DEFAULT</code> as a flag. The emulation layer emulates the convention described below of passing <code>undef</code> as the dynamic library name to mean, use the currently running executable. I&#39;ve used it without any problems for years, but Windows is not my main development platform.</p>
+</dd>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="FUNCTIONS"
+>FUNCTIONS</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="dlopen"
+>dlopen</a></h2>
+
+<pre class="sh_perl"> my $handle = dlopen($filename, $flags);</pre>
+
+<p>This opens a dynamic library in the context of the dynamic loader. <code>$filename</code> is the full or relative path to a dynamic library (usually a <code>.so</code> on Linux and some other UNIXen, a <code>.dll</code> on Windows and a <code>.dylib</code> on OS X). <code>$flags</code> are flags that can be used to alter the behavior of the library and the symbols it contains. The return value is an opaque pointer or <code>$handle</code> which can be used to look up symbols with <code>dlsym</code>. The handle should be closed with <code>dlclose</code> when you are done with it.</p>
+
+<p>By convention if you pass in <code>undef</code> for the filename, the currently loaded executable will be used instead of a separate dynamic library. This is the easiest and most portable way to find the address of symbols in the standard C library. This convention is baked into most UNIXen, but this capability is emulated in Windows which doesn&#39;t come with the capability out of the box.</p>
+
+<p>If there is an error in opening the library then <code>undef</code> will be returned and the diagnostic for the failure can be retrieved with <code>dlerror</code> as described below.</p>
+
+<p>Not all flags are supported on all platforms. You can test if a flag is available using can:</p>
+
+<pre class="sh_perl"> if(FFI::Platypus::DL-&#62;can(&#39;RTLD_LAZY&#39;))
+ {
+   ...
+ }</pre>
+
+<p>Typically where flags are not mutually exclusive, they can be or&#39;d together:</p>
+
+<pre class="sh_perl"> my $handle = dlopen(&#34;libfoo.so&#34;, RTLD_LAZY | RTLD_GLOBAL);</pre>
+
+<p>Check your operating system documentation for detailed descriptions of these flags.</p>
+
+<dl>
+<dt><a name="RTLD_PLATYPUS_DEFAULT"
+>RTLD_PLATYPUS_DEFAULT</a></dt>
+
+<dd>
+<p>This is the <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> default for <code>dlopen</code> (NOTE: NOT the libdl default). This is the only flag supported on Windows. For historical reasons, this is usually <code>RTLD_LAZY</code> on Unix and <code>0</code> on Windows.</p>
+
+<dt><a name="RTLD_LAZY"
+>RTLD_LAZY</a></dt>
+
+<dd>
+<p>Perform lazy binding.</p>
+
+<dt><a name="RTLD_NOW"
+>RTLD_NOW</a></dt>
+
+<dd>
+<p>Resolve all symbols before returning from <code>dlopen</code>. Error if all symbols cannot resolve.</p>
+
+<dt><a name="RTLD_GLOBAL"
+>RTLD_GLOBAL</a></dt>
+
+<dd>
+<p>Symbols are shared.</p>
+
+<dt><a name="RTLD_LOCAL"
+>RTLD_LOCAL</a></dt>
+
+<dd>
+<p>Symbols are NOT shared.</p>
+
+<dt><a name="RTLD_NODELETE"
+>RTLD_NODELETE</a></dt>
+
+<dd>
+<p>glibc 2.2 extension.</p>
+
+<dt><a name="RTLD_NOLOAD"
+>RTLD_NOLOAD</a></dt>
+
+<dd>
+<p>glibc 2.2 extension.</p>
+
+<dt><a name="RTLD_DEEPBIND"
+>RTLD_DEEPBIND</a></dt>
+
+<dd>
+<p>glibc 2.3.4 extension.</p>
+</dd>
+</dl>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="dlsym"
+>dlsym</a></h2>
+
+<pre class="sh_perl"> my $opaque = dlsym($handle, $symbol);</pre>
+
+<p>This looks up the given <code>$symbol</code> in the library pointed to by <code>$handle</code>. If the symbol is found, the address for that symbol is returned as an opaque pointer. This pointer can be passed into the <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> <code>function</code> and <code>attach</code> methods instead of a function name.</p>
+
+<p>If the symbol cannot be found then <code>undef</code> will be returned and the diagnostic for the failure can be retrieved with <code>dlerror</code> as described below.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="dlclose"
+>dlclose</a></h2>
+
+<pre class="sh_perl"> my $status = dlclose($handle);</pre>
+
+<p>On success, <code>dlclose</code> returns 0; on error, it returns a nonzero value, and the diagnostic for the failure can be retrieved with <code>dlerror</code> as described below.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="dlerror"
+>dlerror</a></h2>
+
+<pre class="sh_perl"> my $error_string = dlerror;</pre>
+
+<p>Returns the human readable diagnostic for the reason for the failure for the most recent <code>dl</code> prefixed function call.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CAVEATS"
+>CAVEATS</a></h1>
+
+<p>Some flags for <code>dlopen</code> are not portable. This module may not be supported platforms added to <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> in the future. It does work as far as I know on all of the currently supported platforms.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SEE_ALSO"
+>SEE ALSO</a></h1>
+
+<dl>
+<dt><a name="FFI::Platypus"
+><a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a></a></dt>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Author: Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<p>Contributors:</p>
+
+<p>Bakkiaraj Murugesan (bakkiaraj)</p>
+
+<p>Dylan Cali (calid)</p>
+
+<p>pipcet</p>
+
+<p>Zaki Mughal (zmughal)</p>
+
+<p>Fitz Elliott (felliott)</p>
+
+<p>Vickenty Fesunov (vyf)</p>
+
+<p>Gregor Herrmann (gregoa)</p>
+
+<p>Shlomi Fish (shlomif)</p>
+
+<p>Damyan Ivanov</p>
+
+<p>Ilya Pavlov (Ilya33)</p>
+
+<p>Petr P&#237;sa&#345; (ppisar)</p>
+
+<p>Mohammad S Anwar (MANWAR)</p>
+
+<p>H&#229;kon H&#230;gland (hakonhagland, HAKONH)</p>
+
+<p>Meredith (merrilymeredith, MHOWARD)</p>
+
+<p>Diab Jerius (DJERIUS)</p>
+
+<p>Eric Brine (IKEGAMI)</p>
+
+<p>szTheory</p>
+
+<p>Jos&#233; Joaqu&#237;n Atria (JJATRIA)</p>
+
+<p>Pete Houston (openstrike, HOUSTON)</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2015-2022 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>
+        [
+            <a href="https://wdlabs.com">wdlabs.com</a> |
+            <a href="https://alienfile.org">alienfile.org</a> |
+            <a href="https://pl.atypus.org">pl.atypus.org</a> |
+            <a href="https://perlwasm.github.io">perlwasm</a> |
+            <a href="https://uperl.github.io">uperl</a>
+        ]
+        Copyright &copy; 2022 Graham Ollis
+      </p>
+    </div>
+  </body>
+</html>

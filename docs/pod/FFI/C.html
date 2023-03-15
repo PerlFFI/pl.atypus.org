@@ -146,8 +146,8 @@ name="DESCRIPTION"
 
 <p>This distribution provides tools for building classes to interface for common C data types. Arrays, <code>struct</code>, <code>union</code> and nested types based on those are supported.</p>
 
-<p>Core <a href="https://metacpan.org/pod/FFI%3A%3APlatypus" class="podlinkpod"
->FFI::Platypus</a> also provides <a href="https://metacpan.org/pod/FFI%3A%3APlatypus%3A%3ARecord" class="podlinkpod"
+<p>Core <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> also provides <a href="/pod/FFI/Platypus/Record.html" class="podlinkpod"
 >FFI::Platypus::Record</a> for manipulating and passing structured data. Typically you want to use <a href="/pod/FFI/C.html" class="podlinkpod"
 >FFI::C</a> instead, the main exception is when you need to pass structured data by value instead of by reference.</p>
 
@@ -167,7 +167,7 @@ name="ffi"
 <pre class="sh_perl"> FFI::C-&#62;ffi($ffi);
  my $ffi = FFI::C-&#62;ffi;</pre>
 
-<p>Get or set the <a href="https://metacpan.org/pod/FFI%3A%3APlatypus" class="podlinkpod"
+<p>Get or set the <a href="/pod/FFI/Platypus.html" class="podlinkpod"
 >FFI::Platypus</a> instance used for the current Perl file (<code>.pl</code> or <code>.pm</code>).</p>
 
 <p>By default a new Platypus instance is created the on the first call to <code>ffi</code>, or when a new type is created with <code>struct</code>, <code>union</code> or <code>array</code> below, so if you want to use your own Platypus instance make sure that you set it as soon as possible.</p>
@@ -182,7 +182,7 @@ name="struct"
  FFI::C-&#62;struct(\@members);</pre>
 
 <p>Generate a new <a href="/pod/FFI/C/Struct.html" class="podlinkpod"
->FFI::C::Struct</a> class with the given <code>@members</code> into the calling package. (<code>@members</code> should be a list of name/type pairs). You may optionally give a <code>$name</code> which will be used for the <a href="https://metacpan.org/pod/FFI%3A%3APlatypus" class="podlinkpod"
+>FFI::C::Struct</a> class with the given <code>@members</code> into the calling package. (<code>@members</code> should be a list of name/type pairs). You may optionally give a <code>$name</code> which will be used for the <a href="/pod/FFI/Platypus.html" class="podlinkpod"
 >FFI::Platypus</a> type name for the generated class. If you do not specify a <code>$name</code>, a C style name will be generated from the last segment in the calling package name by converting to snake case and appending a <code>_t</code> to the end.</p>
 
 <p>As an example, given:</p>
@@ -194,7 +194,7 @@ name="struct"
    ]);
  };</pre>
 
-<p>You can use <code>MyLibrary::FooBar</code> via the file scoped <a href="https://metacpan.org/pod/FFI%3A%3APlatypus" class="podlinkpod"
+<p>You can use <code>MyLibrary::FooBar</code> via the file scoped <a href="/pod/FFI/Platypus.html" class="podlinkpod"
 >FFI::Platypus</a> instance using the type <code>foo_bar_t</code>.</p>
 
 <pre class="sh_perl"> my $foobar = MyLibrary::FooBar-&#62;new({ a =&#62; 1, b =&#62; 3.14 });
@@ -296,8 +296,8 @@ name="CAVEATS"
 >CAVEATS</a></h1>
 
 <p><a href="/pod/FFI/C.html" class="podlinkpod"
->FFI::C</a> objects must be passed into C via <a href="https://metacpan.org/pod/FFI%3A%3APlatypus" class="podlinkpod"
->FFI::Platypus</a> by pointers. So-called &#34;pass-by-value&#34; is not and will not be supported. For &#34;pass-by-value&#34; record types, you should instead use <a href="https://metacpan.org/pod/FFI%3A%3APlatypus%3A%3ARecord" class="podlinkpod"
+>FFI::C</a> objects must be passed into C via <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> by pointers. So-called &#34;pass-by-value&#34; is not and will not be supported. For &#34;pass-by-value&#34; record types, you should instead use <a href="/pod/FFI/Platypus/Record.html" class="podlinkpod"
 >FFI::Platypus::Record</a>.</p>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
@@ -361,7 +361,7 @@ name="SEE_ALSO"
 
 <dd>
 <dt><a name="FFI::Platypus::Record"
-><a href="https://metacpan.org/pod/FFI%3A%3APlatypus%3A%3ARecord" class="podlinkpod"
+><a href="/pod/FFI/Platypus/Record.html" class="podlinkpod"
 >FFI::Platypus::Record</a></a></dt>
 </dl>
 

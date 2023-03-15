@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FFI::Platypus::Record</title>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
+    <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
+    <link type="text/css" rel="stylesheet" href="https://hatch.wdlabs.com/css/default.css">
+  </head>
+  <body onload="sh_highlightDocument();">
+    <div class="nx-header-flag-1"></div>
+    <div class="nx-header-flag-2"></div>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/Platypus.html">Platypus</a>::Record</div>
+    <!--FFI::Platypus::Record--><a name='___top' class='dummyTopAnchor' ></a>
+
+<div class='indexgroup'>
+<ul   class='indexList indexList1'>
+  <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
+  <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
+  <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
+  <li class='indexItem indexItem1'><a href='#FUNCTIONS'>FUNCTIONS</a>
+  <ul   class='indexList indexList2'>
+    <li class='indexItem indexItem2'><a href='#record_layout_1'>record_layout_1</a>
+    <ul   class='indexList indexList3'>
+      <li class='indexItem indexItem3'><a href='#strings'>strings</a>
+      <li class='indexItem indexItem3'><a href='#arrays'>arrays</a>
+    </ul>
+    <li class='indexItem indexItem2'><a href='#record_layout'>record_layout</a>
+  </ul>
+  <li class='indexItem indexItem1'><a href='#CAVEATS'>CAVEATS</a>
+  <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
+  <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
+  <li class='indexItem indexItem1'><a href='#COPYRIGHT_AND_LICENSE'>COPYRIGHT AND LICENSE</a>
+</ul>
+</div>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="NAME"
+>NAME</a></h1>
+
+<p>FFI::Platypus::Record - FFI support for structured records data</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="VERSION"
+>VERSION</a></h1>
+
+<p>version 2.07</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<p>C:</p>
+
+<pre class="sh_perl"> struct my_person {
+   int         age;
+   const char  title[3];
+   const char *name
+ };
+ 
+ void process_person(struct my_person *person)
+ {
+   /* ... */
+ }</pre>
+
+<p>Perl:</p>
+
+<pre class="sh_perl"> package MyPerson;
+ 
+ use FFI::Platypus::Record;
+ 
+ record_layout_1(
+   &#39;int&#39;       =&#62; &#39;age&#39;,
+   &#39;string(3)&#39; =&#62; &#39;title&#39;,
+   &#39;string rw&#39; =&#62; &#39;name&#39;,
+ );
+ 
+ package main;
+ 
+ use FFI::Platypus 2.00;
+ 
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 2 );
+ $ffi-&#62;lib(&#34;myperson.so&#34;);
+ $ffi-&#62;type(&#34;record(MyPerson)&#34; =&#62; &#39;MyPerson&#39;);
+ 
+ my $person = MyPerson-&#62;new(
+   age   =&#62; 40,
+   title =&#62; &#34;Mr.&#34;,
+   name  =&#62; &#34;John Smith&#34;,
+ );
+ 
+ $ffi-&#62;attach( process_person =&#62; [ &#39;MyPerson*&#39; ] =&#62; &#39;void&#39; );
+ 
+ process_person($person);
+ 
+ $person-&#62;age($person-&#62;age + 1); # another year older
+ 
+ process_person($person);</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="DESCRIPTION"
+>DESCRIPTION</a></h1>
+
+<p>[version 0.21]</p>
+
+<p>This module provides a mechanism for building classes that can be used to mange structured data records (known as C as &#34;structs&#34; and in some languages as &#34;records&#34;). A structured record is a series of bytes that have structure understood by the C or other foreign language library that you are interfacing with. It is designed for use with FFI and <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a>, though it may have other applications.</p>
+
+<p>Before you get to deep into using this class you should also consider the <a href="/pod/FFI/C.html" class="podlinkpod"
+>FFI::C</a>, which provides some overlapping functionality. Briefly, it comes down to this:</p>
+
+<p>(The tl;dr is: use this class when you need to pass by value (since <a href="/pod/FFI/C.html" class="podlinkpod"
+>FFI::C</a> does not support pass by value) and use <a href="/pod/FFI/C.html" class="podlinkpod"
+>FFI::C</a> in all other circumstances).</p>
+
+<dl>
+<dt><a name="FFI::Platypus::Record"
+><a href="/pod/FFI/Platypus/Record.html" class="podlinkpod"
+>FFI::Platypus::Record</a></a></dt>
+
+<dd>
+<p>Supports:</p>
+
+<dl>
+<dt><a name="C_pointers_to_struct_types"
+>C pointers to <code>struct</code> types</a></dt>
+
+<dd>
+<dt><a name="Passing_C_structs_by-value."
+>Passing C <code>struct</code>s by-value.</a></dt>
+</dl>
+
+<p>Does not support:</p>
+
+<dl>
+<dt><a name="C_union_types."
+>C <code>union</code> types.</a></dt>
+
+<dd>
+<dt><a name="C_arrays_of_struct_and_union_types."
+>C arrays of <code>struct</code> and <code>union</code> types.</a></dt>
+</dl>
+
+<dt><a name="FFI::C"
+><a href="/pod/FFI/C.html" class="podlinkpod"
+>FFI::C</a></a></dt>
+
+<dd>
+<p>Supports:</p>
+
+<dl>
+<dt><a name="C_struct_andunion_types"
+>C <code>struct</code> and<code>union</code> types</a></dt>
+
+<dd>
+<dt><a name="C_arrays_of_struct_and_union_types."
+>C arrays of <code>struct</code> and <code>union</code> types.</a></dt>
+</dl>
+
+<p>Does not support:</p>
+
+<dl>
+<dt><a name="Passing_C_structs_by-value."
+>Passing C <code>struct</code>s by-value.</a></dt>
+</dl>
+
+<p>String members are as of this writing a TODO for <a href="/pod/FFI/C.html" class="podlinkpod"
+>FFI::C</a>, but should be coming soon!</p>
+</dd>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="FUNCTIONS"
+>FUNCTIONS</a></h1>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="record_layout_1"
+>record_layout_1</a></h2>
+
+<pre class="sh_perl"> record_layout_1($ffi, $type =&#62; $name, ... );
+ record_layout_1(\@ffi_args, $type =&#62; $name, ... );
+ record_layout_1($type =&#62; $name, ... );</pre>
+
+<p>Define the layout of the record. You may optionally provide an instance of <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a> as the first argument in order to use its type aliases. Alternatively you may provide constructor arguments that will be passed to the internal platypus instance. Thus this is the same:</p>
+
+<pre class="sh_perl"> my $ffi = FFI::Platypus-&#62;new( lang =&#62; &#39;Rust&#39;, api =&#62; 2 );
+ record_layout_1( $ffi, ... );
+ # same as:
+ record_layout_1( [ lang =&#62; &#39;Rust&#39; ], ... );</pre>
+
+<p>and this is the same:</p>
+
+<pre class="sh_perl"> my $ffi = FFI::Platypus-&#62;new( api =&#62; 2 );
+ record_layout_1( $ffi, ... );
+ # same as:
+ record_layout_1( ... );</pre>
+
+<p>Then you provide members as type/name pairs.</p>
+
+<p>For each member you declare, <code>record_layout_1</code> will create an accessor which can be used to read and write its value. For example imagine a class <code>Foo</code>:</p>
+
+<pre class="sh_perl"> package Foo;
+ 
+ use FFI::Platypus::Record;
+ 
+ record_layout_1(
+   int          =&#62; &#39;bar&#39;,  #  int bar;
+   &#39;string(10)&#39; =&#62; &#39;baz&#39;,  #  char baz[10];
+ );</pre>
+
+<p>You can get and set its fields with like named <code>bar</code> and <code>baz</code> accessors:</p>
+
+<pre class="sh_perl"> my $foo = Foo-&#62;new;
+ 
+ $foo-&#62;bar(22);
+ my $value = $foo-&#62;bar;
+ 
+ $foo-&#62;baz(&#34;grimlock\0\0&#34;); # should be 10 characters long
+ my $string_value = $foo-&#62;baz; # includes the trailing \0\0</pre>
+
+<p>You can also pass initial values in to the constructor, either passing as a list of key value pairs or by passing a hash reference:</p>
+
+<pre class="sh_perl"> $foo = Foo-&#62;new(
+   bar =&#62; 22,
+   baz =&#62; &#34;grimlock\0\0&#34;,
+ );
+ 
+ # same as:
+ 
+ $foo = Foo-&#62;new( {
+   bar =&#62; 22,
+   baz =&#62; &#34;grimlock\0\0&#34;,
+ } );</pre>
+
+<p>If there are members of a record that you need to account for in terms of size and alignment, but do not want to have an accessor for, you can use <code>:</code> as a place holder for its name:</p>
+
+<pre class="sh_perl"> record_layout_1(
+   &#39;int&#39;        =&#62; &#39;:&#39;,
+   &#39;string(10)&#39; =&#62; &#39;baz&#39;,
+ );</pre>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="strings"
+>strings</a></h3>
+
+<p>So far I&#39;ve shown fixed length strings. These are declared with the word <code>string</code> followed by the length of the string in parentheticals. Fixed length strings are included inside the record itself and do not need to be allocated or deallocated separately from the record. Variable length strings must be allocated on the heap, and thus require a sense of &#34;ownership&#34;, that is whomever allocates variable length strings should be responsible for also free&#39;ing them. To handle this, you can add a <code>ro</code> or <code>rw</code> trait to a string field. The default is <code>ro</code>, means that you can get, but not set its value:</p>
+
+<pre class="sh_perl"> package Foo;
+ 
+ record_layout_1(
+   &#39;string ro&#39; =&#62; &#39;bar&#39;,  # same type as &#39;string&#39; and &#39;string_ro&#39;
+ );
+ 
+ package main;
+ 
+ my $foo = Foo-&#62;new;
+ 
+ my $string = $foo-&#62;bar;  # GOOD
+ $foo-&#62;bar(&#34;starscream&#34;); # BAD</pre>
+
+<p>If you specify a field is <code>rw</code>, then you can set its value:</p>
+
+<pre class="sh_perl"> package Foo;
+ 
+ record_layout_1(
+   &#39;string rw&#39; =&#62; &#39;bar&#39;,  # same type as &#39;string_rw&#39;
+ );
+ 
+ package main;
+ 
+ my $foo = Foo-&#62;new;
+ 
+ my $string = $foo-&#62;bar;  # GOOD
+ $foo-&#62;bar(&#34;starscream&#34;); # GOOD</pre>
+
+<p>Any string value that is pointed to by the record will be free&#39;d when it falls out of scope, so you must be very careful that any <code>string rw</code> fields are not set or modified by C code. You should also take care not to copy any record that has a <code>rw</code> string in it because its values will be free&#39;d twice!</p>
+
+<pre class="sh_perl"> use Clone qw( clone );
+ 
+ my $foo2 = clone $foo;  # BAD  bar will be free&#39;d twice</pre>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="arrays"
+>arrays</a></h3>
+
+<p>Arrays of integer, floating points and opaque pointers are supported.</p>
+
+<pre class="sh_perl"> package Foo;
+ 
+ record_layout_1(
+   &#39;int[10]&#39; =&#62; &#39;bar&#39;,
+ );
+ 
+ my $foo = Foo-&#62;new;
+ 
+ $foo-&#62;bar([1,2,3,4,5,6,7,8,9,10]); # sets the values for the array
+ my $list = $foo-&#62;bar;  # returns a list reference
+ 
+ $foo-&#62;bar(5, -6); # sets the 5th element in the array to -6
+ my $item = $foo-&#62;bar(5); gets the 5th element in the array</pre>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="record_layout"
+>record_layout</a></h2>
+
+<pre class="sh_perl"> record_layout($ffi, $type =&#62; $name, ... );
+ record_layout(\@ffi_args, $type =&#62; $name, ... );
+ record_layout($type =&#62; $name, ... );</pre>
+
+<p>This function works like <code>record_layout</code> except that <code>api =&#62; 0</code> is used instead of <code>api =&#62; 1</code>. All new code should use <code>record_layout_1</code> instead.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="CAVEATS"
+>CAVEATS</a></h1>
+
+<p>These useful features (and probably more) are missing, and unlikely to be added.</p>
+
+<dl>
+<dt><a name="Unions"
+>Unions</a></dt>
+
+<dd>
+<dt><a name="Nested_records"
+>Nested records</a></dt>
+</dl>
+
+<p>If you need these features, consider using <a href="/pod/FFI/C.html" class="podlinkpod"
+>FFI::C</a> instead.</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="SEE_ALSO"
+>SEE ALSO</a></h1>
+
+<dl>
+<dt><a name="FFI::Platypus"
+><a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a></a></dt>
+
+<dd>
+<p>The main platypus documentation.</p>
+
+<dt><a name="FFI::C"
+><a href="/pod/FFI/C.html" class="podlinkpod"
+>FFI::C</a></a></dt>
+
+<dd>
+<p>Another interface for constructing structured data. It includes support for <code>union</code> and array types (which this module does not), but lacks support for passing records by-value.</p>
+
+<dt><a name="FFI::Platypus::Record::TieArray"
+><a href="/pod/FFI/Platypus/Record/TieArray.html" class="podlinkpod"
+>FFI::Platypus::Record::TieArray</a></a></dt>
+
+<dd>
+<p>Tied array interface for record array members.</p>
+
+<dt><a name="Convert::Binary::C"
+><a href="https://metacpan.org/pod/Convert%3A%3ABinary%3A%3AC" class="podlinkpod"
+>Convert::Binary::C</a></a></dt>
+
+<dd>
+<p>Another method for constructing and dissecting structured data records.</p>
+
+<dt><a name="pack_and_unpack"
+><a href="https://metacpan.org/pod/perlpacktut" class="podlinkpod"
+>pack and unpack</a></a></dt>
+
+<dd>
+<p>Built-in Perl functions for constructing and dissecting structured data records.</p>
+</dd>
+</dl>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="AUTHOR"
+>AUTHOR</a></h1>
+
+<p>Author: Graham Ollis &#60;plicease@cpan.org&#62;</p>
+
+<p>Contributors:</p>
+
+<p>Bakkiaraj Murugesan (bakkiaraj)</p>
+
+<p>Dylan Cali (calid)</p>
+
+<p>pipcet</p>
+
+<p>Zaki Mughal (zmughal)</p>
+
+<p>Fitz Elliott (felliott)</p>
+
+<p>Vickenty Fesunov (vyf)</p>
+
+<p>Gregor Herrmann (gregoa)</p>
+
+<p>Shlomi Fish (shlomif)</p>
+
+<p>Damyan Ivanov</p>
+
+<p>Ilya Pavlov (Ilya33)</p>
+
+<p>Petr P&#237;sa&#345; (ppisar)</p>
+
+<p>Mohammad S Anwar (MANWAR)</p>
+
+<p>H&#229;kon H&#230;gland (hakonhagland, HAKONH)</p>
+
+<p>Meredith (merrilymeredith, MHOWARD)</p>
+
+<p>Diab Jerius (DJERIUS)</p>
+
+<p>Eric Brine (IKEGAMI)</p>
+
+<p>szTheory</p>
+
+<p>Jos&#233; Joaqu&#237;n Atria (JJATRIA)</p>
+
+<p>Pete Houston (openstrike, HOUSTON)</p>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
+name="COPYRIGHT_AND_LICENSE"
+>COPYRIGHT AND LICENSE</a></h1>
+
+<p>This software is copyright (c) 2015-2022 by Graham Ollis.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
+
+
+    <div class="nx-footer">
+      <p>
+        [
+            <a href="https://wdlabs.com">wdlabs.com</a> |
+            <a href="https://alienfile.org">alienfile.org</a> |
+            <a href="https://pl.atypus.org">pl.atypus.org</a> |
+            <a href="https://perlwasm.github.io">perlwasm</a> |
+            <a href="https://uperl.github.io">uperl</a>
+        ]
+        Copyright &copy; 2022 Graham Ollis
+      </p>
+    </div>
+  </body>
+</html>
