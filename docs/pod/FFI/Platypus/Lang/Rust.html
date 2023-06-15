@@ -114,7 +114,7 @@ name="NAME"
 name="VERSION"
 >VERSION</a></h1>
 
-<p>version 0.15</p>
+<p>version 0.16</p>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
 name="SYNOPSIS"
@@ -232,9 +232,10 @@ name="Rust_Source"
 <pre class="sh_perl"> #![crate_type = &#34;cdylib&#34;]
  
  use std::ffi::CStr;
+ use std::os::raw::c_char;
  
  #[no_mangle]
- pub extern &#34;C&#34; fn how_many_characters(s: *const i8) -&#62; isize {
+ pub extern &#34;C&#34; fn how_many_characters(s: *const c_char) -&#62; isize {
      if s.is_null() {
          return -1;
      }
@@ -322,9 +323,10 @@ name="Rust_Source"
  
  use std::ffi::CString;
  use std::iter;
+ use std::os::raw::c_char;
  
  #[no_mangle]
- pub extern &#34;C&#34; fn theme_song_generate(length: u8) -&#62; *mut i8 {
+ pub extern &#34;C&#34; fn theme_song_generate(length: u8) -&#62; *mut c_char {
      let mut song = String::from(&#34;&#128163; &#34;);
      song.extend(iter::repeat(&#34;na &#34;).take(length as usize));
      song.push_str(&#34;Batman! &#128163;&#34;);
@@ -334,7 +336,7 @@ name="Rust_Source"
  }
  
  #[no_mangle]
- pub extern &#34;C&#34; fn theme_song_free(s: *mut i8) {
+ pub extern &#34;C&#34; fn theme_song_free(s: *mut c_char) {
      if s.is_null() {
          return;
      }
@@ -404,9 +406,10 @@ name="Rust_Source"
  use std::cell::RefCell;
  use std::ffi::CString;
  use std::iter;
+ use std::os::raw::c_char;
  
  #[no_mangle]
- pub extern &#34;C&#34; fn theme_song_generate(length: u8) -&#62; *const i8 {
+ pub extern &#34;C&#34; fn theme_song_generate(length: u8) -&#62; *const c_char {
      thread_local! {
          static KEEP: RefCell&#60;Option&#60;CString&#62;&#62; = RefCell::new(None);
      }
@@ -526,8 +529,9 @@ name="Rust_Source"
 <pre class="sh_perl"> #![crate_type = &#34;cdylib&#34;]
  
  use std::ffi::CString;
+ use std::os::raw::c_char;
  
- type PerlLog = extern &#34;C&#34; fn(line: *const i8);
+ type PerlLog = extern &#34;C&#34; fn(line: *const c_char);
  
  #[no_mangle]
  pub extern &#34;C&#34; fn rust_log(logf: PerlLog) {
@@ -765,6 +769,7 @@ name="Rust_Source"
  use std::ffi::c_void;
  use std::ffi::CStr;
  use std::ffi::CString;
+ use std::os::raw::c_char;
  
  struct Person {
      name: String,
@@ -796,8 +801,8 @@ name="Rust_Source"
  
  #[no_mangle]
  pub extern &#34;C&#34; fn person_new(
-     _class: *const i8,
-     name: *const i8,
+     _class: *const c_char,
+     name: *const c_char,
      lucky_number: i32,
  ) -&#62; *mut CPerson {
      let name = unsafe { CStr::from_ptr(name) };
@@ -806,7 +811,7 @@ name="Rust_Source"
  }
  
  #[no_mangle]
- pub extern &#34;C&#34; fn person_name(p: *mut CPerson) -&#62; *const i8 {
+ pub extern &#34;C&#34; fn person_name(p: *mut CPerson) -&#62; *const c_char {
      thread_local!(
          static KEEP: RefCell&#60;Option&#60;CString&#62;&#62; = RefCell::new(None);
      );
@@ -821,7 +826,7 @@ name="Rust_Source"
  }
  
  #[no_mangle]
- pub extern &#34;C&#34; fn person_rename(p: *mut CPerson, new: *const i8) {
+ pub extern &#34;C&#34; fn person_rename(p: *mut CPerson, new: *const c_char) {
      let new = unsafe { CStr::from_ptr(new) };
      let p = unsafe { &#38;mut *(p as *mut Person) };
      if let Ok(new) = new.to_str() {
