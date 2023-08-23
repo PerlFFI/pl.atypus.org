@@ -114,7 +114,7 @@ name="NAME"
 name="VERSION"
 >VERSION</a></h1>
 
-<p>version 0.16</p>
+<p>version 0.17</p>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
 name="SYNOPSIS"
@@ -497,12 +497,23 @@ name="Rust_Source"
 name="Perl_Source"
 >Perl Source</a></h3>
 
-<pre class="sh_perl"> #![crate_type = &#34;cdylib&#34;]
+<pre class="sh_perl"> use FFI::CheckLib qw( find_lib_or_die );
+ use File::Basename qw( dirname );
+ use FFI::Platypus 1.00;
  
- #[no_mangle]
- pub extern &#34;C&#34; fn hello_rust() -&#62; *const u8 {
-     &#34;Hello, world!\0&#34;.as_ptr()
- }</pre>
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 1, lang =&#62; &#39;Rust&#39;);
+ $ffi-&#62;lang(&#39;Rust&#39;);
+ $ffi-&#62;lib(
+     find_lib_or_die(
+         lib        =&#62; &#39;static&#39;,
+         libpath    =&#62; [dirname __FILE__],
+         systempath =&#62; [],
+     )
+ );
+ $ffi-&#62;lib(&#39;./libstring.so&#39;);
+ $ffi-&#62;attach(hello_rust =&#62; [] =&#62; &#39;string&#39;);
+ 
+ print hello_rust(), &#34;\n&#34;;</pre>
 
 <h3><a class='u' href='#___top' title='click to go to top of document'
 name="Execute"
@@ -615,21 +626,23 @@ name="Rust_Source"
 name="Perl_Source"
 >Perl Source</a></h3>
 
-<pre class="sh_perl"> #![crate_type = &#34;cdylib&#34;]
+<pre class="sh_perl"> use FFI::Platypus 2.00;
+ use FFI::CheckLib qw( find_lib_or_die );
+ use File::Basename qw( dirname );
  
- use std::slice;
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 2, lang =&#62; &#39;Rust&#39; );
+ $ffi-&#62;lib(
+     find_lib_or_die(
+         lib        =&#62; &#39;slice&#39;,
+         libpath    =&#62; [dirname __FILE__],
+         systempath =&#62; [],
+     )
+ );
  
- #[no_mangle]
- pub extern &#34;C&#34; fn sum_of_even(numbers: *const u32, len: usize) -&#62; i64 {
-     if numbers.is_null() {
-         return -1;
-     }
+ $ffi-&#62;attach( sum_of_even =&#62; [&#39;u32*&#39;, &#39;usize&#39;] =&#62; &#39;i64&#39; );
  
-     let numbers = unsafe { slice::from_raw_parts(numbers, len) };
- 
-     let sum: u32 = numbers.iter().filter(|&#38;v| v % 2 == 0).sum();
-     sum as i64
- }</pre>
+ print sum_of_even(undef, 0), &#34;\n&#34;;          # print -1
+ print sum_of_even([1,2,3,4,5,6], 6), &#34;\n&#34;;  # print 12</pre>
 
 <h3><a class='u' href='#___top' title='click to go to top of document'
 name="Execute"
