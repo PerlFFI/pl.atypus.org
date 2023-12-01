@@ -56,7 +56,7 @@ name="NAME"
 name="VERSION"
 >VERSION</a></h1>
 
-<p>version 0.02</p>
+<p>version 0.03</p>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
 name="SYNOPSIS"
@@ -99,9 +99,10 @@ name="new"
 >new</a></h2>
 
 <pre class="sh_perl"> my $stat = FFI::C::Stat-&#62;new(*HANDLE,   %options);
- my $stat = FFI::C::Stat-&#62;new($filename, %options);</pre>
+ my $stat = FFI::C::Stat-&#62;new($filename, %options);
+ my $stat = FFI::C::Stat-&#62;new;</pre>
 
-<p>You can create a new instance of this class by calling the new method and passing in either a file or directory handle, or by passing in the filename path.</p>
+<p>You can create a new instance of this class by calling the new method and passing in either a file or directory handle, or by passing in the filename path. If you do not pass anything then an uninitialized stat will be returned.</p>
 
 <p>Options:</p>
 
@@ -140,6 +141,8 @@ name="clone"
    my $ptr = $xsub-&#62;();
    return FFI::C::Stat-&#62;clone($ptr);
  });</pre>
+
+<p>The behavior of passing in <code>undef</code> prior to version 0.03 was undefined and could cause a crash. In version 0.03 and later passing in <code>undef</code> will return a stat object with all of the bits set to zero (0).</p>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
 name="PROPERTIES"
@@ -259,7 +262,7 @@ name="AUTHOR"
 name="COPYRIGHT_AND_LICENSE"
 >COPYRIGHT AND LICENSE</a></h1>
 
-<p>This software is copyright (c) 2021 by Graham Ollis.</p>
+<p>This software is copyright (c) 2021-2023 by Graham Ollis.</p>
 
 <p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
 
