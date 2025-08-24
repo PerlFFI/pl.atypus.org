@@ -535,6 +535,19 @@
       ]
    },
    {
+      "name" : "FFI-Platypus-Lang-V",
+      "pods" : [
+         {
+            "href" : "/pod/FFI/Build/File/VMod.html",
+            "name" : "FFI::Build::File::VMod"
+         },
+         {
+            "href" : "/pod/FFI/Platypus/Lang/V.html",
+            "name" : "FFI::Platypus::Lang::V"
+         }
+      ]
+   },
+   {
       "name" : "FFI-Platypus-Lang-Zig",
       "pods" : [
          {

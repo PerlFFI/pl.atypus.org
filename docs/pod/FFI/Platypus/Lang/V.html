@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Clang::CastXML::Exception::ProcessException::IntrospectException</title>
+    <title>FFI::Platypus::Lang::V</title>
     <script type="text/javascript" src="https://shjs.wdlabs.com/sh_main.min.js"></script>
     <script type="text/javascript" src="https://shjs.wdlabs.com/lang/sh_perl.min.js"></script>
     <link type="text/css" rel="stylesheet" href="https://shjs.wdlabs.com/css/sh_acid.css">
@@ -11,18 +11,18 @@
   <body onload="sh_highlightDocument();">
     <div class="nx-header-flag-1"></div>
     <div class="nx-header-flag-2"></div>
-    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> Clang::<a href="/pod/Clang/CastXML.html">CastXML</a>::<a href="/pod/Clang/CastXML/Exception.html">Exception</a>::<a href="/pod/Clang/CastXML/Exception/ProcessException.html">ProcessException</a>::IntrospectException</div>
-    <!--Clang::CastXML::Exception::ProcessException::IntrospectException - Exception for when castxml fails introspection--><a name='___top' class='dummyTopAnchor' ></a>
+    <div class="nx-header-title"><a href="/">🌻</a> <a href="/pod/">📖</a> <a href="/pod/FFI.html">FFI</a>::<a href="/pod/FFI/Platypus.html">Platypus</a>::<a href="/pod/FFI/Platypus/Lang.html">Lang</a>::V</div>
+    <!--FFI::Platypus::Lang::V--><a name='___top' class='dummyTopAnchor' ></a>
 
 <div class='indexgroup'>
 <ul   class='indexList indexList1'>
   <li class='indexItem indexItem1'><a href='#NAME'>NAME</a>
   <li class='indexItem indexItem1'><a href='#VERSION'>VERSION</a>
+  <li class='indexItem indexItem1'><a href='#SYNOPSIS'>SYNOPSIS</a>
   <li class='indexItem indexItem1'><a href='#DESCRIPTION'>DESCRIPTION</a>
-  <li class='indexItem indexItem1'><a href='#EXTENDS'>EXTENDS</a>
   <li class='indexItem indexItem1'><a href='#METHODS'>METHODS</a>
   <ul   class='indexList indexList2'>
-    <li class='indexItem indexItem2'><a href='#message'>message</a>
+    <li class='indexItem indexItem2'><a href='#native_type_map'>native_type_map</a>
   </ul>
   <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
   <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
@@ -34,7 +34,7 @@
 name="NAME"
 >NAME</a></h1>
 
-<p>Clang::CastXML::Exception::ProcessException::IntrospectException - Exception for when castxml fails introspection</p>
+<p>FFI::Platypus::Lang::V - Documentation and tools for using Platypus with the V programming language</p>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
 name="VERSION"
@@ -43,38 +43,69 @@ name="VERSION"
 <p>version 0.02</p>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
+name="SYNOPSIS"
+>SYNOPSIS</a></h1>
+
+<p>V:</p>
+
+<pre class="sh_perl"> module foo
+ 
+ pub fn add(a, b i32) i32 {
+     return a + b
+ }</pre>
+
+<p>Perl:</p>
+
+<pre class="sh_perl"> use FFI::Platypus 2.00;
+ my $ffi = FFI::Platypus-&#62;new( api =&#62; 2, lang =&#62; &#39;V&#39;, lib =&#62; &#39;foo.so&#39; );
+ $ffi-&#62;mangle(sub ($sym) { &#34;foo__$sym&#34; });
+ $ffi-&#62;attach( add =&#62; [&#39;i32&#39;,&#39;i32&#39;] =&#62; &#39;i32&#39;);
+ 
+ say add(1,2);</pre>
+
+<p>Prints:</p>
+
+<pre class="sh_perl"> 3</pre>
+
+<h1><a class='u' href='#___top' title='click to go to top of document'
 name="DESCRIPTION"
 >DESCRIPTION</a></h1>
 
-<p>This class represents an exception when trying to introspect C/C++ code by running CastXML.</p>
-
-<h1><a class='u' href='#___top' title='click to go to top of document'
-name="EXTENDS"
->EXTENDS</a></h1>
-
-<p>This class extends <a href="/pod/Clang/CastXML/Exception/ProcessException.html" class="podlinkpod"
->Clang::CastXML::Exception::ProcessException</a>.</p>
+<p>This module provides types and documentation for using the V programming language with <a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a>. For details on bundling a V project with your Perl distribution see <a href="/pod/FFI/Build/File/VMod.html" class="podlinkpod"
+>FFI::Build::File::VMod</a>.</p>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
 name="METHODS"
 >METHODS</a></h1>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
-name="message"
->message</a></h2>
+name="native_type_map"
+>native_type_map</a></h2>
 
-<pre class="sh_perl"> my $message = $ex-&#62;message;</pre>
+<pre class="sh_perl"> my $hashref = FFI::Platypus::Lang::V-&#62;native_type_map;</pre>
 
-<p>Returns the exception message.</p>
+<p>Returns a mapping of V primitive types to Platypus types.</p>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
 name="SEE_ALSO"
 >SEE ALSO</a></h1>
 
-<p><a href="/pod/Clang/CastXML.html" class="podlinkpod"
->Clang::CastXML</a>, <a href="/pod/Clang/CastXML/Exception.html" class="podlinkpod"
->Clang::CastXML::Exception</a>, <a href="/pod/Clang/CastXML/Exception/ProcessException.html" class="podlinkpod"
->Clang::CastXML::Exception::ProcessException</a></p>
+<dl>
+<dt><a name="https://vlang.io/"
+><a href="https://vlang.io/" class="podlinkurl"
+>https://vlang.io/</a></a></dt>
+
+<dd>
+<dt><a name="FFI::Platypus"
+><a href="/pod/FFI/Platypus.html" class="podlinkpod"
+>FFI::Platypus</a></a></dt>
+
+<dd>
+<dt><a name="FFI::Build::File::VMod"
+><a href="/pod/FFI/Build/File/VMod.html" class="podlinkpod"
+>FFI::Build::File::VMod</a></a></dt>
+</dl>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
 name="AUTHOR"
@@ -86,7 +117,7 @@ name="AUTHOR"
 name="COPYRIGHT_AND_LICENSE"
 >COPYRIGHT AND LICENSE</a></h1>
 
-<p>This software is copyright (c) 2020 by Graham Ollis.</p>
+<p>This software is copyright (c) 2024 by Graham Ollis.</p>
 
 <p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
 
