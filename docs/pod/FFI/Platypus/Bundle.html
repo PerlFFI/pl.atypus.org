@@ -41,7 +41,7 @@ name="NAME"
 name="VERSION"
 >VERSION</a></h1>
 
-<p>version 2.10</p>
+<p>version 2.12</p>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
 name="SYNOPSIS"
@@ -518,10 +518,7 @@ name="Using_bundled_code_with_Alien."
  int
  bzip2__new(bz_stream **stream, int blockSize100k, int verbosity, int workFactor )
  {
-   *stream = malloc(sizeof(bz_stream));
-   (*stream)-&#62;bzalloc = NULL;
-   (*stream)-&#62;bzfree  = NULL;
-   (*stream)-&#62;opaque  = NULL;
+   *stream = calloc(1, sizeof(bz_stream));
  
    return BZ2_bzCompressInit(*stream, blockSize100k, verbosity, workFactor );
  }</pre>

@@ -40,7 +40,7 @@ name="NAME"
 name="VERSION"
 >VERSION</a></h1>
 
-<p>version 0.02</p>
+<p>version 0.04</p>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
 name="SYNOPSIS"
@@ -50,7 +50,8 @@ name="SYNOPSIS"
 
 <pre class="sh_perl"> module foo
  
- pub fn add(a, b i32) i32 {
+ @[export: &#39;foo_add&#39;]
+ pub fn add(a i32, b i32) i32 {
      return a + b
  }</pre>
 
@@ -58,7 +59,7 @@ name="SYNOPSIS"
 
 <pre class="sh_perl"> use FFI::Platypus 2.00;
  my $ffi = FFI::Platypus-&#62;new( api =&#62; 2, lang =&#62; &#39;V&#39;, lib =&#62; &#39;foo.so&#39; );
- $ffi-&#62;mangle(sub ($sym) { &#34;foo__$sym&#34; });
+ $ffi-&#62;mangle(sub ($sym) { &#34;foo_$sym&#34; });
  $ffi-&#62;attach( add =&#62; [&#39;i32&#39;,&#39;i32&#39;] =&#62; &#39;i32&#39;);
  
  say add(1,2);</pre>
@@ -117,7 +118,7 @@ name="AUTHOR"
 name="COPYRIGHT_AND_LICENSE"
 >COPYRIGHT AND LICENSE</a></h1>
 
-<p>This software is copyright (c) 2024 by Graham Ollis.</p>
+<p>This software is copyright (c) 2025 by Graham Ollis.</p>
 
 <p>This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.</p>
 

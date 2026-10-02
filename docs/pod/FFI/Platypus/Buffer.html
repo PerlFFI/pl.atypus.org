@@ -28,6 +28,7 @@
     <li class='indexItem indexItem2'><a href='#grow'>grow</a>
     <li class='indexItem indexItem2'><a href='#set_used_length'>set_used_length</a>
     <li class='indexItem indexItem2'><a href='#window'>window</a>
+    <li class='indexItem indexItem2'><a href='#raw_scalar'>raw_scalar</a>
   </ul>
   <li class='indexItem indexItem1'><a href='#SEE_ALSO'>SEE ALSO</a>
   <li class='indexItem indexItem1'><a href='#AUTHOR'>AUTHOR</a>
@@ -45,7 +46,7 @@ name="NAME"
 name="VERSION"
 >VERSION</a></h1>
 
-<p>version 2.10</p>
+<p>version 2.12</p>
 
 <h1><a class='u' href='#___top' title='click to go to top of document'
 name="SYNOPSIS"
@@ -265,6 +266,20 @@ name="window"
  
  my $ref = c_string();
  print $$ref, &#34;\n&#34;;  # prints &#34;Hello Perl&#34; without the \0</pre>
+
+<p>Not exported by default, but may be exported on request.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="raw_scalar"
+>raw_scalar</a></h2>
+
+<pre class="sh_perl"> my $buffer = raw_scalar $size;</pre>
+
+<p>Returns a new scalar of exactly <code>$size</code> bytes, suitable for use as a buffer. The contents of the returned scalar are <b>not</b> initialized, so it will contain whatever happened to be in the memory that was allocated for it. This makes it cheaper than the equivalent</p>
+
+<pre class="sh_perl"> my $buffer = &#34;\0&#34; x $size;</pre>
+
+<p>when you are about to have a foreign function overwrite the whole thing anyway. If you need the buffer zeroed out, use the <code>&#34;\0&#34; x $size</code> form instead.</p>
 
 <p>Not exported by default, but may be exported on request.</p>
 
