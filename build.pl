@@ -11,7 +11,7 @@ my $xor = XOR->new(
 );
 
 $xor->pods->add_sister_site("https://uperl.github.io");
-$xor->pods->add_sister_site("https://perlwasm.github.io");
+$xor->pods->add_sister_site("https://perlwasm.org");
 $xor->pods->add_sister_site("https://alienfile.org");
 
 $xor->builder->build;
